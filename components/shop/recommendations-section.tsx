@@ -1,4 +1,8 @@
-import { StarIcon, ChevronRightIcon, FireIcon } from "@heroicons/react/24/outline";
+import {
+  StarIcon,
+  ChevronRightIcon,
+  FireIcon,
+} from "@heroicons/react/24/outline";
 import { ProductCard } from "components/shop/product-card";
 import { MotionSection } from "components/ui/motion";
 import { getBestSellers } from "lib/api/catalog";
@@ -37,11 +41,11 @@ export async function RecommendationsSection() {
   }
 
   const title = isPersonalized ? "Rekomendasi Untuk Anda" : "Produk Populer";
-  const subtitle = isPersonalized 
-    ? "Dipilih khusus berdasarkan selera dan riwayat Anda" 
+  const subtitle = isPersonalized
+    ? "Dipilih khusus berdasarkan selera dan riwayat Anda"
     : "Produk paling diminati pelanggan kami";
   const Icon = isPersonalized ? StarIcon : FireIcon;
-  const iconBgClass = isPersonalized 
+  const iconBgClass = isPersonalized
     ? "bg-mitologi-gold/10 border-mitologi-gold/20 text-mitologi-gold-dark"
     : "bg-orange-50 border-orange-200 text-orange-600";
 
@@ -59,7 +63,9 @@ export async function RecommendationsSection() {
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
             <div className="flex items-center gap-4">
-              <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${iconBgClass}`}>
+              <div
+                className={`flex h-14 w-14 items-center justify-center rounded-xl ${iconBgClass}`}
+              >
                 <Icon className="w-6 h-6" />
               </div>
               <div>
@@ -81,16 +87,20 @@ export async function RecommendationsSection() {
             </Link>
           </div>
 
-          {/* Products Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Products Grid - Horizontal Scroll on Mobile, Grid on Desktop */}
+          <div className="flex lg:grid lg:grid-cols-4 gap-4 lg:gap-6 overflow-x-auto pb-4 lg:pb-0 snap-x snap-mandatory scrollbar-hide -mx-2 px-2 lg:mx-0 lg:px-0">
             {products.slice(0, 4).map((product, index) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                index={index}
-                isRecommended={isPersonalized}
-                isBestSeller={!isPersonalized}
-              />
+              <div
+                key={product.id}
+                className="flex-shrink-0 w-[280px] sm:w-[300px] lg:w-auto snap-start"
+              >
+                <ProductCard
+                  product={product}
+                  index={index}
+                  isRecommended={isPersonalized}
+                  isBestSeller={!isPersonalized}
+                />
+              </div>
             ))}
           </div>
 
