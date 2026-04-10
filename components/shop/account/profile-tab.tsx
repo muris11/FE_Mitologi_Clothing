@@ -24,6 +24,7 @@ import {
   updateAddress,
 } from "lib/api/addresses";
 import { updateProfile } from "lib/api/account";
+import clsx from "clsx";
 import { UnknownError, User, Address } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import { useAuth } from "lib/hooks/useAuth";
@@ -209,7 +210,7 @@ export function ProfileTab({
   };
 
   const handleDeleteAddress = async (addressId: number) => {
-    if (!confirm("Yakin ingin menghapus alamat ini?")) return;
+    if (!confirm("Apakah Anda yakin ingin menghapus alamat ini?")) return;
 
     try {
       await deleteAddress(addressId);
@@ -230,12 +231,12 @@ export function ProfileTab({
       await updateAddress(addressId, { isPrimary: true });
       await loadAddresses();
       router.refresh();
-      addToast({ variant: "success", title: "Alamat utama berhasil diubah" });
+      addToast({ variant: "success", title: "Alamat utama diperbarui" });
     } catch (error: unknown) {
       const err = error as UnknownError;
       addToast({
         variant: "error",
-        title: err?.message || "Gagal mengubah alamat utama",
+        title: err?.message || "Gagal memperbarui alamat utama",
       });
     }
   };
@@ -247,7 +248,7 @@ export function ProfileTab({
     setAvatarError(null);
 
     if (file.size > 2 * 1024 * 1024) {
-      const message = "Ukuran file maksimal 2MB";
+      const message = "Ukuran file maksimum adalah 2MB";
       setAvatarError(message);
       addToast({ variant: "error", title: message });
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -283,7 +284,7 @@ export function ProfileTab({
       iconBg: "bg-white text-slate-500 border border-slate-200",
     },
     {
-      label: "Total Belanja",
+      label: "Total Pengeluaran",
       value: new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
@@ -294,7 +295,7 @@ export function ProfileTab({
       iconBg: "bg-white text-slate-500 border border-slate-200",
     },
     {
-      label: "Member Sejak",
+      label: "Anggota Sejak",
       value: userSince.toString(),
       icon: CalendarDaysIcon,
       gradient: "from-zinc-100 to-zinc-50",
@@ -390,7 +391,7 @@ export function ProfileTab({
                     <>
                       <PencilSquareIcon className="h-5 w-5 text-white mb-1" />
                       <span className="text-[10px] font-sans font-bold text-white/90">
-                        Ubah Foto
+                        Perbarui Foto
                       </span>
                     </>
                   )}
@@ -406,7 +407,7 @@ export function ProfileTab({
               </div>
             </div>
             <p className="mt-2 max-w-[170px] text-[11px] leading-relaxed text-slate-500">
-              JPG, PNG, WEBP. Maksimal 2MB.
+              JPG, PNG, WEBP. Maksimum 2MB.
             </p>
             {avatarError && (
               <p className="mt-1 max-w-[170px] text-[11px] leading-relaxed text-red-600">
@@ -463,7 +464,7 @@ export function ProfileTab({
                 Alamat Pengiriman
               </h3>
               <p className="text-xs font-sans text-slate-400 mt-0.5">
-                Kelola alamat untuk pengiriman pesanan
+                Kelola alamat pengiriman Anda untuk pengiriman lokal dan internasional
               </p>
             </div>
           </div>
@@ -478,111 +479,124 @@ export function ProfileTab({
         </div>
 
         {/* Address List */}
-        <div className="space-y-4 relative z-10">
+        <div className="relative z-10">
           {isLoadingAddresses ? (
-            <div className="animate-pulse space-y-4">
-              <div className="h-32 bg-slate-100 rounded-2xl"></div>
-              <div className="h-32 bg-slate-100 rounded-2xl"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="h-44 bg-slate-50 rounded-3xl animate-pulse ring-1 ring-slate-100"></div>
+              <div className="h-44 bg-slate-50 rounded-3xl animate-pulse ring-1 ring-slate-100"></div>
             </div>
           ) : addresses.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-              <HomeIcon className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-600 font-sans mb-4">
-                Anda belum memiliki alamat pengiriman
-              </p>
-              <Button
-                onClick={openAddAddress}
-                variant="primary"
-                className="rounded-xl"
-              >
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Tambah Alamat
-              </Button>
+            <div className="text-center py-16 bg-slate-50/50 rounded-[40px] border-2 border-dashed border-slate-200/60 overflow-hidden relative group">
+              <div className="absolute inset-0 bg-gradient-to-b from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-white rounded-3xl shadow-soft flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 border border-slate-100">
+                  <HomeIcon className="w-10 h-10 text-slate-300" />
+                </div>
+                <h4 className="text-lg font-sans font-bold text-mitologi-navy mb-2">Tidak ada alamat</h4>
+                <p className="text-sm text-slate-400 font-sans mb-8 max-w-xs mx-auto leading-relaxed">
+                  Mulai dengan menambahkan alamat pengiriman pertama Anda untuk pengalaman checkout yang lebih cepat.
+                </p>
+                <Button
+                  onClick={openAddAddress}
+                  variant="primary"
+                  className="rounded-2xl px-8 py-6 shadow-xl shadow-mitologi-navy/10"
+                >
+                  <PlusIcon className="h-5 w-5 mr-3" />
+                  Tambah Alamat Baru
+                </Button>
+              </div>
             </div>
           ) : (
-            addresses.map((address) => (
-              <div
-                key={address.id}
-                className={`p-5 md:p-6 rounded-2xl border-2 transition-all duration-300 relative overflow-hidden ${
-                  address.isPrimary
-                    ? "border-mitologi-navy bg-white shadow-md"
-                    : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
-                }`}
-              >
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex-1 min-w-0">
-                    {/* Badge and Label */}
-                    <div className="flex items-center gap-2 mb-3">
-                      {address.isPrimary ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold bg-mitologi-navy text-white shadow-sm">
-                          <StarIcon className="w-3 h-3" />
-                          Utama
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-sans font-bold bg-amber-100 text-amber-700">
-                          {address.label}
-                        </span>
-                      )}
-                    </div>
-                    
-                    {/* Recipient Info */}
-                    <p className="font-sans font-bold text-lg text-slate-900 mb-1">
-                      {address.recipientName}
-                    </p>
-                    <p className="font-sans text-sm text-slate-600 mb-3">
-                      {address.phone}
-                    </p>
-                    
-                    {/* Address */}
-                    <div className="flex items-start gap-2 text-sm text-slate-600">
-                      <MapPinIcon className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
-                      <div className="space-y-0.5">
-                        <p className="font-sans">
-                          {address.addressLine1}
-                          {address.addressLine2 && `, ${address.addressLine2}`}
-                        </p>
-                        <p className="font-sans">
-                          {address.city}, {address.province} {address.postalCode}
-                        </p>
-                        {address.country && address.country !== "Indonesia" && (
-                          <p className="font-sans text-slate-500">
-                            {address.country}
-                          </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {addresses.map((address) => (
+                <div
+                  key={address.id}
+                  className={clsx(
+                    "group/card p-6 rounded-[32px] border-2 transition-all duration-500 relative overflow-hidden flex flex-col justify-between h-full hover:-translate-y-1",
+                    address.isPrimary
+                      ? "border-mitologi-navy/10 bg-white shadow-soft ring-1 ring-mitologi-navy/5"
+                      : "border-slate-100 bg-white hover:border-mitologi-gold/30 hover:shadow-xl hover:shadow-slate-200/50"
+                  )}
+                >
+                  {/* Decorative element */}
+                  <div className={clsx(
+                    "absolute top-0 right-0 w-24 h-24 bg-gradient-to-br transition-all duration-700 -mr-12 -mt-12 blur-2xl opacity-40 group-hover/card:scale-150",
+                    address.isPrimary ? "from-mitologi-navy opacity-20" : "from-mitologi-gold"
+                  )} />
+
+                  <div>
+                    <div className="flex justify-between items-start gap-4 mb-6">
+                      <div className="flex items-center gap-2">
+                        {address.isPrimary ? (
+                          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-mitologi-navy text-white shadow-lg shadow-mitologi-navy/20">
+                            <StarIcon className="w-3.5 h-3.5 fill-white" />
+                            <span className="text-[10px] font-sans font-bold uppercase tracking-[0.15em]">Utama</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center px-4 py-2 rounded-2xl bg-slate-50 border border-slate-100 text-slate-500 group-hover/card:border-mitologi-gold/40 group-hover/card:bg-mitologi-gold/5 transition-colors">
+                            <span className="text-[10px] font-sans font-bold uppercase tracking-[0.15em] truncate max-w-[100px]">{address.label}</span>
+                          </div>
                         )}
+                      </div>
+
+                      <div className="flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-x-2 group-hover/card:translate-x-0">
+                        <button
+                          onClick={() => openEditAddress(address)}
+                          className="p-3 text-slate-400 hover:text-mitologi-navy hover:bg-slate-50 hover:shadow-sm rounded-xl transition-all border border-transparent hover:border-slate-200"
+                          title="Edit Alamat"
+                        >
+                          <PencilSquareIcon className="h-4.5 w-4.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAddress(address.id)}
+                          className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:shadow-sm rounded-xl transition-all border border-transparent hover:border-red-100"
+                          title="Hapus Alamat"
+                        >
+                          <TrashIcon className="h-4.5 w-4.5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1 group-hover/card:translate-x-1 transition-transform duration-500">
+                      <h4 className="font-sans font-extrabold text-xl text-mitologi-navy leading-none mb-2">
+                        {address.recipientName}
+                      </h4>
+                      <div className="flex items-center gap-2 text-slate-400 font-sans text-sm mb-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                        <span>{address.phone}</span>
+                      </div>
+                      
+                      <div className="flex items-start gap-3 pt-4 mt-4 border-t border-slate-50 group-hover/card:border-slate-100 transition-colors">
+                        <div className="p-2.5 rounded-xl bg-slate-50 text-slate-400 group-hover/card:bg-white group-hover/card:shadow-sm transition-all">
+                          <MapPinIcon className="w-4 h-4" />
+                        </div>
+                        <div className="text-sm font-sans text-slate-500 leading-relaxed pt-0.5">
+                          <p className="font-medium text-slate-700">
+                            {address.addressLine1}
+                            {address.addressLine2 && `, ${address.addressLine2}`}
+                          </p>
+                          <p>
+                            {address.city}, {address.province}
+                          </p>
+                          <p className="text-slate-400 text-xs font-bold mt-1 tracking-wider uppercase">
+                            {address.postalCode} • {address.country || "Indonesia"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    {!address.isPrimary && (
-                      <button
-                        onClick={() => handleSetPrimary(address.id)}
-                        className="text-xs font-sans font-semibold text-mitologi-navy hover:text-mitologi-gold transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 whitespace-nowrap"
-                      >
-                        Jadikan Utama
-                      </button>
-                    )}
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => openEditAddress(address)}
-                        className="p-2 text-slate-400 hover:text-mitologi-navy hover:bg-slate-100 rounded-lg transition-all"
-                        title="Edit"
-                      >
-                        <PencilSquareIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteAddress(address.id)}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                        title="Hapus"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
+                  {!address.isPrimary && (
+                    <button
+                      onClick={() => handleSetPrimary(address.id)}
+                      className="mt-8 w-full py-4 rounded-2xl text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-slate-400 border border-dashed border-slate-200 hover:border-mitologi-navy hover:text-mitologi-navy hover:bg-slate-50 transition-all duration-300 active:scale-[0.98]"
+                    >
+                      Jadikan Alamat Utama
+                    </button>
+                  )}
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -635,7 +649,7 @@ export function ProfileTab({
               className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
               value={profileForm.phone}
               autoComplete="tel"
-              placeholder="08xxxxxxxxxx"
+              placeholder="+62xxxxxxxx"
               onChange={(e) =>
                 setProfileForm({ ...profileForm, phone: e.target.value })
               }
@@ -718,7 +732,7 @@ export function ProfileTab({
               type="tel"
               className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
               value={addressForm.phone}
-              placeholder="08xxxxxxxxxx"
+              placeholder="+62xxxxxxxx"
               onChange={(e) =>
                 setAddressForm({ ...addressForm, phone: e.target.value })
               }
@@ -734,7 +748,7 @@ export function ProfileTab({
               type="text"
               className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
               value={addressForm.addressLine1}
-              placeholder="Jl. Nama Jalan No. 123, RT/RW"
+              placeholder="Nama jalan, gedung, no. rumah"
               onChange={(e) =>
                 setAddressForm({ ...addressForm, addressLine1: e.target.value })
               }
@@ -744,13 +758,13 @@ export function ProfileTab({
 
           <div>
             <label className="block text-sm font-sans font-bold text-mitologi-navy mb-2">
-              Alamat Lengkap (Baris 2)
+              Detail Alamat (Baris 2)
             </label>
             <input
               type="text"
               className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
               value={addressForm.addressLine2}
-              placeholder="Kelurahan, Kecamatan, Landmark (opsional)"
+              placeholder="Blok, Lantai, Patokan (opsional)"
               onChange={(e) =>
                 setAddressForm({ ...addressForm, addressLine2: e.target.value })
               }
@@ -766,7 +780,7 @@ export function ProfileTab({
                 type="text"
                 className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
                 value={addressForm.city}
-                placeholder="Jakarta"
+                placeholder="Contoh: Jakarta"
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, city: e.target.value })
                 }
@@ -781,7 +795,7 @@ export function ProfileTab({
                 type="text"
                 className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
                 value={addressForm.province}
-                placeholder="DKI Jakarta"
+                placeholder="Contoh: DKI Jakarta"
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, province: e.target.value })
                 }

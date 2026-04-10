@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowRightIcon,
   EnvelopeIcon,
   EyeIcon,
   EyeSlashIcon,
@@ -10,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { Button } from "components/ui/button";
+import { useToast } from "components/ui/ultra-quality-toast";
 import { ApiError } from "lib/api";
 import { UnknownError } from "lib/api/types";
 import { useAuth } from "lib/hooks/useAuth";
@@ -26,6 +26,7 @@ interface FieldErrors {
 
 export default function RegisterForm() {
   const { register, user } = useAuth();
+  const { addToast } = useToast();
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -70,8 +71,13 @@ export default function RegisterForm() {
 
     try {
       await register(name, email, password, passwordConfirmation);
-      // Full page reload to ensure session is correctly initialized
-      window.location.href = "/shop";
+      addToast({
+        variant: "success",
+        title: "Akun Berhasil Dibuat",
+        description:
+          "Selamat datang di Mitologi Clothing. Silakan login dengan akun baru Anda.",
+      });
+      router.push("/shop/login");
     } catch (e: unknown) {
       const error = e as UnknownError;
       if (e instanceof ApiError && e.isValidationError()) {
@@ -89,10 +95,10 @@ export default function RegisterForm() {
         if (e.isEmailTaken()) {
           setIsEmailTaken(true);
         } else {
-          setApiError(e.message || "Mohon periksa kembali data Anda.");
+          setApiError(e.message || "Mohon periksa kembali informasi Anda.");
         }
       } else {
-        setApiError("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
+        setApiError("Terjadi kesalahan saat pendaftaran. Silakan coba lagi.");
       }
     } finally {
       setIsPending(false);
@@ -122,9 +128,9 @@ export default function RegisterForm() {
               href="/shop/login"
               className="font-bold underline text-amber-900 hover:text-mitologi-navy"
             >
-              login disini
+              login di sini
             </Link>{" "}
-            untuk masuk.
+            untuk melanjutkan.
           </div>
         </div>
       )}
@@ -173,7 +179,7 @@ export default function RegisterForm() {
                   ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
                   : "border-slate-200 hover:border-slate-300",
               )}
-              placeholder="Nama Anda"
+              placeholder="Nama lengkap Anda"
               required
               autoComplete="name"
             />
@@ -190,7 +196,7 @@ export default function RegisterForm() {
             htmlFor="email"
             className="block text-[12px] font-sans font-semibold uppercase tracking-[0.16em] text-slate-600 mb-2"
           >
-            Email
+            Alamat Email
           </label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -211,7 +217,7 @@ export default function RegisterForm() {
                   ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
                   : "border-slate-200 hover:border-slate-300",
               )}
-              placeholder="nama@email.com"
+              placeholder="name@email.com"
               required
               autoComplete="email"
             />
@@ -240,7 +246,7 @@ export default function RegisterForm() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setName(e.target.value);
                 clearFieldError("password");
               }}
               className={clsx(
@@ -332,8 +338,7 @@ export default function RegisterForm() {
         variant="primary"
         className="w-full flex items-center justify-center p-4 text-base"
       >
-        <span>{isPending ? "Mendaftarkan…" : "Buat Akun"}</span>
-        {!isPending}
+        <span>{isPending ? "Mendaftar…" : "Buat Akun"}</span>
       </Button>
 
       <div className="text-center pt-2">
@@ -343,7 +348,7 @@ export default function RegisterForm() {
             href="/shop/login"
             className="font-bold text-mitologi-navy hover:text-mitologi-gold transition-colors"
           >
-            Masuk Disini
+            Masuk di sini
           </Link>
         </p>
       </div>
