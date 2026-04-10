@@ -43,39 +43,60 @@ const toRemotePattern = (origin: string) => {
 
 const backendRemotePatterns = backendOrigins
   .map(toRemotePattern)
-  .filter((pattern): pattern is NonNullable<typeof pattern> => pattern !== null);
+  .filter(
+    (pattern): pattern is NonNullable<typeof pattern> => pattern !== null,
+  );
 
 // Extract Midtrans origins dynamicly if available
 const midtransSnapUrl = process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL || "";
 const midtransOrigin = midtransSnapUrl ? new URL(midtransSnapUrl).origin : "";
 const midtransApiOrigin = midtransOrigin.replace("app.", "api.");
-const midtransProductionOrigin = process.env.NEXT_PUBLIC_MIDTRANS_PRODUCTION_ORIGIN || "";
-const midtransProductionApiOrigin = process.env.NEXT_PUBLIC_MIDTRANS_PRODUCTION_API_ORIGIN || "";
+const midtransProductionOrigin =
+  process.env.NEXT_PUBLIC_MIDTRANS_PRODUCTION_ORIGIN || "";
+const midtransProductionApiOrigin =
+  process.env.NEXT_PUBLIC_MIDTRANS_PRODUCTION_API_ORIGIN || "";
 
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.2.101", "0.0.0.0"],
-  
+
   images: {
     formats: ["image/avif", "image/webp"],
     unoptimized: !isProduction,
     dangerouslyAllowSVG: true,
     remotePatterns: [
       ...backendRemotePatterns,
-      ...(process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN ? [{
-        protocol: "https" as const,
-        hostname: process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN.replace("https://", ""),
-      }] : []),
-      ...(process.env.NEXT_PUBLIC_UNSPLASH_ORIGIN ? [{
-        protocol: "https" as const,
-        hostname: process.env.NEXT_PUBLIC_UNSPLASH_ORIGIN.replace("https://", ""),
-      }] : []),
+      ...(process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN
+        ? [
+            {
+              protocol: "https" as const,
+              hostname: process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN.replace(
+                "https://",
+                "",
+              ),
+              port: undefined as string | undefined,
+            },
+          ]
+        : []),
+      ...(process.env.NEXT_PUBLIC_UNSPLASH_ORIGIN
+        ? [
+            {
+              protocol: "https" as const,
+              hostname: process.env.NEXT_PUBLIC_UNSPLASH_ORIGIN.replace(
+                "https://",
+                "",
+              ),
+              port: undefined as string | undefined,
+            },
+          ]
+        : []),
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "*.amazonaws.com",
+        port: undefined as string | undefined,
       },
-    ].filter(p => p.hostname !== ""),
+    ].filter((p) => p.hostname !== ""),
   },
 
   // In Next.js 15+, turbopack can be at top level
@@ -185,7 +206,10 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: cspDirectives.join("; ").replace(/\s{2,}/g, " ").trim(),
+            value: cspDirectives
+              .join("; ")
+              .replace(/\s{2,}/g, " ")
+              .trim(),
           },
           {
             key: "X-Frame-Options",
@@ -201,7 +225,8 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(self), payment=(self)",
+            value:
+              "camera=(), microphone=(), geolocation=(self), payment=(self)",
           },
           {
             key: "Access-Control-Allow-Origin",
