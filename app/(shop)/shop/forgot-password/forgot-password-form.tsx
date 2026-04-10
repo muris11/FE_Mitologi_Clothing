@@ -2,6 +2,7 @@
 
 import { ArrowLeftIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { Button } from "components/ui/button";
+import { useToast } from "components/ui/ultra-quality-toast";
 import { forgotPassword } from "lib/api/auth";
 import { UnknownError } from "lib/api/types";
 import { useAuth } from "lib/hooks/useAuth";
@@ -11,12 +12,12 @@ import { useEffect, useState } from "react";
 
 export default function ForgotPasswordForm() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   // Redirect if already logged in
   useEffect(() => {
@@ -29,14 +30,19 @@ export default function ForgotPasswordForm() {
     e.preventDefault();
     setLoading(true);
     setApiError("");
-    setSuccessMsg("");
 
     try {
       const result = await forgotPassword(email);
-      setSuccessMsg(
-        result.message || "Link reset password telah dikirim ke email Anda.",
-      );
+      addToast({
+        variant: "success",
+        title: "Email Terkirim",
+        description:
+          result.message ||
+          "Tautan untuk mengatur ulang password telah dikirim ke email Anda.",
+      });
       setEmail("");
+      // Redirect to login after success
+      router.push("/shop/login");
     } catch (err: unknown) {
       const error = err as UnknownError;
       setApiError(
@@ -65,24 +71,6 @@ export default function ForgotPasswordForm() {
             ></path>
           </svg>
           {apiError}
-        </div>
-      )}
-      {successMsg && (
-        <div className="p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-[16px] text-sm font-medium flex items-start gap-3">
-          <svg
-            className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          {successMsg}
         </div>
       )}
       <div>
