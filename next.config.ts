@@ -64,6 +64,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
   },
+  // Ensure static files are served correctly
+  assetPrefix: process.env.VERCEL ? undefined : undefined,
+  trailingSlash: false,
 
   images: {
     formats: ["image/avif", "image/webp"],
