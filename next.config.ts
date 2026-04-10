@@ -60,6 +60,10 @@ const nextConfig: NextConfig = {
   output: process.env.VERCEL ? undefined : "standalone",
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.2.101", "0.0.0.0"],
+  // Disable CSS optimization to fix Vercel deployment issues
+  experimental: {
+    optimizeCss: false,
+  },
 
   images: {
     formats: ["image/avif", "image/webp"],
@@ -198,6 +202,25 @@ const nextConfig: NextConfig = {
 
     if (isProduction) {
       cspDirectives.push(`upgrade-insecure-requests`);
+    }
+
+    // Disable CSP in development for debugging
+    if (!isProduction) {
+      return [
+        {
+          source: "/(.*)",
+          headers: [
+            {
+              key: "X-Frame-Options",
+              value: "SAMEORIGIN",
+            },
+            {
+              key: "Access-Control-Allow-Origin",
+              value: "*",
+            },
+          ],
+        },
+      ];
     }
 
     return [
