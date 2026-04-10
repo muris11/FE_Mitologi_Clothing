@@ -35,16 +35,19 @@ export function GridTileImage({
               isInteractive,
           })}
           {...props}
-          unoptimized={
+          unoptimized={Boolean(
             typeof props.src === "string" &&
             (props.src.includes(
-              process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN?.replace("https://", "") || "",
+              process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN?.replace(
+                "https://",
+                "",
+              ) || "",
             ) ||
               (process.env.NEXT_PUBLIC_SITE_URL &&
                 props.src.includes(
                   new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname,
-                )))
-          }
+                ))),
+          )}
         />
       ) : null}
       {label ? (
