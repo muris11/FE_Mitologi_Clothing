@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+
+  --color-mitologi-navy: oklch(0.25 0.05 260);
+  --color-mitologi-navy-light: oklch(0.32 0.06 260);
+  --color-mitologi-gold: oklch(0.75 0.16 75);
+  --color-mitologi-gold-dark: oklch(0.65 0.16 75);
+  --color-mitologi-cream: oklch(0.98 0.01 100);
+
+  --color-ring: var(--color-mitologi-navy);
+  --color-primary: var(--color-mitologi-navy);
+  --color-secondary: var(--color-mitologi-gold);
+  --color-surface: #ffffff;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --color-wa-green: #25d366;
+  --color-wa-green-dark: #20bd5a;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-foreground)] font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Corporate Trust UI Utilities */
+  .shadow-soft {
+    box-shadow:
+      0 4px 20px -2px rgba(20, 25, 60, 0.05),
+      0 0 3px rgba(20, 25, 60, 0.02);
+  }
+
+  .shadow-hover {
+    box-shadow:
+      0 12px 30px -4px rgba(20, 25, 60, 0.1),
+      0 0 4px rgba(20, 25, 60, 0.04);
+  }
+
+  .shadow-btn {
+    box-shadow: 0 4px 14px 0 rgba(20, 25, 60, 0.15);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-mitologi-navy to-mitologi-gold bg-clip-text text-transparent;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-tr from-mitologi-navy to-mitologi-navy-light;
+  }
+
+  .gradient-gold {
+    @apply bg-gradient-to-r from-mitologi-gold to-mitologi-gold-dark;
+  }
+
+  /* Scroll Animation Utilities */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delays for grids */
+  .scroll-delay-1 {
+    transition-delay: 100ms;
+  }
+  .scroll-delay-2 {
+    transition-delay: 200ms;
+  }
+  .scroll-delay-3 {
+    transition-delay: 300ms;
+  }
+  .scroll-delay-4 {
+    transition-delay: 400ms;
+  }
+  .scroll-delay-5 {
+    transition-delay: 500ms;
+  }
+  .scroll-delay-6 {
+    transition-delay: 600ms;
+  }
+
+  /* Parallax utilities */
+  .parallax-slow {
+    transform: translateY(0);
+    transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .parallax-medium {
+    transform: translateY(0);
+    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .parallax-fast {
+    transform: translateY(0);
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  /* Smooth hover lift effect */
+  .hover-lift-smooth {
+    transition:
+      transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+      box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .hover-lift-smooth:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 30px -4px rgba(20, 25, 60, 0.1),
+      0 0 4px rgba(20, 25, 60, 0.04);
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-4px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(4px);
+    }
+  }
+
+  .animate-shake {
+    animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  /* Premium Micro-Animations */
+  @keyframes subtle-scale {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes subtle-fade {
+    from {
+      opacity: 0.8;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up-sm {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-subtle-scale {
+    animation: subtle-scale 0.3s ease-out forwards;
+  }
+
+  .animate-subtle-fade {
+    animation: subtle-fade 0.25s ease-out forwards;
+  }
+
+  .animate-slide-up-sm {
+    animation: slide-up-sm 0.35s ease-out forwards;
+  }
+
+  /* Smooth hover transitions for cards */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Premium shadow transitions */
+  .shadow-transition {
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduced Motion Support - Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .scroll-reveal,
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .parallax-slow,
+    .parallax-medium,
+    .parallax-fast {
+      transform: none;
+      transition: none;
+    }
+
+    .hover-lift-smooth,
+    .hover-lift-smooth:hover {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading="lazy"] {
+    clip-path: inset(0.6px);
+  }
+}
+
+a,
+input,
+button,
+select,
+textarea {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mitologi-navy focus-visible:ring-offset-2 transition-shadow;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
