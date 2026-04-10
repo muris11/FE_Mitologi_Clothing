@@ -57,7 +57,7 @@ const midtransProductionApiOrigin =
   process.env.NEXT_PUBLIC_MIDTRANS_PRODUCTION_API_ORIGIN || "";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: process.env.VERCEL ? undefined : "standalone",
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.2.101", "0.0.0.0"],
 
