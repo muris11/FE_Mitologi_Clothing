@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --hostname 0.0.0.0 --port 3011",
-    "build": "next build --no-turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "npm run lint:endpoints && tsc --noEmit",
     "prettier": "prettier --write --ignore-unknown .",

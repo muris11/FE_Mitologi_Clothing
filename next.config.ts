@@ -185,7 +185,7 @@ const nextConfig: NextConfig = {
     const cspDirectives = [
       `default-src 'self'`,
       `script-src ${scriptSources.join(" ")}`,
-      `style-src 'self' 'unsafe-inline' ${safeEnv("NEXT_PUBLIC_GOOGLE_FONTS_ORIGIN")}`,
+      `style-src 'self' 'unsafe-inline' 'unsafe-eval' ${safeEnv("NEXT_PUBLIC_GOOGLE_FONTS_ORIGIN")}`,
       `img-src ${imgSources.join(" ")}`,
       `font-src 'self' data: ${safeEnv("NEXT_PUBLIC_GOOGLE_GSTATIC_ORIGIN")}`,
       `connect-src ${connectSources.join(" ")}`,
