@@ -386,7 +386,7 @@ export default function OrderDetailPage(props: {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-sans font-semibold text-slate-900 text-base">
-                        {order.shippingAddress.name}
+                        {order.shippingAddress.recipientName}
                       </p>
                       <p className="font-sans text-sm text-slate-600 mt-0.5">
                         {order.shippingAddress.phone}
@@ -396,7 +396,13 @@ export default function OrderDetailPage(props: {
                   
                   <div className="pl-16">
                     <p className="font-sans text-sm text-slate-700 leading-relaxed">
-                      {order.shippingAddress.address}
+                      {order.shippingAddress.addressLine1}
+                      {order.shippingAddress.addressLine2 && (
+                        <>
+                          <br />
+                          {order.shippingAddress.addressLine2}
+                        </>
+                      )}
                     </p>
                     <p className="font-sans text-sm text-slate-700 mt-1">
                       {order.shippingAddress.city}, {order.shippingAddress.province} {order.shippingAddress.postalCode}

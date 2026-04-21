@@ -131,10 +131,6 @@ export type User = {
   avatarUrl?: string;
   phone?: string;
   addresses?: Address[];
-  address?: string;
-  city?: string;
-  province?: string;
-  postalCode?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -207,14 +203,7 @@ export type Order = {
   total: number;
   subtotal: number;
   shippingCost: number;
-  shippingAddress?: {
-    name?: string;
-    phone?: string;
-    address?: string;
-    city?: string;
-    province?: string;
-    postalCode?: string;
-  };
+  shippingAddress?: Address;
   itemsCount?: number;
   createdAt: string;
   refundRequestedAt?: string;
@@ -548,12 +537,16 @@ export type CheckoutResponse = {
 };
 
 export type CheckoutPayload = {
-  shippingName: string;
-  shippingPhone: string;
-  shippingAddress: string;
-  shippingCity: string;
-  shippingProvince: string;
-  shippingPostalCode: string;
+  label: string;
+  recipientName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  country?: string;
+  isPrimary?: boolean;
   notes?: string;
 };
 
