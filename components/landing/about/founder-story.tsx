@@ -119,8 +119,6 @@ export function FounderStory({ settings }: FounderStoryProps) {
               </div>
             </div>
 
-            </div>
-
             <div className="pt-8 border-t border-slate-200/60 hidden lg:flex items-center gap-6">
               <div>
                 <p className="text-xl font-bold font-sans tracking-tight text-mitologi-navy mb-1">
