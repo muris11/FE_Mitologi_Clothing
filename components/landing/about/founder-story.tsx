@@ -70,15 +70,6 @@ export function FounderStory({ settings }: FounderStoryProps) {
               </span>
             </div>
 
-            {/* Founder Name & Role for Mobile Only */}
-            <div className="mt-12 lg:hidden text-center">
-              <p className="text-2xl font-bold font-sans tracking-tight text-mitologi-navy mb-1">
-                {name}
-              </p>
-              <p className="text-sm font-bold font-sans text-mitologi-gold uppercase tracking-[0.2em]">
-                {role}
-              </p>
-            </div>
           </motion.div>
 
           {/* Right: Story Content */}
@@ -89,6 +80,16 @@ export function FounderStory({ settings }: FounderStoryProps) {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.2 }}
           >
+            {/* Founder Name & Role for Mobile Only - Positioned after photo on stack */}
+            <div className="mb-10 lg:hidden text-center sm:text-left">
+              <p className="text-3xl font-bold font-sans tracking-tight text-mitologi-navy mb-1">
+                {name}
+              </p>
+              <p className="text-sm font-bold font-sans text-mitologi-gold uppercase tracking-[0.2em]">
+                {role}
+              </p>
+            </div>
+
             <div className="flex items-center gap-4 mb-6">
               <span className="w-12 h-1 bg-mitologi-gold"></span>
               <span className="text-[10px] font-bold font-sans text-mitologi-navy uppercase tracking-[0.3em]">
