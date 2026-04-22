@@ -69,6 +69,16 @@ export function FounderStory({ settings }: FounderStoryProps) {
                 Pengalaman
               </span>
             </div>
+
+            {/* Founder Name & Role for Mobile Only */}
+            <div className="mt-12 lg:hidden text-center">
+              <p className="text-2xl font-bold font-sans tracking-tight text-mitologi-navy mb-1">
+                {name}
+              </p>
+              <p className="text-sm font-bold font-sans text-mitologi-gold uppercase tracking-[0.2em]">
+                {role}
+              </p>
+            </div>
           </motion.div>
 
           {/* Right: Story Content */}
@@ -109,7 +119,9 @@ export function FounderStory({ settings }: FounderStoryProps) {
               </div>
             </div>
 
-            <div className="pt-8 border-t border-slate-200/60 flex items-center gap-6">
+            </div>
+
+            <div className="pt-8 border-t border-slate-200/60 hidden lg:flex items-center gap-6">
               <div>
                 <p className="text-xl font-bold font-sans tracking-tight text-mitologi-navy mb-1">
                   {name}
