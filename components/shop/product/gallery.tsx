@@ -35,11 +35,11 @@ export function Gallery({
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image */}
-      <div className="relative aspect-square w-full rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden shadow-soft group">
+      <div className="relative aspect-[4/5] w-full rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden shadow-soft group">
         {currentImage.src && currentImage.src !== "" ? (
           <>
             <Image
-              className="h-full w-full object-contain transition-transform duration-700 ease-in-out group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               alt={currentImage.altText || "Product image"}

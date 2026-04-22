@@ -198,7 +198,7 @@ export default async function ProductPage(props: {
               <div className="md:col-span-5">
                 <Suspense
                   fallback={
-                    <div className="relative aspect-square w-full bg-slate-100 rounded-2xl animate-pulse" />
+                    <div className="relative aspect-[4/5] w-full bg-slate-100 rounded-2xl animate-pulse" />
                   }
                 >
                   <Gallery images={galleryImages} />
