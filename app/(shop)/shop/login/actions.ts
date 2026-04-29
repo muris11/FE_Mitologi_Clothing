@@ -17,7 +17,7 @@ export async function authenticate(
     // Set cookie
     // Note: The API might return token in response.
     if (response?.token) {
-      (await cookies()).set("auth_token", response.token, {
+      (await cookies()).set("mitologi_auth_token", response.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

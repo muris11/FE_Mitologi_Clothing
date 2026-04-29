@@ -4,7 +4,7 @@ import { apiFetch } from "./index";
 import { User } from "./types";
 
 export async function getUser(): Promise<User | null> {
-  const token = (await cookies()).get("auth_token")?.value;
+  const token = (await cookies()).get("mitologi_auth_token")?.value;
 
   if (!token) return null;
 

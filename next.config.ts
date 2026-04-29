@@ -158,11 +158,13 @@ const nextConfig: NextConfig = {
       midtransProductionOrigin,
       midtransProductionApiOrigin,
       safeEnv("NEXT_PUBLIC_MIDTRANS_SNAP_ASSETS_ORIGIN"),
+      "https://gwk.gopayapi.com",
     ].filter(Boolean);
 
     const scriptSources = [
       "'self'",
       "'unsafe-eval'",
+      "'wasm-unsafe-eval'",
       "'unsafe-inline'",
       midtransOrigin,
       midtransApiOrigin,
@@ -170,6 +172,7 @@ const nextConfig: NextConfig = {
       midtransProductionApiOrigin,
       safeEnv("NEXT_PUBLIC_MIDTRANS_SNAP_ASSETS_ORIGIN"),
       safeEnv("NEXT_PUBLIC_GOOGLE_PAY_ORIGIN"),
+      "https://gwk.gopayapi.com",
     ].filter(Boolean);
 
     const frameSources = [
@@ -179,14 +182,16 @@ const nextConfig: NextConfig = {
       midtransProductionOrigin,
       safeEnv("NEXT_PUBLIC_MIDTRANS_SNAP_ASSETS_ORIGIN"),
       safeEnv("NEXT_PUBLIC_GOOGLE_PAY_ORIGIN"),
+      "https://gwk.gopayapi.com",
       safeEnv("NEXT_PUBLIC_GOOGLE_MAPS_ORIGIN", "https://www.google.com"),
       safeEnv("NEXT_PUBLIC_MAPS_GOOGLE_ORIGIN", "https://maps.google.com"),
     ].filter(Boolean);
 
     if (!isProduction) {
-      // Dev-only: allow dynamic LAN IP origins
-      imgSources.push("http:");
-      connectSources.push("http:");
+      // Dev-only: allow dynamic LAN IP origins and blob for workers
+      imgSources.push("http:", "blob:");
+      connectSources.push("http:", "ws:", "wss:");
+      scriptSources.push("blob:");
     }
 
     const cspDirectives = [
@@ -207,24 +212,10 @@ const nextConfig: NextConfig = {
       cspDirectives.push(`upgrade-insecure-requests`);
     }
 
-    // Disable CSP in development for debugging
-    if (!isProduction) {
-      return [
-        {
-          source: "/(.*)",
-          headers: [
-            {
-              key: "X-Frame-Options",
-              value: "SAMEORIGIN",
-            },
-            {
-              key: "Access-Control-Allow-Origin",
-              value: "*",
-            },
-          ],
-        },
-      ];
-    }
+    const cspHeaderValue = cspDirectives
+      .join("; ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
 
     return [
       {
@@ -232,10 +223,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: cspDirectives
-              .join("; ")
-              .replace(/\s{2,}/g, " ")
-              .trim(),
+            value: cspHeaderValue,
           },
           {
             key: "X-Frame-Options",

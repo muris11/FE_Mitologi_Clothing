@@ -49,7 +49,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const addToast = useCallback(
     ({ title, description, variant, duration = 4000 }: Omit<Toast, "id">) => {
-      const id = Date.now().toString();
+      const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
       setToasts((arr) => [
         ...arr,
         { id, title, description, variant, duration },

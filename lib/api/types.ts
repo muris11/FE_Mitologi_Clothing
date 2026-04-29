@@ -377,6 +377,7 @@ export type SiteSettings = {
     pricingPlastisolData?: string | PlastisolPrice[];
     pricingAddonsData?: string | PricingAddon[];
     pricingMinOrder?: string;
+    pricingFeaturesData?: Array<{ text: string }>;
     garansiBonusData?: Array<{ title: string; description: string }>;
   };
   cta?: {
@@ -553,10 +554,12 @@ export type CheckoutPayload = {
 // Pricing Types
 export type PlastisolPrice = {
   title: string;
+  image?: string;
   price?: string;
   short?: string;
   long?: string;
   popular?: boolean;
+  min_order?: string;
 };
 
 export type PricingAddon = {

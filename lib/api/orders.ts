@@ -58,14 +58,22 @@ export async function requestOrderRefund(
   reason: string,
 ): Promise<{ success: boolean; message?: string }> {
   try {
-    const response = await apiFetch<{ message: string }>(
+    const response = await apiFetch<{ message: string; success?: boolean }>(
       ENDPOINTS.ORDER_REQUEST_REFUND(orderNumber),
       {
         method: "POST",
         body: JSON.stringify({ reason }),
       },
     );
-    return { success: true, message: response.message };
+
+    if (!response) {
+      throw new Error("Empty response from server");
+    }
+
+    return {
+      success: response.success ?? true,
+      message: response.message,
+    };
   } catch (error: unknown) {
     const err = error as Error;
     return {

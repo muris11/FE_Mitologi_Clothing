@@ -50,7 +50,7 @@ async function handleAuthSuccess(
 
   // Store the Bearer token for Next.js Server Components
   if (result.token) {
-    Cookies.set("auth_token", result.token, {
+    Cookies.set("mitologi_auth_token", result.token, {
       expires: 30,
       sameSite: "Lax",
       secure: process.env.NODE_ENV === "production",
@@ -58,12 +58,12 @@ async function handleAuthSuccess(
     });
 
     // Native fallback: ensure cookie is always set even if js-cookie fails
-    if (!Cookies.get("auth_token")) {
+    if (!Cookies.get("mitologi_auth_token")) {
       const expires = new Date(
         Date.now() + 30 * 24 * 60 * 60 * 1000,
       ).toUTCString();
       const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-      document.cookie = `auth_token=${encodeURIComponent(result.token)}; expires=${expires}; path=/; SameSite=Lax${secure}`;
+      document.cookie = `mitologi_auth_token=${encodeURIComponent(result.token)}; expires=${expires}; path=/; SameSite=Lax${secure}`;
     }
   }
 
@@ -137,12 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password_confirmation,
         currentCartId,
       );
-      await handleAuthSuccess(result, setUser, router);
-      addToast({
-        title: "Berhasil",
-        description: `Akun berhasil dibuat, ${name.split(" ")[0]}!`,
-        variant: "success",
-      });
+      // Removed handleAuthSuccess to prevent automatic login after registration
     } catch (error) {
       throw error;
     } finally {
@@ -177,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } finally {
       setUser(null);
-      Cookies.remove("auth_token");
+      Cookies.remove("mitologi_auth_token");
       Cookies.remove("cartSessionId");
       window.dispatchEvent(new Event("auth:changed"));
       router.push("/");

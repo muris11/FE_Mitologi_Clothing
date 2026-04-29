@@ -2,210 +2,237 @@
 
 import { Button } from "components/ui/button";
 import { SectionHeading } from "components/ui/section-heading";
-import { PlastisolPrice, PricingAddon, SiteSettings } from "lib/api/types";
-import { useMemo } from "react";
-import { MotionSection } from "components/ui/motion";
+import { SiteSettings } from "lib/api/types";
+import { motion } from "framer-motion";
+import { storageUrl } from "lib/utils/storage-url";
+import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
 
+// Local type extension for pricing settings
 type PricingSettings = SiteSettings & {
   beranda?: {
-    pricingPlastisolData?: string | PlastisolPrice[];
-    pricingAddonsData?: string | PricingAddon[];
+    pricingPlastisolData?: any;
+    pricingAddonsData?: any;
+    pricingFeaturesData?: any[];
     pricingMinOrder?: string;
+    pricingPlastisolSubtitle?: string;
+    pricingExtraData?: any;
   };
 };
 
 export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
-  const prices = useMemo(() => {
-    const data =
-      settings?.beranda?.pricingPlastisolData ||
-      settings?.pricing?.pricingPlastisolData;
-    if (data) {
-      if (Array.isArray(data)) return data;
-      try {
-        const parsed = JSON.parse(data as string);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {
-        // Use fallback data
-      }
-    }
-    // Fallback
-    return [];
-  }, [
-    settings?.beranda?.pricingPlastisolData,
-    settings?.pricing?.pricingPlastisolData,
-  ]);
+  const plastisolDataRaw = settings?.beranda?.pricingPlastisolData;
+  const plastisolData = (Array.isArray(plastisolDataRaw)
+    ? plastisolDataRaw
+    : typeof plastisolDataRaw === "string"
+    ? JSON.parse(plastisolDataRaw)
+    : []
+  ).map((item: any) => ({
+    ...item,
+    minOrder: item.minOrder || item.min_order,
+  }));
 
-  const addOns = useMemo(() => {
-    const data =
-      settings?.beranda?.pricingAddonsData ||
-      settings?.pricing?.pricingAddonsData;
-    if (data) {
-      if (Array.isArray(data)) return data;
-      try {
-        const parsed = JSON.parse(data as string);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {
-        // Use fallback data
-      }
-    }
-    // Fallback
-    return [];
-  }, [
-    settings?.beranda?.pricingAddonsData,
-    settings?.pricing?.pricingAddonsData,
-  ]);
+  // Removed global minOrder, now using per-package min_order
 
-  if (prices.length === 0 && addOns.length === 0) return null;
+  const addonsDataRaw = settings?.beranda?.pricingAddonsData;
+  const addonsData = Array.isArray(addonsDataRaw)
+    ? addonsDataRaw
+    : typeof addonsDataRaw === "string"
+    ? JSON.parse(addonsDataRaw)
+    : [];
+
+  const extraOptionsDataRaw = settings?.beranda?.pricingExtraData;
+  const extraOptionsData = Array.isArray(extraOptionsDataRaw)
+    ? extraOptionsDataRaw
+    : typeof extraOptionsDataRaw === "string"
+    ? JSON.parse(extraOptionsDataRaw)
+    : [];
+
+  const featuresRaw = settings?.beranda?.pricingFeaturesData;
+  const features = Array.isArray(featuresRaw)
+    ? featuresRaw.map((f: any) => f.text).filter(Boolean)
+    : [];
 
   return (
-    <MotionSection className="py-24 sm:py-32 bg-white border-t border-slate-200/50 relative overflow-hidden">
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8 relative z-10">
-        <div className="mx-auto max-w-2xl text-center mb-16 flex flex-col items-center">
+    <section className="py-24 sm:py-32 bg-white border-t border-slate-200/50 relative overflow-hidden font-sans">
+      {/* Background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-mitologi-navy rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 -right-24 w-80 h-80 bg-mitologi-gold rounded-full blur-[100px]" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+        <div className="mx-auto max-w-2xl text-center mb-12">
           <SectionHeading
             overline="Pricelist"
-            title="Harga Sablon Plastisol"
-            subtitle="Harga terbaik untuk kualitas premium. Garansi detailing dan ketepatan waktu."
+            title="Pricelist Sablon Plastisol"
+            subtitle={settings?.beranda?.pricingPlastisolSubtitle || "Harga terbaik untuk kualitas premium. Garansi detailing dan ketepatan waktu."}
             className="items-center"
           />
         </div>
 
-        <div className="mx-auto mt-10 grid w-full max-w-5xl grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
-          {/* Standard Pricing Card */}
-          <div className="rounded-2xl md:rounded-3xl p-6 md:p-8 border border-slate-100 bg-white shadow-soft transition-shadow duration-300 hover:shadow-hover relative z-10 flex flex-col h-full">
-            <div className="flex items-center gap-x-4 mb-4">
-              <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100">
-                <svg
-                  className="w-5 h-5 text-mitologi-navy"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl md:text-2xl font-sans font-bold text-mitologi-navy tracking-tight">
-                Paket Produksi
-              </h3>
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-slate-600 font-sans font-medium">
-              Harga dasar untuk produksi kaos dengan sablon plastisol
-              berkualitas tinggi. Min Order{" "}
-              <span className="font-bold text-mitologi-navy">
-                {settings?.beranda?.pricingMinOrder ||
-                  settings?.pricing?.pricingMinOrder ||
-                  "24 pcs"}
-              </span>
-              .
-            </p>
-            <ul role="list" className="mt-8 space-y-4 flex-grow">
-              {prices.map((price: PlastisolPrice, idx: number) => (
-                <li
-                  key={idx}
-                  className="flex justify-between items-center gap-x-4 bg-slate-50 p-4 rounded-xl border border-slate-100/50 hover:bg-slate-100 transition-colors"
-                >
-                  <span className="font-sans font-bold tracking-wider uppercase text-slate-500 text-xs">
-                    {price.title}
-                  </span>
-                  <div className="text-right shrink-0">
-                    <span className="block text-mitologi-navy font-sans font-bold text-base tracking-tight whitespace-nowrap">
-                      {price.price || `Rp ${price.short} - ${price.long}`}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Premium/Info Card */}
-          <div className="rounded-2xl md:rounded-3xl p-6 md:p-8 border border-mitologi-navy bg-mitologi-navy shadow-2xl relative z-20 overflow-hidden flex flex-col h-full">
-            {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-mitologi-gold/20 blur-[80px] rounded-full pointer-events-none"></div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center gap-y-4 sm:gap-x-4 mb-4 relative z-10 w-full">
-              <div className="flex items-center gap-x-4 justify-start">
-                <div className="h-10 w-10 shrink-0 bg-white/10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md">
-                  <svg
-                    className="w-5 h-5 text-mitologi-gold"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                    />
-                  </svg>
+        {/* Feature Badges */}
+        {features.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-3 mb-16">
+            {features.map((feature, idx) => (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                key={idx}
+                className="flex items-center gap-2 bg-slate-100/80 backdrop-blur-sm border border-slate-200 px-4 py-2 rounded-full shadow-sm"
+              >
+                <div className="bg-mitologi-gold rounded-full p-0.5">
+                  <CheckCircle2 className="w-4 h-4 text-mitologi-navy" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-sans font-bold text-white tracking-tight">
+                <span className="text-xs md:text-sm font-bold text-mitologi-navy uppercase tracking-tight">
+                  {feature}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Pricing Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {plastisolData.map((pkg: any, idx: number) => (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.1 }}
+              viewport={{ once: true }}
+              key={idx}
+              className="flex flex-col items-center group"
+            >
+              {/* T-Shirt Mockup */}
+              <div className="relative w-full aspect-square mb-4 transition-transform duration-500 group-hover:scale-105">
+                <div className="absolute inset-0 bg-slate-50 rounded-3xl -z-10 group-hover:bg-slate-100 transition-colors" />
+                {pkg.image ? (
+                  <Image
+                    src={storageUrl(pkg.image)}
+                    alt={pkg.title}
+                    fill
+                    className="object-contain p-4 drop-shadow-2xl"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full opacity-20">
+                    <Image
+                      src="/images/logo.png"
+                      alt="Placeholder"
+                      width={100}
+                      height={100}
+                      className="grayscale"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Title Label (Skewed look like flyer) */}
+              <div className="relative w-full mb-6">
+                <div className="bg-mitologi-gold py-2 px-4 rounded-lg transform -skew-x-12 shadow-md">
+                  <div className="transform skew-x-12 text-center">
+                    <h4 className="text-sm font-black text-mitologi-navy leading-tight uppercase">
+                      {pkg.title}
+                    </h4>
+                    {pkg.minOrder && (
+                      <p className="text-[11px] font-black text-mitologi-navy/70 mt-1 uppercase tracking-tighter bg-white/50 px-2 py-0.5 rounded-full inline-block mx-auto">
+                        {pkg.minOrder}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Price Details */}
+              <div className="w-full space-y-2">
+                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Pendek
+                  </span>
+                  <span className="text-lg font-black text-mitologi-navy">
+                    IDR {pkg.short?.toString().toUpperCase().replace(/K$/, '')}K
+                  </span>
+                </div>
+                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Panjang
+                  </span>
+                  <span className="text-lg font-black text-mitologi-navy">
+                    IDR {pkg.long?.toString().toUpperCase().replace(/K$/, '')}K
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Add-ons & Extra Options Section */}
+        {addonsData.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-12">
+            <div className="bg-mitologi-navy rounded-[2rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-mitologi-gold/50 to-transparent opacity-30" />
+              
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                  <CheckCircle2 className="w-6 h-6 text-mitologi-gold" />
+                </div>
+                <h3 className="text-2xl font-black text-white tracking-tight uppercase">
                   Add-ons & Ketentuan
                 </h3>
               </div>
-            </div>
 
-            <p className="mt-4 text-sm leading-relaxed text-slate-300 font-sans font-medium relative z-10 w-full">
-              Tambahan fitur dan informasi penting untuk pesanan Anda.
-            </p>
-
-            <ul
-              role="list"
-              className="mt-8 mb-6 space-y-4 flex-grow relative z-10 w-full pr-1"
-            >
-              {addOns.map((addon: PricingAddon, idx: number) => (
-                <li
-                  key={idx}
-                  className="flex items-start sm:items-center gap-x-3 gap-y-2 w-full flex-wrap sm:flex-nowrap"
-                >
-                  <div className="flex items-start sm:items-center gap-x-3 flex-1 min-w-0">
-                    <svg
-                      className="h-5 w-5 flex-none text-mitologi-gold mt-0.5 sm:mt-0"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-xs sm:text-sm font-sans font-medium text-slate-300 break-words leading-relaxed">
-                      {addon.name}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {addonsData.map((addon: any, idx: number) => (
+                  <div key={idx} className="flex flex-col gap-1 border-l-2 border-mitologi-gold/30 pl-4 py-2">
+                    <span className="text-white font-bold text-sm">{addon.name}</span>
+                    <span className="text-mitologi-gold font-black text-base">
+                      + Rp {addon.price?.toString().toUpperCase().replace(/^\+\s*RP\s*/, '').replace(/\/PCS$/, '')}/pcs
                     </span>
                   </div>
-                  <div className="shrink-0 pl-8 sm:pl-0 mt-1 sm:mt-0">
-                    <span className="inline-block rounded-md border border-white/10 bg-white/10 px-2 py-0.5 text-[10px] sm:text-xs sm:text-sm font-bold tracking-wide text-white whitespace-nowrap">
-                      {addon.price}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 pt-6 sm:pt-8 border-t border-white/10 mt-auto relative z-10 w-full flex-none">
-              <Button
-                asChild
-                size="lg"
-                className="w-full h-auto min-h-[52px] py-1 flex items-center justify-center rounded-full font-sans tracking-wide font-bold bg-mitologi-gold text-mitologi-navy hover:bg-[#E5AA28] shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-center"
-              >
-                <a
-                  href={process.env.NEXT_PUBLIC_WHATSAPP_URL || "#"}
-                >
-                  <span className="w-full text-center leading-tight whitespace-normal max-w-full px-2">
-                    Hubungi Admin Sekarang
-                  </span>
-                </a>
-              </Button>
+                ))}
+              </div>
             </div>
           </div>
+        )}
+
+        {/* Bottom Extra Banner */}
+        {extraOptionsData.length > 0 && (
+          <div className="bg-mitologi-gold rounded-2xl md:rounded-full p-4 md:px-10 shadow-xl flex flex-wrap justify-center items-center gap-y-4 gap-x-8 md:gap-x-12 mb-16 border-2 border-white/20">
+            <span className="text-mitologi-navy font-bold text-xs uppercase tracking-wider bg-white/30 px-3 py-1 rounded-full">
+              Extra Note
+            </span>
+            {extraOptionsData.map((opt: any, idx: number) => (
+              <div key={idx} className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-mitologi-navy rounded-full" />
+                <span className="text-sm font-black text-mitologi-navy">
+                  {opt.title} <span className="font-bold opacity-70">+{opt.price}K</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <div className="flex justify-center">
+          <Button
+            asChild
+            size="lg"
+            className="h-16 px-12 rounded-full bg-mitologi-navy text-white hover:bg-slate-900 shadow-2xl hover:shadow-mitologi-navy/20 transition-all font-black uppercase tracking-widest text-base group"
+          >
+            <a href={process.env.NEXT_PUBLIC_WHATSAPP_URL || "#"}>
+              Hubungi Admin Sekarang
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="ml-3"
+              >
+                →
+              </motion.span>
+            </a>
+          </Button>
         </div>
       </div>
-    </MotionSection>
+    </section>
   );
 }

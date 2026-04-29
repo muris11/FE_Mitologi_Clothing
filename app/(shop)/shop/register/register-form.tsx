@@ -166,7 +166,7 @@ export default function RegisterForm() {
             </div>
             <input
               id="register-name"
-              name="name"
+              name="register-name"
               type="text"
               value={name}
               onChange={(e) => {
@@ -193,7 +193,7 @@ export default function RegisterForm() {
 
         <div>
           <label
-            htmlFor="email"
+            htmlFor="register-email"
             className="block text-[12px] font-sans font-semibold uppercase tracking-[0.16em] text-slate-600 mb-2"
           >
             Alamat Email
@@ -203,8 +203,8 @@ export default function RegisterForm() {
               <EnvelopeIcon className="h-5 w-5 text-slate-400 group-focus-within:text-mitologi-navy transition-colors" />
             </div>
             <input
-              id="email"
-              name="email"
+              id="register-email"
+              name="register-email"
               type="email"
               value={email}
               onChange={(e) => {
@@ -219,7 +219,7 @@ export default function RegisterForm() {
               )}
               placeholder="name@email.com"
               required
-              autoComplete="email"
+              autoComplete="email username"
             />
           </div>
           {fieldErrors.email && (
@@ -231,7 +231,7 @@ export default function RegisterForm() {
 
         <div>
           <label
-            htmlFor="password"
+            htmlFor="register-password"
             className="block text-[12px] font-sans font-semibold uppercase tracking-[0.16em] text-slate-600 mb-2"
           >
             Password
@@ -241,12 +241,12 @@ export default function RegisterForm() {
               <LockClosedIcon className="h-5 w-5 text-slate-400 group-focus-within:text-mitologi-navy transition-colors" />
             </div>
             <input
-              id="password"
-              name="password"
+              id="register-password"
+              name="register-password"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => {
-                setName(e.target.value);
+                setPassword(e.target.value);
                 clearFieldError("password");
               }}
               className={clsx(
@@ -281,7 +281,7 @@ export default function RegisterForm() {
 
         <div>
           <label
-            htmlFor="password_confirmation"
+            htmlFor="register-password-confirmation"
             className="block text-[12px] font-sans font-semibold uppercase tracking-[0.16em] text-slate-600 mb-2"
           >
             Konfirmasi Password
@@ -291,8 +291,8 @@ export default function RegisterForm() {
               <LockClosedIcon className="h-5 w-5 text-slate-400 group-focus-within:text-mitologi-navy transition-colors" />
             </div>
             <input
-              id="password_confirmation"
-              name="password_confirmation"
+              id="register-password-confirmation"
+              name="register-password-confirmation"
               type={showPasswordConfirmation ? "text" : "password"}
               value={passwordConfirmation}
               onChange={(e) => {

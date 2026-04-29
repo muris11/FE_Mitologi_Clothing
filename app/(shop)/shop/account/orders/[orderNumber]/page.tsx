@@ -240,59 +240,61 @@ export default function OrderDetailPage(props: {
       </div>
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Progress Steps */}
-        <div className="mb-8 bg-white rounded-xl border border-slate-200 p-4 md:p-6">
-          <div className="flex items-center justify-between relative">
-            {[
-              { key: 'pending', label: 'Dipesan' },
-              { key: 'paid', label: 'Dibayar' },
-              { key: 'processing', label: 'Diproses' },
-              { key: 'shipped', label: 'Dikirim' },
-              { key: 'delivered', label: 'Sampai' },
-            ].map((step, idx) => {
-              const currentStatusIdx = ['pending', 'paid', 'processing', 'shipped', 'delivered', 'completed'].indexOf(order.status);
-              const isActive = currentStatusIdx >= idx;
-              const isCurrent = ['pending', 'paid', 'processing', 'shipped', 'delivered'].includes(order.status) && 
-                order.status === step.key;
-              const isCompleted = currentStatusIdx > idx || order.status === 'completed';
-              
-              return (
-                <div key={step.key} className="flex items-center flex-1 relative z-10">
-                  <div className="flex flex-col items-center flex-1">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mb-1 transition-colors ${
-                      isCompleted
-                        ? "bg-mitologi-navy text-white"
-                        : isCurrent
-                          ? "bg-mitologi-navy text-white ring-4 ring-mitologi-navy/20"
-                          : "bg-slate-100 text-slate-400 border border-slate-200"
-                    }`}>
-                      {isCompleted ? (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      ) : (
-                        idx + 1
-                      )}
+        {/* Progress Steps - Only show for normal order flow */}
+        {!['cancelled', 'refunded'].includes(order.status) && (
+          <div className="mb-8 bg-white rounded-xl border border-slate-200 p-4 md:p-6">
+            <div className="flex items-center justify-between relative">
+              {[
+                { key: 'pending', label: 'Dipesan' },
+                { key: 'paid', label: 'Dibayar' },
+                { key: 'processing', label: 'Diproses' },
+                { key: 'shipped', label: 'Dikirim' },
+                { key: 'delivered', label: 'Sampai' },
+              ].map((step, idx) => {
+                const currentStatusIdx = ['pending', 'paid', 'processing', 'shipped', 'delivered', 'completed'].indexOf(order.status);
+                const isActive = currentStatusIdx >= idx;
+                const isCurrent = ['pending', 'paid', 'processing', 'shipped', 'delivered'].includes(order.status) && 
+                  order.status === step.key;
+                const isCompleted = currentStatusIdx > idx || order.status === 'completed';
+                
+                return (
+                  <div key={step.key} className="flex items-center flex-1 relative z-10">
+                    <div className="flex flex-col items-center flex-1">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mb-1 transition-colors ${
+                        isCompleted
+                          ? "bg-mitologi-navy text-white"
+                          : isCurrent
+                            ? "bg-mitologi-navy text-white ring-4 ring-mitologi-navy/20"
+                            : "bg-slate-100 text-slate-400 border border-slate-200"
+                      }`}>
+                        {isCompleted ? (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          idx + 1
+                        )}
+                      </div>
+                      <span className={`text-xs font-sans font-medium whitespace-nowrap ${
+                        isActive ? "text-slate-700" : "text-slate-400"
+                      }`}>
+                        {step.label}
+                      </span>
                     </div>
-                    <span className={`text-xs font-sans font-medium whitespace-nowrap ${
-                      isActive ? "text-slate-700" : "text-slate-400"
-                    }`}>
-                      {step.label}
-                    </span>
+                    {idx < 4 && (
+                      <div className="flex-1 h-0.5 mx-2 bg-slate-200 relative">
+                        <div 
+                          className="absolute inset-y-0 left-0 bg-mitologi-navy transition-all duration-500"
+                          style={{ width: isCompleted ? '100%' : isCurrent ? '50%' : '0%' }}
+                        />
+                      </div>
+                    )}
                   </div>
-                  {idx < 4 && (
-                    <div className="flex-1 h-0.5 mx-2 bg-slate-200 relative">
-                      <div 
-                        className="absolute inset-y-0 left-0 bg-mitologi-navy transition-all duration-500"
-                        style={{ width: isCompleted ? '100%' : isCurrent ? '50%' : '0%' }}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content - Left Column */}
@@ -508,7 +510,25 @@ export default function OrderDetailPage(props: {
               </div>
 
               {/* Refund Status */}
-              {order.refundRequestedAt && (
+              {order.status === "refunded" ? (
+                <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 text-emerald-600 rounded-full p-1.5 shrink-0 mt-0.5">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-emerald-800 font-sans">
+                        Refund Selesai
+                      </h4>
+                      <p className="text-xs font-sans text-emerald-700 mt-1">
+                        Dana telah dikembalikan ke metode pembayaran asal.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : order.refundRequestedAt ? (
                 <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <div className="bg-amber-100 text-amber-600 rounded-full p-1.5 shrink-0 mt-0.5">
@@ -526,7 +546,7 @@ export default function OrderDetailPage(props: {
                     </div>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Refund Form */}
               {showRefundForm && (

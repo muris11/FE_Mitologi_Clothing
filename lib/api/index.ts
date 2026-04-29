@@ -116,7 +116,9 @@ function extractData<T>(response: unknown): T {
   const obj = response as Record<string, unknown>;
 
   // Check if response has 'data' field (new standardized format)
-  if ("data" in obj && obj.data !== undefined) {
+  // Only extract if data is not null. If data is null, the top-level message 
+  // might be the primary information (e.g., in action responses).
+  if ("data" in obj && obj.data !== undefined && obj.data !== null) {
     return obj.data as T;
   }
 
@@ -192,7 +194,7 @@ export async function apiFetch<T>(
 
     if (!(headers as Record<string, string>)["Authorization"]) {
       const matchAuth = document.cookie.match(
-        new RegExp("(^| )auth_token=([^;]+)"),
+        new RegExp("(^| )mitologi_auth_token=([^;]+)"),
       );
       if (matchAuth && matchAuth[2]) {
         (headers as Record<string, string>)["Authorization"] =

@@ -18,7 +18,7 @@ export async function signUp(
     const response = await register(name, email, password, password);
 
     if (response?.token) {
-      (await cookies()).set("auth_token", response.token, {
+      (await cookies()).set("mitologi_auth_token", response.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

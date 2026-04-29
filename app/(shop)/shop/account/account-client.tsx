@@ -30,7 +30,7 @@ export default function AccountClient() {
     }
 
     // Fetch orders with auth token from cookie
-    const token = Cookies.get("auth_token");
+    const token = Cookies.get("mitologi_auth_token");
     if (!token) {
       router.replace("/shop/login");
       return;
