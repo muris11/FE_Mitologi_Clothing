@@ -170,23 +170,23 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
         {/* Add-ons & Extra Options Section */}
         {addonsData.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-12">
-            <div className="bg-mitologi-navy rounded-[2rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            <div className="bg-mitologi-navy rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-10 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-mitologi-gold/50 to-transparent opacity-30" />
               
-              <div className="flex items-center gap-4 mb-8">
-                <div className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
-                  <CheckCircle2 className="w-6 h-6 text-mitologi-gold" />
+              <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+                <div className="h-8 w-8 md:h-10 md:w-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                  <CheckCircle2 className="w-4 h-4 md:w-6 md:h-6 text-mitologi-gold" />
                 </div>
-                <h3 className="text-2xl font-black text-white tracking-tight uppercase">
+                <h3 className="text-lg md:text-2xl font-black text-white tracking-tight uppercase">
                   Add-ons & Ketentuan
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {addonsData.map((addon: any, idx: number) => (
-                  <div key={idx} className="flex flex-col gap-1 border-l-2 border-mitologi-gold/30 pl-4 py-2">
-                    <span className="text-white font-bold text-sm">{addon.name}</span>
-                    <span className="text-mitologi-gold font-black text-base">
+                  <div key={idx} className="flex flex-col gap-0.5 md:gap-1 border-l-2 border-mitologi-gold/30 pl-3 md:pl-4 py-1.5 md:py-2">
+                    <span className="text-white font-bold text-xs md:text-sm">{addon.name}</span>
+                    <span className="text-mitologi-gold font-black text-sm md:text-base">
                       + Rp {addon.price?.toString().toUpperCase().replace(/^\+\s*RP\s*/, '').replace(/\/PCS$/, '')}/pcs
                     </span>
                   </div>
@@ -212,26 +212,6 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
             ))}
           </div>
         )}
-
-        {/* CTA */}
-        <div className="flex justify-center">
-          <Button
-            asChild
-            size="lg"
-            className="h-16 px-12 rounded-full bg-mitologi-navy text-white hover:bg-slate-900 shadow-2xl hover:shadow-mitologi-navy/20 transition-all font-black uppercase tracking-widest text-base group"
-          >
-            <a href={process.env.NEXT_PUBLIC_WHATSAPP_URL || "#"}>
-              Hubungi Admin Sekarang
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                className="ml-3"
-              >
-                →
-              </motion.span>
-            </a>
-          </Button>
-        </div>
       </div>
     </section>
   );
