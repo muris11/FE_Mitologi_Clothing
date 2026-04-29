@@ -95,7 +95,7 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
         )}
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8 mb-16">
           {plastisolData.map((pkg: any, idx: number) => (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -106,14 +106,14 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
               className="flex flex-col items-center group"
             >
               {/* T-Shirt Mockup */}
-              <div className="relative w-full aspect-square mb-4 transition-transform duration-500 group-hover:scale-105">
-                <div className="absolute inset-0 bg-slate-50 rounded-3xl -z-10 group-hover:bg-slate-100 transition-colors" />
+              <div className="relative w-full aspect-square mb-3 md:mb-4 transition-transform duration-500 group-hover:scale-105">
+                <div className="absolute inset-0 bg-slate-50 rounded-2xl md:rounded-3xl -z-10 group-hover:bg-slate-100 transition-colors" />
                 {pkg.image ? (
                   <Image
                     src={storageUrl(pkg.image)}
                     alt={pkg.title}
                     fill
-                    className="object-contain p-4 drop-shadow-2xl"
+                    className="object-contain p-2 md:p-4 drop-shadow-xl md:drop-shadow-2xl"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full opacity-20">
@@ -122,21 +122,21 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
                       alt="Placeholder"
                       width={100}
                       height={100}
-                      className="grayscale"
+                      className="grayscale w-12 h-12 md:w-24 md:h-24"
                     />
                   </div>
                 )}
               </div>
 
               {/* Title Label (Skewed look like flyer) */}
-              <div className="relative w-full mb-6">
-                <div className="bg-mitologi-gold py-2 px-4 rounded-lg transform -skew-x-12 shadow-md">
-                  <div className="transform skew-x-12 text-center">
-                    <h4 className="text-sm font-black text-mitologi-navy leading-tight uppercase">
+              <div className="relative w-full mb-4 md:mb-6">
+                <div className="bg-mitologi-gold py-1.5 px-1.5 md:py-2 md:px-4 rounded-lg transform -skew-x-6 md:-skew-x-12 shadow-sm md:shadow-md">
+                  <div className="transform skew-x-6 md:skew-x-12 text-center flex flex-col justify-center items-center min-h-[36px] md:min-h-0">
+                    <h4 className="text-[10px] sm:text-xs md:text-sm font-black text-mitologi-navy leading-tight uppercase line-clamp-2">
                       {pkg.title}
                     </h4>
                     {pkg.minOrder && (
-                      <p className="text-[11px] font-black text-mitologi-navy/70 mt-1 uppercase tracking-tighter bg-white/50 px-2 py-0.5 rounded-full inline-block mx-auto">
+                      <p className="text-[8px] md:text-[11px] font-black text-mitologi-navy/70 mt-0.5 md:mt-1 uppercase tracking-tighter bg-white/50 px-1.5 md:px-2 py-0.5 rounded-full inline-block mx-auto leading-none">
                         {pkg.minOrder}
                       </p>
                     )}
@@ -145,20 +145,20 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
               </div>
 
               {/* Price Details */}
-              <div className="w-full space-y-2">
-                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <div className="w-full space-y-1.5 md:space-y-2">
+                <div className="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-2 md:p-3 rounded-lg md:rounded-xl border border-slate-100 gap-0.5 sm:gap-2">
+                  <span className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-left">
                     Pendek
                   </span>
-                  <span className="text-lg font-black text-mitologi-navy">
+                  <span className="text-[11px] sm:text-sm md:text-lg font-black text-mitologi-navy text-center sm:text-right">
                     IDR {pkg.short?.toString().toUpperCase().replace(/K$/, '')}K
                   </span>
                 </div>
-                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-2 md:p-3 rounded-lg md:rounded-xl border border-slate-100 gap-0.5 sm:gap-2">
+                  <span className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-left">
                     Panjang
                   </span>
-                  <span className="text-lg font-black text-mitologi-navy">
+                  <span className="text-[11px] sm:text-sm md:text-lg font-black text-mitologi-navy text-center sm:text-right">
                     IDR {pkg.long?.toString().toUpperCase().replace(/K$/, '')}K
                   </span>
                 </div>
