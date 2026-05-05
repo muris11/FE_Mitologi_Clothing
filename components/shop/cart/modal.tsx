@@ -31,7 +31,6 @@ function shouldBypassImageOptimization(src: string): boolean {
     const imageUrl = new URL(src);
     const host = imageUrl.hostname.toLowerCase();
     
-    // Hosts from environment variables
     const bypassHosts = [
       process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN?.replace("https://", ""),
       process.env.NEXT_PUBLIC_UNSPLASH_ORIGIN?.replace("https://", ""),
@@ -44,7 +43,6 @@ function shouldBypassImageOptimization(src: string): boolean {
       return true;
     }
 
-    // AWS S3 buckets are often used for direct serving
     if (host.endsWith(".amazonaws.com")) return true;
 
     return false;
@@ -144,10 +142,8 @@ export default function CartModal() {
                       new URLSearchParams(merchandiseSearchParams),
                     );
 
-                    // Use item.id if available (unique per line), otherwise fallback to merchandise.id and index composite
                     const itemKey = item.id || `${item.merchandise.id}-${i}`;
 
-                    // Resolved Image URL via storageUrl helper
                     const imageUrl = storageUrl(item.merchandise.product.featuredImage?.url);
 
                     return (

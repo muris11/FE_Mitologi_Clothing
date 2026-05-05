@@ -20,7 +20,6 @@ import {
 } from "react";
 import { useToast } from "components/ui/ultra-quality-toast";
 
-// ML Interaction tracking for learning
 interface PendingInteraction {
   productId: number;
   action: "cart" | "purchase";
@@ -65,10 +64,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { addToast } = useToast();
 
-  // ML Learning: Track cart/purchase interactions
   const pendingInteractionsRef = useRef<PendingInteraction[]>([]);
 
-  // Load pending interactions from localStorage
   useEffect(() => {
     const stored = localStorage.getItem(INTERACTION_STORAGE_KEY);
     if (stored) {
@@ -76,12 +73,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save interactions to localStorage
   const saveInteractions = useCallback(() => {
     localStorage.setItem(INTERACTION_STORAGE_KEY, JSON.stringify(pendingInteractionsRef.current));
   }, []);
 
-  // Track interaction for ML learning
   const trackInteraction = useCallback((productId: number, action: "cart" | "purchase") => {
     pendingInteractionsRef.current.push({
       productId,
@@ -91,7 +86,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     saveInteractions();
   }, [saveInteractions]);
 
-  // Send interactions batch to API
   const sendInteractionsBatch = useCallback(async () => {
     if (pendingInteractionsRef.current.length === 0) return;
 
@@ -112,13 +106,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }),
       });
     } catch (error) {
-      // Restore failed interactions
       pendingInteractionsRef.current = [...batch, ...pendingInteractionsRef.current];
       saveInteractions();
     }
   }, [saveInteractions]);
 
-  // Setup batch sending interval
   useEffect(() => {
     const interval = setInterval(sendInteractionsBatch, BATCH_SEND_INTERVAL);
     return () => {
@@ -138,7 +130,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       setCart(cartData);
     } catch (error) {
-      // Silent fail
     } finally {
       setIsLoading(false);
     }
@@ -148,10 +139,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     refreshCart();
   }, []);
 
-  // Listen for auth state changes (login/logout) to refresh cart
   useEffect(() => {
     const handleAuthChange = () => {
-      // Small delay to allow auth state to settle
       setTimeout(() => {
         refreshCart();
       }, 100);
@@ -172,9 +161,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     const previousCart = cart; // Store previous cart for rollback
 
-    // --- Optimistic UI Update ---
     if (cart && productDetails) {
-      // Very rough optimistic item structure to make the UI tick instantly
       const optimisticLineItem = {
         id: `temp-${Date.now()}`,
         quantity,
@@ -204,7 +191,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
       openCart();
     }
-    // ----------------------------
 
     try {
       let cartId = Cookies.get("cartSessionId");
@@ -212,7 +198,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (!cartId) {
         currentCart = await createCart();
-        // Prefer UUID sessionId for stable cart merging on login; fall back to integer id
         cartId = currentCart.sessionId || currentCart.id;
         if (cartId) {
           Cookies.set("cartSessionId", cartId, {
@@ -234,7 +219,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           variant: "success",
           title: "Produk berhasil ditambahkan ke keranjang",
         });
-        // Track cart interaction for ML learning
         if (productDetails?.id) {
           trackInteraction(Number(productDetails.id), "cart");
         }
@@ -255,12 +239,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     const previousCart = cart; // Rollback point
 
-    // --- Optimistic UI Update ---
     if (cart) {
       setCart({
         ...cart,
         lines: cart.lines.filter((line) => line.id !== lineId),
-        // Accurate total count requires recalculation, ignoring for simple optimisim
       });
     }
 
@@ -276,7 +258,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           });
         } catch (error: unknown) {
           const err = error as UnknownError;
-          // If item not found (404) or already deleted, just refresh cart
           if (
             err?.status === 404 ||
             err?.message?.includes("No query results")
@@ -307,7 +288,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     const previousCart = cart;
 
-    // --- Optimistic UI Update ---
     if (cart) {
       setCart({
         ...cart,
@@ -327,7 +307,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           setCart(updatedCart);
         } catch (error: unknown) {
           const err = error as UnknownError;
-          // If item not found (404) or already deleted, just refresh cart
           if (
             err?.status === 404 ||
             err?.message?.includes("No query results")

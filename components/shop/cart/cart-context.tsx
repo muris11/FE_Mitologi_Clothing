@@ -132,7 +132,6 @@ function createEmptyCart(): Cart {
 function cartReducer(state: Cart | undefined, action: CartAction): Cart {
   let currentCart = state || createEmptyCart();
 
-  // Ensure lines exists to prevent runtime crashes with malformed cart data
   if (!currentCart.lines) {
     currentCart = {
       ...currentCart,

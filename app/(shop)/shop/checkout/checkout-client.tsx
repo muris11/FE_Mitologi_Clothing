@@ -21,16 +21,13 @@ export default function CheckoutClient() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Wait for auth to finish loading
     if (authLoading) return;
 
-    // If not authenticated, redirect to login
     if (!isAuthenticated || !user) {
       router.replace("/shop/login?redirect=/shop/checkout");
       return;
     }
 
-    // Fetch cart
     const cartId = Cookies.get("cartSessionId");
     if (!cartId) {
       router.replace("/shop");
@@ -53,7 +50,6 @@ export default function CheckoutClient() {
       });
   }, [authLoading, isAuthenticated, user, router]);
 
-  // Loading state
   if (authLoading || loading || !cart || !user) {
     return (
       <div className="bg-slate-50 min-h-screen pt-12 pb-32">

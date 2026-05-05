@@ -48,7 +48,6 @@ async function handleAuthSuccess(
 ) {
   setUser(result.user);
 
-  // Store the Bearer token for Next.js Server Components
   if (result.token) {
     Cookies.set("mitologi_auth_token", result.token, {
       expires: 30,
@@ -57,7 +56,6 @@ async function handleAuthSuccess(
       path: "/",
     });
 
-    // Native fallback: ensure cookie is always set even if js-cookie fails
     if (!Cookies.get("mitologi_auth_token")) {
       const expires = new Date(
         Date.now() + 30 * 24 * 60 * 60 * 1000,
@@ -67,7 +65,6 @@ async function handleAuthSuccess(
     }
   }
 
-  // Update cart cookie if backend returned a merged/new cart ID
   if (result.cartId) {
     Cookies.set("cartSessionId", result.cartId, {
       expires: 7,
@@ -77,8 +74,6 @@ async function handleAuthSuccess(
     });
   }
 
-  // Notify cart and other components to refresh their state
-  // CartProvider listens to this and will call refreshCart()
   window.dispatchEvent(new Event("auth:changed"));
 }
 
@@ -137,7 +132,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password_confirmation,
         currentCartId,
       );
-      // Removed handleAuthSuccess to prevent automatic login after registration
     } catch (error) {
       throw error;
     } finally {
@@ -155,8 +149,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         variant: "success",
       });
     } catch (error) {
-      // If it's a 401, they are already logged out on the server or the token is invalid,
-      // so we don't need to show an error to the user.
       if (error instanceof ApiError && error.status === 401) {
         addToast({
           title: "Berhasil",

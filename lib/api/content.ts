@@ -90,7 +90,6 @@ export async function getSiteSettings(): Promise<SiteSettings | undefined> {
  */
 export function getTeamMemberPhotoUrl(id: string | number): string {
   const apiUrl = ENDPOINTS.TEAM_MEMBER_PHOTO(id);
-  // Use backend URL if available, otherwise relative
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
   return backendUrl ? `${backendUrl.replace(/\/+$/, "")}${apiUrl}` : apiUrl;
 }

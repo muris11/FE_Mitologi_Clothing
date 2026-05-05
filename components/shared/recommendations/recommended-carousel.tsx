@@ -10,7 +10,6 @@ export async function RecommendedCarousel() {
     return null;
   }
 
-  // Fetch recommendations
   const products = await getRecommendations();
 
   if (!products?.length) return null;

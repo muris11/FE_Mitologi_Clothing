@@ -21,5 +21,4 @@ export function KontakHero() {
   );
 }
 
-// Legacy/alias export used by some pages
 export const HeroSection = KontakHero;

@@ -17,25 +17,20 @@ export async function RecommendationsSection() {
   let isPersonalized = false;
 
   if (user) {
-    // Logged-in user: get AI-powered personalized recommendations
     try {
       products = await getRecommendations();
       isPersonalized = products.length > 0;
     } catch (e) {
-      // Silent fail, will fallback to best sellers
     }
   }
 
-  // Fallback: show best sellers for guests or if no personalized recommendations
   if (products.length === 0) {
     try {
       products = await getBestSellers(8);
     } catch (e) {
-      // Silent fail
     }
   }
 
-  // If still no products, don't render the section
   if (products.length === 0) {
     return null;
   }

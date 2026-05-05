@@ -27,7 +27,6 @@ export function SizeCalculator() {
     else if (h >= 185 && h < 190) sizeByHeight = "3XL";
     else sizeByHeight = "4XL";
 
-    // A simple mapping to determine the larger size
     const sizeRank: Record<string, number> = {
       S: 1,
       M: 2,
@@ -41,7 +40,6 @@ export function SizeCalculator() {
     const rankW = sizeRank[sizeByWeight] ?? 1;
     const rankH = sizeRank[sizeByHeight] ?? 1;
 
-    // Pick the larger recommended size to ensure it fits
     const finalRank = Math.max(rankW, rankH);
     const finalSize = Object.keys(sizeRank).find(
       (key) => sizeRank[key] === finalRank,

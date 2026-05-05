@@ -24,13 +24,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const revalidatedTags: string[] = [];
     const revalidatedPaths: string[] = [];
 
-    // Revalidate by tags (for fetch cache)
     for (const tag of tags) {
       try {
         revalidateTag(tag, 'max');
         revalidatedTags.push(tag);
 
-        // Also revalidate related paths based on tag
         switch (tag) {
           case "products":
           case "best-sellers":
@@ -67,7 +65,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             revalidatedPaths.push("/[page]");
             break;
           default:
-            // For any other tag, revalidate root
             revalidatePath("/", "layout");
             revalidatedPaths.push("/ (layout)");
         }
@@ -76,7 +73,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     }
 
-    // Revalidate specific paths if provided
     for (const path of paths) {
       try {
         revalidatePath(path, "page");
@@ -86,7 +82,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     }
 
-    // If no tags or paths provided, revalidate everything
     if (tags.length === 0 && paths.length === 0) {
       revalidatePath("/", "layout");
       return NextResponse.json({

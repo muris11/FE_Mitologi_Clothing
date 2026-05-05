@@ -48,7 +48,6 @@ function parseMapsEmbed(rawValue?: string): string {
   const defaultEmbed = "";
   if (!rawValue) return defaultEmbed;
 
-  // Extract src from iframe HTML if present
   const srcMatch = rawValue.match(/src=["']([^"']+)["']/);
   let url = srcMatch?.[1] || rawValue;
 
@@ -56,16 +55,13 @@ function parseMapsEmbed(rawValue?: string): string {
     process.env.NEXT_PUBLIC_GOOGLE_MAPS_BASE_URL ||
     "https://www.google.com/maps";
 
-  // Handle coordinates (e.g., -6.438597, 108.287315)
   if (/^-?\d+\.?\d*\s*,\s*-?\d+\.?\d*$/.test(url.trim())) {
     return `${mapsBase}?q=${url.replace(/\s/g, "")}&output=embed`;
   }
 
-  // Convert old Google Maps embed URL format to new format
   const mapsOrigin =
     process.env.NEXT_PUBLIC_MAPS_GOOGLE_ORIGIN || "https://maps.google.com";
   if (url.includes(mapsOrigin) && url.includes("maps?")) {
-    // Extract parameters from old format (handle &amp; encoding)
     const qMatch = url.match(/[?&](?:amp;)?q=([^&]+)/);
     const query = qMatch && qMatch[1] ? decodeURIComponent(qMatch[1]) : "";
     if (query) {
@@ -73,7 +69,6 @@ function parseMapsEmbed(rawValue?: string): string {
     }
   }
 
-  // If already new format or other valid URL
   if (url.includes("://")) {
     return url;
   }
@@ -98,7 +93,6 @@ export function KontakSection({ settings }: KontakSectionProps) {
     contact?.operatingHoursWeekend || "Tutup (Online Chat Only)";
   const mapsEmbed = parseMapsEmbed(contact?.contactMapsEmbed);
 
-  // Social media links from DB (only show if enabled)
   const socials = [
     {
       type: "instagram",

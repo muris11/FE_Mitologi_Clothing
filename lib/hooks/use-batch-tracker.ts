@@ -16,7 +16,6 @@ const BATCH_INTERVAL = 30000; // 30 seconds
 export function useBatchTracker() {
   const interactionsRef = useRef<Interaction[]>([]);
 
-  // Load pending interactions from localStorage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
@@ -24,12 +23,10 @@ export function useBatchTracker() {
     }
   }, []);
 
-  // Save to localStorage
   const saveToStorage = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(interactionsRef.current));
   }, []);
 
-  // Add interaction
   const track = useCallback(
     (
       productId: number,
@@ -48,7 +45,6 @@ export function useBatchTracker() {
     [saveToStorage],
   );
 
-  // Send batch to API
   const sendBatch = useCallback(async () => {
     if (interactionsRef.current.length === 0) return;
 
@@ -68,13 +64,11 @@ export function useBatchTracker() {
         }),
       });
     } catch (error) {
-      // Restore failed interactions
       interactionsRef.current = [...batch, ...interactionsRef.current];
       saveToStorage();
     }
   }, [saveToStorage]);
 
-  // Setup interval
   useEffect(() => {
     const interval = setInterval(sendBatch, BATCH_INTERVAL);
     return () => {

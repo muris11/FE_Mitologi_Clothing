@@ -30,7 +30,6 @@ export function ProductionFacilities({
 
         <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto auto-rows-[300px]">
           {facilities.map((facility, index) => {
-            // Create a varied grid layout: some items might span 2 columns if conditions match
             const isLarge = index === 0 || index === 3;
 
             return (

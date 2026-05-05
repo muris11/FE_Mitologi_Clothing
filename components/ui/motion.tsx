@@ -5,9 +5,6 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 
 const easeOutExpo = [0.25, 1, 0.5, 1] as const;
 
-// ─────────────────────────────────────────────────────────────
-// Animation Variants
-// ─────────────────────────────────────────────────────────────
 
 export const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -73,9 +70,6 @@ export const staggerItem = {
   },
 };
 
-// ─────────────────────────────────────────────────────────────
-// Reusable Motion Components
-// ─────────────────────────────────────────────────────────────
 
 interface MotionSectionProps extends HTMLMotionProps<"section"> {
   children: React.ReactNode;
@@ -303,9 +297,6 @@ export const MotionNumber = ({
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// Export variants for custom usage
-// ─────────────────────────────────────────────────────────────
 
 export { motion };
 export default motion;

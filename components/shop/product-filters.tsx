@@ -30,11 +30,9 @@ export function ProductFilters({
     }
   }
 
-  // Price Filter State
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
 
-  // Update local state when URL params change (e.g. on reset)
   useEffect(() => {
     setMinPrice(searchParams.get("minPrice") || "");
     setMaxPrice(searchParams.get("maxPrice") || "");

@@ -38,5 +38,4 @@ export function PortofolioHero() {
   );
 }
 
-// Legacy alias used by pages that import `HeroSection`
 export const HeroSection = PortofolioHero;

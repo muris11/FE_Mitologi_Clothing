@@ -12,14 +12,12 @@ export function sanitizeHtmlContent(html: string): string {
 
   return sanitizeHtmlLib(html, {
     allowedTags: [
-      // Headers
       "h1",
       "h2",
       "h3",
       "h4",
       "h5",
       "h6",
-      // Text formatting
       "p",
       "br",
       "hr",
@@ -32,17 +30,14 @@ export function sanitizeHtmlContent(html: string): string {
       "strike",
       "sub",
       "sup",
-      // Lists
       "ul",
       "ol",
       "li",
       "dl",
       "dt",
       "dd",
-      // Links and media
       "a",
       "img",
-      // Tables
       "table",
       "thead",
       "tbody",
@@ -53,7 +48,6 @@ export function sanitizeHtmlContent(html: string): string {
       "caption",
       "colgroup",
       "col",
-      // Semantic elements
       "article",
       "section",
       "nav",
@@ -73,13 +67,11 @@ export function sanitizeHtmlContent(html: string): string {
       "small",
       "del",
       "ins",
-      // Code
       "pre",
       "code",
       "kbd",
       "samp",
       "var",
-      // Other
       "div",
       "span",
     ],
@@ -124,5 +116,4 @@ export function sanitizePlainText(text: string): string {
   });
 }
 
-// Legacy export for backward compatibility
 export { sanitizeHtmlContent as sanitizeHtml };

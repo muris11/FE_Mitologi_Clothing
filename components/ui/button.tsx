@@ -25,7 +25,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    // Base styles: Corporate Trust
     const baseStyles =
       "inline-flex items-center justify-center whitespace-nowrap rounded-full font-bold text-sm transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mitologi-navy focus-visible:ring-offset-2";
 

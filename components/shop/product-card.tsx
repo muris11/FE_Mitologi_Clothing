@@ -31,13 +31,11 @@ export const ProductCard = memo(function ProductCard({
   const [isAdding, setIsAdding] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Logic for variants and stock (guard against undefined variants from recommendation API)
   const variants = product.variants ?? [];
   const hasMultipleVariants = variants.length > 1;
   const firstVariant = variants[0];
   const totalStock = variants.reduce((acc, v) => acc + (v.stock || 0), 0);
 
-  // Variant label (e.g. "BLACK NT" or "3 Varian")
   const variantTitle = hasMultipleVariants
     ? `${variants.length} Varian`
     : firstVariant?.title !== "Default Title"
@@ -71,11 +69,9 @@ export const ProductCard = memo(function ProductCard({
     }
   };
 
-  // Calculate discount and price range
   const minPrice = parseFloat(product.priceRange.minVariantPrice.amount);
   const maxPrice = parseFloat(product.priceRange.maxVariantPrice.amount);
 
-  // Price range: "Rp131rb - Rp149rb"
   const isPriceRange = minPrice !== maxPrice;
 
   const imageUrl = storageUrl(product.featuredImage?.url);
@@ -85,7 +81,6 @@ export const ProductCard = memo(function ProductCard({
   const hasRating =
     typeof product.averageRating === "number" && product.averageRating > 0;
 
-  // Discount badge logic (if we have compareAt or implicit)
   const isSale = tags.includes("sale") || tags.includes("diskon");
 
   return (
@@ -228,7 +223,6 @@ export const ProductCard = memo(function ProductCard({
   );
 });
 
-// Skeleton Loading for Product Card
 export function ProductCardSkeleton() {
   return (
     <div className="flex flex-col rounded-2xl overflow-hidden h-full">
@@ -244,7 +238,6 @@ export function ProductCardSkeleton() {
   );
 }
 
-// Skeleton Grid for Shop Page
 export function ProductGridSkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">

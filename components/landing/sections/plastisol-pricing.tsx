@@ -8,7 +8,6 @@ import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 
-// Local type extension for pricing settings
 type PricingSettings = SiteSettings & {
   beranda?: {
     pricingPlastisolData?: any;
@@ -32,7 +31,6 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
     minOrder: item.minOrder || item.min_order,
   }));
 
-  // Removed global minOrder, now using per-package min_order
 
   const addonsDataRaw = settings?.beranda?.pricingAddonsData;
   const addonsData = Array.isArray(addonsDataRaw)

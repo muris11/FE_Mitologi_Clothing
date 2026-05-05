@@ -85,11 +85,9 @@ export function AddToCart({
 
     setIsPending(true);
     try {
-      // Pass the product details down to `useCart` so it can optimistically render the cart UI immediately
       await addToCart(selectedVariantId, 1, product);
     } catch (e: unknown) {
       const err = e as Error;
-      // Silent fail - useCart handles toast notification
     } finally {
       setIsPending(false);
     }

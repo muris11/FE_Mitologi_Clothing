@@ -52,7 +52,6 @@ export function AccountDashboard({
     { id: "settings" as const, label: "Pengaturan", icon: Cog6ToothIcon },
   ];
 
-  // Calculate Stats
   const totalOrders = orders.length;
   const totalSpend = orders
     .filter((o) =>

@@ -175,7 +175,6 @@ export async function getRelatedProducts(
       return recommended.slice(0, 4);
     }
   } catch {
-    // Fallback to random products if recommendation API fails
   }
 
   try {

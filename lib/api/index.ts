@@ -70,8 +70,6 @@ function resolveDynamicHost(url: string): string {
 export function resolveApiBaseUrl(): string {
   const isBrowser = typeof window !== "undefined";
 
-  // Di browser (client-side), gunakan path relatif /api yang diproksi oleh Next.js
-  // untuk menghindari masalah CORS.
   if (isBrowser) {
     return "/api";
   }
@@ -79,7 +77,6 @@ export function resolveApiBaseUrl(): string {
   const publicApiUrl = process.env.NEXT_PUBLIC_API_URL;
   const internalApiUrl = process.env.INTERNAL_API_URL;
 
-  // Di server (SSR/ISR), gunakan internal URL untuk komunikasi langsung ke backend.
   const resolved = internalApiUrl || publicApiUrl;
 
   if (!resolved) {
@@ -115,14 +112,10 @@ function extractData<T>(response: unknown): T {
 
   const obj = response as Record<string, unknown>;
 
-  // Check if response has 'data' field (new standardized format)
-  // Only extract if data is not null. If data is null, the top-level message 
-  // might be the primary information (e.g., in action responses).
   if ("data" in obj && obj.data !== undefined && obj.data !== null) {
     return obj.data as T;
   }
 
-  // Fallback: return the whole response (for backward compatibility)
   return response as T;
 }
 
@@ -137,9 +130,7 @@ function normalizeKeys<T>(obj: unknown): T {
   if (obj !== null && typeof obj === "object" && !(obj instanceof Date)) {
     const result: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
-      // Convert snake_case to camelCase
       const camelKey = key.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-      // Keep both original and camelCase key so existing code isn't broken
       result[key] = normalizeKeys(value);
       if (camelKey !== key) {
         result[camelKey] = result[key];
@@ -175,7 +166,6 @@ export async function apiFetch<T>(
     ...options.headers,
   };
 
-  // Ensure cookies are sent (important for cartSessionId and Sanctum)
   if (!options.credentials) {
     (options as RequestInit).credentials = "include";
   }
@@ -206,7 +196,6 @@ export async function apiFetch<T>(
   const nextConfig: NextFetchConfig = {};
   if (tags) nextConfig.tags = tags;
 
-  // User explicitly wants everything to be 100% realtime instantly.
   const fetchCacheOption = options.cache || "no-store";
 
   try {
@@ -227,12 +216,10 @@ export async function apiFetch<T>(
     if (!res.ok) {
       const errorBody = await res.text();
 
-      // For 404, return undefined silently - callers handle "not found" gracefully
       if (res.status === 404) {
         return undefined as unknown as T;
       }
 
-      // Try to parse as JSON for structured errors
       try {
         const errorJson = JSON.parse(errorBody) as ApiErrorResponse;
         let errorMessage: string;
@@ -252,7 +239,6 @@ export async function apiFetch<T>(
 
         throw new ApiError(errorMessage, res.status, errorCode, errorDetails);
       } catch (e) {
-        // If parsing fails, throw generic error
         if (e instanceof ApiError) throw e;
         const errorSnippet = errorBody.slice(0, 300);
         throw new ApiError(
@@ -273,9 +259,7 @@ export async function apiFetch<T>(
 
     try {
       const rawData = await res.json();
-      // Extract data from standardized response format { data: T, message?: string }
       const extractedData = extractData(rawData);
-      // Normalize keys (snake_case to camelCase)
       return normalizeKeys<T>(extractedData);
     } catch (jsonError) {
       throw new ApiError(
@@ -284,11 +268,9 @@ export async function apiFetch<T>(
       );
     }
   } catch (error) {
-    // Silently handle all API errors - no console logging
     if (error instanceof ApiError) {
       throw error;
     }
-    // Network errors are thrown as 500 ApiError, caller should handle if needed.
     throw new ApiError(
       `Network error or invalid JSON response: ${error instanceof Error ? error.message : String(error)} (${method} ${url})`,
       500,

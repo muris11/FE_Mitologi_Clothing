@@ -29,19 +29,16 @@ export function ProductDescription({ product }: { product: Product }) {
   const { addToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
-  // Determine the currently matched variant directly from searchParams
   const matchedVariant = product.variants.find((variant) => {
     const selectedOptions = Array.isArray(variant.selectedOptions)
       ? variant.selectedOptions
       : [];
-    // If all required options are present in the URL, this variant matches
     const allOptionsMatch = selectedOptions.every(
       (opt) => searchParams.get(opt.name.toLowerCase()) === opt.value,
     );
     return allOptionsMatch;
   });
 
-  // Track the previously matched variant ID to reset quantity on change
   const [prevVariantId, setPrevVariantId] = useState<string | undefined>(
     undefined,
   );
@@ -95,14 +92,12 @@ export function ProductDescription({ product }: { product: Product }) {
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [hasMultipleSelectableVariants, product.variants, router, searchParams]);
 
-  // Track view when component mounts
   useEffect(() => {
     if (product.id) {
       track(Number(product.id), "view");
     }
   }, [product.id, track]);
 
-  // Calculate discount if applicable
   const minPrice = parseFloat(product.priceRange.minVariantPrice.amount);
   const maxPrice = parseFloat(product.priceRange.maxVariantPrice.amount);
   const hasDiscount = minPrice < maxPrice;
@@ -111,7 +106,6 @@ export function ProductDescription({ product }: { product: Product }) {
   const handleQuantityChange = (type: "plus" | "minus") => {
     if (type === "plus") {
       setQuantity((prev) => {
-        // Check stock limit if available
         if (
           matchedVariant?.stock !== undefined &&
           prev >= matchedVariant.stock
@@ -135,7 +129,6 @@ export function ProductDescription({ product }: { product: Product }) {
     startTransition(async () => {
       try {
         await addToCart(variantId, quantity);
-        // Optional: Show success toast or open cart
       } catch (e: unknown) {
         const err = e as Error;
         addToast({

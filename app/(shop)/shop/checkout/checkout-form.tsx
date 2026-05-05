@@ -44,7 +44,6 @@ export default function CheckoutForm({
   );
   const [addresses, setAddresses] = useState<Address[]>(user.addresses || []);
 
-  // Set default selected address (primary or first)
   useEffect(() => {
     if (addresses.length > 0) {
       const primary = addresses.find((a) => a.isPrimary);
@@ -126,7 +125,6 @@ export default function CheckoutForm({
               const { confirmOrderPayment } = await import("lib/api");
               await confirmOrderPayment(orderNumber);
             } catch (e) {
-              // Silent fail
             }
             Cookies.remove("cartSessionId");
             window.dispatchEvent(new Event("auth:changed"));

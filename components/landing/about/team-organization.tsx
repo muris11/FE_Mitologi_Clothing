@@ -41,7 +41,6 @@ const TeamCard = ({
 );
 
 export function TeamOrganization() {
-  // Currently team members are not fetched from DB, hiding this section to prevent hardcoded dummy data
   return null;
 
   return (

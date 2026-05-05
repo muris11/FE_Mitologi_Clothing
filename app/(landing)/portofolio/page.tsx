@@ -28,7 +28,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PortofolioPage() {
-  // Fetch ALL portfolio items (no limit) — not landing-page which limits to 8
   const portfolios = await getPortfolios();
 
   return (

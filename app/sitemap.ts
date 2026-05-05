@@ -56,7 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       await Promise.all([collectionsPromise, productsPromise, pagesPromise])
     ).flat();
   } catch (error) {
-    // Silent fail - use static routes only
   }
 
   return [...routesMap, ...fetchedRoutes];

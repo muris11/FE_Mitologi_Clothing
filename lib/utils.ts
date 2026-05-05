@@ -36,7 +36,6 @@ export const validateEnvironmentVariables = () => {
   });
 
   if (missingEnvironmentVariables.length) {
-    // Missing environment variables - check .env.example for reference
   }
 };
 
@@ -77,7 +76,6 @@ export const normalizeTags = (tags?: string[] | string | null): string[] => {
   if (!tags) return [];
   if (Array.isArray(tags)) return tags;
   if (typeof tags === "string") {
-    // Accept comma-separated strings (API sometimes returns a CSV string)
     return tags
       .split(",")
       .map((t) => t.trim())

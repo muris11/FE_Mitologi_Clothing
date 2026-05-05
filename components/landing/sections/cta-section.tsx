@@ -3,7 +3,6 @@ import Link from "next/link";
 import { MotionSection } from "components/ui/motion";
 
 export function CTASection({ cta }: { cta?: CtaData }) {
-  // Default fallback if no CTA data
   const title = cta?.title || "";
   const subtitle = cta?.subtitle || "";
   const buttonText = cta?.buttonText || "";

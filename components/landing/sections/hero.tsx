@@ -13,7 +13,6 @@ export function Hero({ slides = [] }: { slides?: HeroSlide[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Parallax effect for decorative orbs
   const { scrollY } = useScroll();
   const orb1Y = useTransform(scrollY, [0, 500], [0, 100]);
   const orb2Y = useTransform(scrollY, [0, 500], [0, -100]);

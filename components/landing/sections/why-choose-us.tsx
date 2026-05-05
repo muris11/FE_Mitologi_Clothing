@@ -14,7 +14,6 @@ import {
 import { SiteSettings } from "lib/api/types";
 
 export function WhyChooseUs({ settings }: { settings?: SiteSettings }) {
-  // Parse guarantees data from settings
   const guarantees =
     settings?.guaranteesData && settings.guaranteesData.length > 0
       ? settings.guaranteesData.map((g, i) => ({

@@ -1,5 +1,3 @@
-// Direct imports to avoid circular dependency
-// DO NOT import from './index' because index.ts exports from this file
 import { apiFetch } from "./index";
 import { ENDPOINTS } from "./endpoints";
 import type { Address } from "./types";

@@ -13,8 +13,6 @@ export async function signUp(
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // Register function expects password confirmation.
-    // For simplicity, we send the same password twice as confirmation.
     const response = await register(name, email, password, password);
 
     if (response?.token) {
@@ -27,8 +25,6 @@ export async function signUp(
     }
   } catch (error) {
     if (error instanceof Error) {
-      // Simple error handling for now.
-      // In reality, we should parse the error message if it's JSON.
       if (error.message.includes("422")) {
         return "Email is already taken or invalid data.";
       }

@@ -27,8 +27,6 @@ export async function generateMetadata({
   if (searchValue) {
     title = `Pencarian: ${searchValue}`;
   } else if (categoryHandle) {
-    // We'd ideally fetch the category name here, but handle is a decent fallback
-    // Proper way: fetch category details. For now, capitalizing handle.
     const catName =
       typeof categoryHandle === "string"
         ? categoryHandle.charAt(0).toUpperCase() + categoryHandle.slice(1)
@@ -99,7 +97,6 @@ async function ProductList({
     user ? getRecommendations() : Promise.resolve([]),
   ]);
 
-  // Fallback if API fails
   const safeProductsData = productsData || {
     products: [],
     pagination: { total: 0, perPage: limit, currentPage: page, lastPage: 1 },

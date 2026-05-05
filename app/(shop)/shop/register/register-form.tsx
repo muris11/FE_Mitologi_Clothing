@@ -41,7 +41,6 @@ export default function RegisterForm() {
   const [isEmailTaken, setIsEmailTaken] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user && !isPending) {
       router.replace("/shop");

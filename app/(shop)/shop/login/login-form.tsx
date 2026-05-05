@@ -34,10 +34,8 @@ export default function LoginForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [apiError, setApiError] = useState("");
 
-  // Redirect if already logged in (only on mount/external state change)
   useEffect(() => {
     if (user && !isPending && !apiError) {
-      // If we're already logged in, just go to shop
       router.push(redirect);
     }
   }, [user, redirect, router, isPending, apiError]);
@@ -55,7 +53,6 @@ export default function LoginForm() {
 
     try {
       await login(email, password);
-      // Full page reload/redirect to ensure state is fresh
       window.location.href = redirect;
     } catch (e: unknown) {
       const error = e as UnknownError;
@@ -68,7 +65,6 @@ export default function LoginForm() {
           }
           setFieldErrors(errors);
 
-          // Show general error message
           if (e.message) {
             setApiError(e.message);
           }

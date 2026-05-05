@@ -7,7 +7,6 @@ import { useState } from "react";
 
 /* ──────────────────── Data from reference images ──────────────────── */
 
-// Page 29: Kaos & Jersey — S to 4XL
 const kaosJerseyData = {
   title: "Kaos & Jersey",
   description:
@@ -20,7 +19,6 @@ const kaosJerseyData = {
   },
 };
 
-// Page 30: Kemeja — multiple categories (TK, SD, SMP, Dewasa)
 const kemejaCategories = [
   {
     title: "TK",

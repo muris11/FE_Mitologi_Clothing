@@ -311,7 +311,6 @@ export type SiteSettings = {
     legalNpwp?: string;
     legalNib?: string;
     legalNmid?: string;
-    // Founder Story
     founderName?: string;
     founderRole?: string;
     founderStory?: string;
@@ -330,7 +329,6 @@ export type SiteSettings = {
     legalNib?: string;
     legalNmid?: string;
   };
-  // Dynamic arrays from JSON
   servicesData?: {
     title: string;
     desc: string;
@@ -348,7 +346,6 @@ export type SiteSettings = {
     description?: string;
     desc?: string;
   }[];
-  // Deprecated fixed fields (optional for backward compatibility)
   guarantee?: {
     guarantee1Title?: string;
     guarantee1Desc?: string;
@@ -486,7 +483,6 @@ export type LandingPageData = {
   teamMembers?: TeamMember[];
 };
 
-// Midtrans Snap Types
 export type MidtransTransactionStatus =
   | "capture"
   | "settlement"
@@ -520,7 +516,6 @@ export type MidtransSnap = {
   pay: (token: string, callbacks: MidtransSnapCallbacks) => void;
 };
 
-// API Response Types
 export type ApiErrorResponse = {
   error: string;
   message?: string;
@@ -551,7 +546,6 @@ export type CheckoutPayload = {
   notes?: string;
 };
 
-// Pricing Types
 export type PlastisolPrice = {
   title: string;
   image?: string;
@@ -567,7 +561,6 @@ export type PricingAddon = {
   price: string;
 };
 
-// Generic API Error for catch blocks
 export type UnknownError = Error & {
   status?: number;
   response?: {

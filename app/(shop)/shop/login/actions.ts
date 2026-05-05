@@ -14,8 +14,6 @@ export async function authenticate(
 
     const response = await login(email, password);
 
-    // Set cookie
-    // Note: The API might return token in response.
     if (response?.token) {
       (await cookies()).set("mitologi_auth_token", response.token, {
         httpOnly: true,

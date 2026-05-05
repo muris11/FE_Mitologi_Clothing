@@ -33,7 +33,6 @@ export default function ResetPasswordClient() {
   const [genericError, setGenericError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       router.replace("/shop");

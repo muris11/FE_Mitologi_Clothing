@@ -14,7 +14,6 @@ export function ProductReviews({ handle }: { handle: string }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
-  // Form state
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -28,7 +27,6 @@ export function ProductReviews({ handle }: { handle: string }) {
         setLoading(true);
         const data = await getProductReviews(handle, 1);
         if (data) {
-          // Fallback array checks: data.reviews.data or data.reviews depending on pagination/wrapping
           const fetchedReviews =
             data.reviews?.data || (data as any)?.reviews || [];
           setReviews(Array.isArray(fetchedReviews) ? fetchedReviews : []);
@@ -66,12 +64,10 @@ export function ProductReviews({ handle }: { handle: string }) {
     try {
       await submitReview(handle, { rating, comment });
       setSuccessMsg("Ulasan berhasil dikirim! Terima kasih.");
-      // Reset form
       setRating(0);
       setComment("");
       setShowForm(false);
 
-      // Refresh reviews list
       await (async () => {
         try {
           setLoading(true);
@@ -84,7 +80,6 @@ export function ProductReviews({ handle }: { handle: string }) {
             setSummary(null);
           }
         } catch (err) {
-          // Graceful fail
         } finally {
           setLoading(false);
         }

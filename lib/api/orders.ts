@@ -36,7 +36,6 @@ export async function getOrderDetail(
   }
 }
 
-// Previously checkCheckout existed, but we implement confirmOrderPayment instead
 export async function confirmOrderPayment(
   orderNumber: string,
 ): Promise<{ success: boolean; order?: Order }> {

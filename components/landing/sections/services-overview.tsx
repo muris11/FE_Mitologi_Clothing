@@ -12,7 +12,6 @@ import {
 } from "components/ui/motion";
 
 export function ServicesOverview({ settings }: { settings?: SiteSettings }) {
-  // Parsing dynamic services data
   const services = (settings?.servicesData || []).map((s) => ({
     title: s.title,
     description: s.desc,

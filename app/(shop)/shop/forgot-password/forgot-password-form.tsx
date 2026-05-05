@@ -19,7 +19,6 @@ export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       router.replace("/shop");
@@ -41,7 +40,6 @@ export default function ForgotPasswordForm() {
           "Tautan untuk mengatur ulang password telah dikirim ke email Anda.",
       });
       setEmail("");
-      // Redirect to login after success
       router.push("/shop/login");
     } catch (err: unknown) {
       const error = err as UnknownError;

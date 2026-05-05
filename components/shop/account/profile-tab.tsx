@@ -60,7 +60,6 @@ export function ProfileTab({
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
 
-  // Load addresses on mount
   useEffect(() => {
     loadAddresses();
   }, []);

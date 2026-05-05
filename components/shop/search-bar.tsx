@@ -20,7 +20,6 @@ export function SearchBar() {
       params.delete("q");
     }
 
-    // Reset page when searching
     params.delete("page");
 
     startTransition(() => {

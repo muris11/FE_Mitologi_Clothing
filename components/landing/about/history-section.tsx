@@ -12,12 +12,10 @@ export function AboutHistory({ settings }: { settings?: SiteSettings }) {
   const siteName = settings?.general?.siteName || "Mitologi Clothing";
   const shortHistory = settings?.about?.aboutShortHistory || "";
 
-  // Split history text into paragraphs
   const historyParagraphs = shortHistory
     ? shortHistory.split("\n").filter((p: string) => p.trim())
     : [];
 
-  // Get logo meaning from detailed JSON data and parse it
   const logoMeaningDetailedRaw = settings?.about?.aboutLogoMeaningDetailed;
   const logoMeanings = logoMeaningDetailedRaw
     ? typeof logoMeaningDetailedRaw === "string"

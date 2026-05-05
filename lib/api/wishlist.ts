@@ -53,7 +53,6 @@ export async function checkWishlist(
     );
     return res.isWishlisted;
   } catch (error) {
-    // Silently fail - return false if endpoint doesn't exist or network error
     return false;
   }
 }

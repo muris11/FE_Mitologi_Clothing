@@ -26,7 +26,6 @@ export function Gallery({
   const previousImageIndex =
     imageIndex === 0 ? images.length - 1 : imageIndex - 1;
 
-  // Default image if none provided
   const currentImage = images[imageIndex] || {
     src: "",
     altText: "Product image",

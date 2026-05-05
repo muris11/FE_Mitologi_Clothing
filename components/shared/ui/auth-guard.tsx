@@ -17,7 +17,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }, [user, isLoading, router, pathname]);
 
   if (isLoading || !user) {
-    // Render nothing or a loading spinner while checking auth or redirecting
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-50">
         <div className="flex flex-col items-center gap-4">
