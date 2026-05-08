@@ -3,7 +3,42 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { StaticPageShell } from "components/shop/static-page-shell";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Category Tabs Skeleton */}
+      <div className="flex gap-2 pb-4 mb-6">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div
+            key={i}
+            className="h-10 w-24 bg-slate-100 rounded-full animate-pulse shrink-0"
+          />
+        ))}
+      </div>
+
+      {/* Accordion Items Skeleton */}
+      <div className="space-y-3">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="border border-slate-200 rounded-2xl overflow-hidden bg-white p-6 space-y-4"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="h-6 flex-1 bg-slate-100 rounded-lg animate-pulse" />
+              <div className="w-5 h-5 bg-slate-100 rounded-full animate-pulse shrink-0" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const faqCategories = [
   { key: "umum", label: "Umum" },
@@ -140,6 +175,24 @@ function AccordionItem({
 
 export default function FAQPage() {
   const [activeCategory, setActiveCategory] = useState("umum");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <StaticPageShell
+        title="Pertanyaan yang Sering Diajukan"
+        subtitle="Temukan jawaban atas pertanyaan umum tentang produk, pemesanan, pengiriman, dan lainnya."
+        breadcrumbs={[{ label: "FAQ" }]}
+      >
+        <LoadingSkeleton />
+      </StaticPageShell>
+    );
+  }
 
   const activeFaqs = faqData[activeCategory] || [];
 

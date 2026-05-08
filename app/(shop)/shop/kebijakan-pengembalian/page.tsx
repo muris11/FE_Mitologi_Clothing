@@ -1,19 +1,58 @@
+"use client";
+
 import {
-  ArrowPathIcon,
-  ChatBubbleLeftRightIcon,
-  CheckBadgeIcon,
-  CurrencyDollarIcon,
-  TruckIcon,
+    ArrowPathIcon,
+    ChatBubbleLeftRightIcon,
+    CheckBadgeIcon,
+    CurrencyDollarIcon,
+    TruckIcon,
 } from "@heroicons/react/24/outline";
 import { StaticPageShell } from "components/shop/static-page-shell";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "Kebijakan Pengembalian - Mitologi Clothing",
-  description:
-    "Pelajari kebijakan pengembalian dan refund produk Mitologi Clothing. Proses mudah dalam 7 hari setelah barang diterima.",
-};
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-12">
+      {/* Section Header Skeleton */}
+      <div className="space-y-4 mb-10 border-b border-slate-100 pb-8">
+        <div className="h-8 w-64 bg-slate-100 rounded-lg animate-pulse" />
+        <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+        <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+      </div>
+
+      {/* Steps Skeleton */}
+      <div className="space-y-6">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex gap-6">
+            <div className="w-12 h-12 bg-slate-100 rounded-full animate-pulse shrink-0" />
+            <div className="flex-1 space-y-3">
+              <div className="h-6 w-48 bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* FAQ Skeleton */}
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="border border-slate-200 rounded-2xl overflow-hidden bg-white p-6 space-y-4"
+          >
+            <div className="h-6 w-64 bg-slate-100 rounded-lg animate-pulse" />
+            <div className="space-y-2">
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const steps = [
   {
@@ -62,6 +101,25 @@ const faqs = [
 ];
 
 export default function KebijakanPengembalianPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <StaticPageShell
+        title="Kebijakan Pengembalian"
+        subtitle="Kebijakan pengembalian dan refund produk Mitologi Clothing. Proses mudah dalam 7 hari setelah barang diterima."
+        breadcrumbs={[{ label: "Kebijakan Pengembalian" }]}
+      >
+        <LoadingSkeleton />
+      </StaticPageShell>
+    );
+  }
+
   return (
     <StaticPageShell
       title="Kebijakan Pengembalian"

@@ -1,19 +1,67 @@
+"use client";
+
 import {
-  CalendarDaysIcon,
-  GiftIcon,
-  TagIcon,
-  TruckIcon,
-  UserGroupIcon,
+    CalendarDaysIcon,
+    GiftIcon,
+    TagIcon,
+    TruckIcon,
+    UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { StaticPageShell } from "components/shop/static-page-shell";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "Promo & Penawaran Spesial - Mitologi Clothing",
-  description:
-    "Dapatkan penawaran terbaik dari Mitologi Clothing. Diskon eksklusif, gratis ongkir, dan promo spesial untuk member.",
-};
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-16">
+      {/* Section Header Skeleton */}
+      <div className="flex items-center gap-4 mb-10 border-b border-slate-100 pb-8">
+        <div className="w-8 h-8 bg-slate-100 rounded-full animate-pulse" />
+        <div className="space-y-2">
+          <div className="h-8 w-64 bg-slate-100 rounded-lg animate-pulse" />
+          <div className="h-4 w-96 bg-slate-100 rounded-lg animate-pulse" />
+        </div>
+      </div>
+
+      {/* Promo Cards Skeleton */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="rounded-3xl border border-slate-100 bg-white p-8 space-y-6"
+          >
+            <div className="flex items-start justify-between">
+              <div className="w-8 h-8 bg-slate-100 rounded-full animate-pulse" />
+              <div className="h-8 w-24 bg-slate-100 rounded-full animate-pulse" />
+            </div>
+            <div className="space-y-3">
+              <div className="h-6 w-48 bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Benefits Skeleton */}
+      <div className="grid gap-6 sm:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="rounded-3xl border border-slate-100 bg-white p-8 text-center space-y-6"
+          >
+            <div className="h-10 w-10 bg-slate-100 rounded-full animate-pulse mx-auto" />
+            <div className="space-y-3">
+              <div className="h-6 w-32 bg-slate-100 rounded-lg animate-pulse mx-auto" />
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse mx-auto" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const benefits = [
   {
@@ -61,6 +109,26 @@ const promos = [
 ];
 
 export default function PromoPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <StaticPageShell
+        title="Promo & Penawaran Spesial"
+        subtitle="Nikmati berbagai penawaran menarik dan keuntungan eksklusif dari Mitologi Clothing."
+        breadcrumbs={[{ label: "Promo" }]}
+        maxWidth="wide"
+      >
+        <LoadingSkeleton />
+      </StaticPageShell>
+    );
+  }
+
   return (
     <StaticPageShell
       title="Promo & Penawaran Spesial"

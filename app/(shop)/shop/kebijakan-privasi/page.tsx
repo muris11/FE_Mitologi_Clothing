@@ -4,6 +4,42 @@ import { StaticPageShell } from "components/shop/static-page-shell";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+function LoadingSkeleton() {
+  return (
+    <div className="flex flex-col lg:flex-row gap-10">
+      {/* Sidebar TOC Skeleton */}
+      <aside className="hidden lg:block w-56 shrink-0">
+        <div className="sticky top-24 space-y-1 p-6 border border-slate-200 bg-slate-50 rounded-2xl">
+          <div className="h-5 w-24 bg-slate-100 rounded-lg animate-pulse mb-6 border-b border-slate-200 pb-4" />
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+            <div key={i} className="h-10 w-full bg-slate-100 rounded-lg animate-pulse" />
+          ))}
+        </div>
+      </aside>
+
+      {/* Mobile TOC Skeleton */}
+      <div className="lg:hidden mb-10 p-6 bg-slate-50 rounded-2xl border border-slate-200">
+        <div className="h-5 w-24 bg-slate-100 rounded-lg animate-pulse" />
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="flex-1 min-w-0 space-y-14">
+        <div className="h-4 w-48 bg-slate-100 rounded-lg animate-pulse mb-10 pb-6 border-b border-slate-200" />
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+          <div key={i} className="space-y-6">
+            <div className="h-8 w-64 bg-slate-100 rounded-lg animate-pulse mb-6" />
+            <div className="space-y-3">
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const sections = [
   { id: "pendahuluan", label: "Pendahuluan" },
   { id: "informasi", label: "Informasi yang Dikumpulkan" },
@@ -41,8 +77,16 @@ function TableOfContents({ activeSection }: { activeSection: string }) {
 
 export default function KebijakanPrivasiPage() {
   const [activeSection, setActiveSection] = useState("pendahuluan");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return; // Don't set up observer while loading
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,7 +104,20 @@ export default function KebijakanPrivasiPage() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [isLoading]);
+
+  if (isLoading) {
+    return (
+      <StaticPageShell
+        title="Kebijakan Privasi"
+        subtitle="Komitmen kami dalam melindungi privasi dan data pribadi Anda."
+        breadcrumbs={[{ label: "Kebijakan Privasi" }]}
+        maxWidth="wide"
+      >
+        <LoadingSkeleton />
+      </StaticPageShell>
+    );
+  }
 
   return (
     <StaticPageShell

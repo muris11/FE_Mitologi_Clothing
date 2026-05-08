@@ -3,7 +3,47 @@
 import { SizeCalculator } from "components/shop/size-calculator";
 import { StaticPageShell } from "components/shop/static-page-shell";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-8">
+      {/* Tab Skeleton */}
+      <div className="flex gap-3 mb-10">
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="h-12 w-32 bg-slate-100 rounded-full animate-pulse"
+          />
+        ))}
+      </div>
+
+      {/* Content Skeleton */}
+      <div className="flex flex-col lg:flex-row gap-10 items-start">
+        <div className="w-full lg:w-80 flex-shrink-0">
+          <div className="bg-slate-100 rounded-3xl p-8 aspect-square animate-pulse" />
+        </div>
+        <div className="flex-1 w-full space-y-6">
+          <div className="h-8 w-64 bg-slate-100 rounded-lg animate-pulse" />
+          <div className="h-4 w-full bg-slate-100 rounded-lg animate-pulse" />
+          <div className="bg-slate-50 rounded-2xl p-6 space-y-4">
+            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="flex gap-4">
+                  <div className="h-8 w-8 bg-slate-100 rounded-full animate-pulse" />
+                  <div className="h-6 flex-1 bg-slate-100 rounded-lg animate-pulse" />
+                </div>
+                {[1, 2, 3, 4, 5, 6, 7].map((j) => (
+                  <div key={j} className="h-6 flex-1 bg-slate-100 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ──────────────────── Data from reference images ──────────────────── */
 
@@ -91,6 +131,26 @@ const tips = [
 
 export default function PanduanUkuranPage() {
   const [activeTab, setActiveTab] = useState("kaos");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <StaticPageShell
+        title="Panduan Ukuran"
+        subtitle="Temukan ukuran yang tepat untuk Anda. Pastikan kenyamanan dan kecocokan sempurna."
+        breadcrumbs={[{ label: "Panduan Ukuran" }]}
+        maxWidth="wide"
+      >
+        <LoadingSkeleton />
+      </StaticPageShell>
+    );
+  }
 
   return (
     <StaticPageShell
