@@ -1,12 +1,12 @@
+import {
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
+} from "components/ui/motion";
 import { Category } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
 
 export function ProductsShowcase({
   categories = [],
@@ -29,7 +29,7 @@ export function ProductsShowcase({
           <h3 className="text-4xl lg:text-5xl font-sans font-extrabold text-mitologi-navy mb-6 tracking-tight">
             Apa yang Kami Buat?
           </h3>
-          <p className="mt-4 text-lg leading-8 text-slate-500 font-medium font-sans">
+          <p className="mt-4 text-lg leading-8 text-slate-600 font-medium font-sans">
             Berbagai macam kebutuhan sandang dan merchandise kustom kualitas
             premium untuk Anda.
           </p>

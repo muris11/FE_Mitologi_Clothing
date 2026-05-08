@@ -1,9 +1,9 @@
 "use client";
 
+import { MotionDiv, MotionSection } from "components/ui/motion";
 import { SiteSettings } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
-import { MotionSection, MotionDiv } from "components/ui/motion";
 
 export function AboutBrief({ settings }: { settings?: SiteSettings }) {
   const aboutImage = storageUrl(
@@ -61,9 +61,9 @@ export function AboutBrief({ settings }: { settings?: SiteSettings }) {
             <div className="space-y-6">
               <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-mitologi-gold"></div>
-                <h4 className="text-sm font-sans tracking-wider uppercase font-bold text-mitologi-navy mb-2">
+                <h3 className="text-sm font-sans tracking-wider uppercase font-bold text-mitologi-navy mb-2">
                   Visi
-                </h4>
+                </h3>
                 <p className="text-slate-600 text-sm font-medium leading-relaxed">
                   {vision}
                 </p>
@@ -71,9 +71,9 @@ export function AboutBrief({ settings }: { settings?: SiteSettings }) {
 
               <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-mitologi-navy"></div>
-                <h4 className="text-sm font-sans tracking-wider uppercase font-bold text-mitologi-navy mb-4">
+                <h3 className="text-sm font-sans tracking-wider uppercase font-bold text-mitologi-navy mb-4">
                   Misi
-                </h4>
+                </h3>
                 <ul className="space-y-3 text-slate-600 text-sm font-medium">
                   {missions.map((item: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-3">

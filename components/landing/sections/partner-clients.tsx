@@ -1,9 +1,9 @@
 "use client";
 
+import { MotionSection } from "components/ui/motion";
 import { Partner } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
-import { MotionSection } from "components/ui/motion";
 
 export function PartnerClients({ partners }: { partners?: Partner[] }) {
   if (!partners || partners.length === 0) return null;
@@ -60,7 +60,7 @@ export function PartnerClients({ partners }: { partners?: Partner[] }) {
                     sizes="(max-width: 768px) 128px, 192px"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center font-bold text-slate-400 font-sans text-lg md:text-xl bg-slate-100/50 rounded-lg whitespace-normal leading-tight text-center px-4">
+                  <div className="w-full h-full flex items-center justify-center font-bold text-slate-600 font-sans text-lg md:text-xl bg-slate-100/50 rounded-lg whitespace-normal leading-tight text-center px-4">
                     {partner.name}
                   </div>
                 )}

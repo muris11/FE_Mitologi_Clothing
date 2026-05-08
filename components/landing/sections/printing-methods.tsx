@@ -1,15 +1,15 @@
 "use client";
 
 import { CheckIcon } from "@heroicons/react/24/solid";
+import {
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
+} from "components/ui/motion";
 import { SectionHeading } from "components/ui/section-heading";
 import { PrintingMethod } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
 
 export function PrintingMethods({ methods }: { methods?: PrintingMethod[] }) {
   if (!methods || methods.length === 0) return null;
@@ -78,10 +78,10 @@ export function PrintingMethods({ methods }: { methods?: PrintingMethod[] }) {
                 </p>
 
                 <div className="mt-auto">
-                  <h4 className="text-[10px] sm:text-xs font-bold text-mitologi-gold uppercase tracking-widest font-sans mb-3 flex items-center gap-2">
+                  <h3 className="text-[10px] sm:text-xs font-bold text-mitologi-gold uppercase tracking-widest font-sans mb-3 flex items-center gap-2">
                     <span className="w-4 h-px bg-mitologi-gold/50"></span>
                     Keunggulan
-                  </h4>
+                  </h3>
 
                   {method.pros && method.pros.length > 0 && (
                     <ul className="space-y-2 sm:space-y-3">

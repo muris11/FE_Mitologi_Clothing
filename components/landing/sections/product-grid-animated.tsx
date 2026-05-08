@@ -56,7 +56,7 @@ export function ProductGridAnimated({ products }: ProductGridAnimatedProps) {
   if (products.length === 0) {
     return (
       <div className="py-16 text-center">
-        <p className="text-sm text-slate-400">Produk tidak ditemukan</p>
+        <p className="text-sm text-slate-600">Produk tidak ditemukan</p>
       </div>
     );
   }
@@ -236,6 +236,7 @@ function ProductCardExpanded({
         <Link
           href={`/shop/product/${product.handle}`}
           onClick={(e) => e.stopPropagation()}
+          aria-label={`Lihat detail produk ${product.title}`}
           className="flex-shrink-0"
           style={{
             opacity: isActive ? 1 : 0,

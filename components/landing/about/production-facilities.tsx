@@ -1,13 +1,13 @@
 "use client";
 
+import {
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
+} from "components/ui/motion";
 import { SectionHeading } from "components/ui/section-heading";
 import { Facility } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
 
 export function ProductionFacilities({
   facilities,
@@ -50,7 +50,7 @@ export function ProductionFacilities({
                   </>
                 ) : (
                   <div className="absolute inset-0 bg-mitologi-navy/10 flex items-center justify-center">
-                    <span className="text-slate-400 font-sans tracking-widest uppercase text-xs">
+                    <span className="text-slate-600 font-sans tracking-widest uppercase text-xs">
                       No Image
                     </span>
                   </div>

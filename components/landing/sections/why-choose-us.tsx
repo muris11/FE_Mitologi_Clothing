@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  ArrowPathIcon,
-  ClockIcon,
-  HandThumbUpIcon,
+    ArrowPathIcon,
+    ClockIcon,
+    HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
-import { SectionHeading } from "components/ui/section-heading";
 import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
 } from "components/ui/motion";
+import { SectionHeading } from "components/ui/section-heading";
 import { SiteSettings } from "lib/api/types";
 
 export function WhyChooseUs({ settings }: { settings?: SiteSettings }) {
@@ -57,9 +57,9 @@ export function WhyChooseUs({ settings }: { settings?: SiteSettings }) {
                 </div>
 
                 <div className="mb-3 sm:mb-4">
-                  <h4 className="text-lg sm:text-xl font-sans font-bold text-mitologi-navy tracking-tight mb-1">
+                  <h3 className="text-lg sm:text-xl font-sans font-bold text-mitologi-navy tracking-tight mb-1">
                     {feature.title}
-                  </h4>
+                  </h3>
                   {feature.subtitle && (
                     <p className="text-[10px] font-bold font-sans text-mitologi-gold uppercase tracking-widest mt-1">
                       {feature.subtitle}

@@ -1,9 +1,9 @@
 "use client";
 
+import { MotionSection } from "components/ui/motion";
 import { SectionHeading } from "components/ui/section-heading";
 import { ProductPricing } from "lib/api/types";
 import { useState } from "react";
-import { MotionSection } from "components/ui/motion";
 
 export function CategoryPricelist({
   pricings,
@@ -41,7 +41,7 @@ export function CategoryPricelist({
                   className={`py-4 md:py-5 px-6 md:px-8 min-h-[56px] text-[13px] sm:text-base font-bold font-sans uppercase tracking-wider whitespace-nowrap transition-all duration-300 border-b-2 flex-shrink-0 sm:flex-1 text-center ${
                     activeTab === index
                       ? "text-mitologi-gold border-mitologi-gold bg-white shadow-[inset_0_-2px_0_0_rgba(229,170,40,1)]"
-                      : "text-slate-500 border-transparent hover:text-mitologi-navy hover:bg-white/50"
+                      : "text-slate-700 border-transparent hover:text-mitologi-navy hover:bg-white/50"
                   }`}
                 >
                   {pricing.categoryName}

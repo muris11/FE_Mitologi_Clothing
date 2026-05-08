@@ -1,16 +1,14 @@
 "use client";
 
 import { StarIcon } from "@heroicons/react/20/solid";
-import { SectionHeading } from "components/ui/section-heading";
 import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
+    MotionSection
 } from "components/ui/motion";
+import { SectionHeading } from "components/ui/section-heading";
+import { motion } from "framer-motion";
 import { Testimonial } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 export function Testimonials({
   testimonials = [],
@@ -133,7 +131,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           <div className="font-sans font-bold text-sm text-mitologi-navy tracking-tight">
             {testimonial.name}
           </div>
-          <div className="text-slate-500 text-xs font-sans font-medium mt-0.5">
+          <div className="text-slate-600 text-xs font-sans font-medium mt-0.5">
             {testimonial.role}
           </div>
         </div>

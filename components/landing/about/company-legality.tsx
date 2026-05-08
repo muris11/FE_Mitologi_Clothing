@@ -1,12 +1,12 @@
 "use client";
 
 import { BuildingLibraryIcon } from "@heroicons/react/24/outline";
-import { SiteSettings } from "lib/api/types";
 import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
 } from "components/ui/motion";
+import { SiteSettings } from "lib/api/types";
 
 export function CompanyLegality({ settings }: { settings?: SiteSettings }) {
   const legality = settings?.legality;
@@ -57,9 +57,9 @@ export function CompanyLegality({ settings }: { settings?: SiteSettings }) {
               key={idx}
               className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-soft transition-all group"
             >
-              <h4 className="text-xs sm:text-sm font-sans font-bold text-slate-500 uppercase tracking-wider mb-2 group-hover:text-mitologi-gold transition-colors">
+              <h3 className="text-xs sm:text-sm font-sans font-bold text-slate-600 uppercase tracking-wider mb-2 group-hover:text-mitologi-gold transition-colors">
                 {item.label}
-              </h4>
+              </h3>
               <p className="text-sm sm:text-lg font-sans font-bold text-mitologi-navy">
                 {item.value}
               </p>

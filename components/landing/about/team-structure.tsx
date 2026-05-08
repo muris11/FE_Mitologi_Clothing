@@ -1,8 +1,8 @@
 "use client";
 
+import { MotionSection } from "components/ui/motion";
 import { TeamMember } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
-import { MotionSection } from "components/ui/motion";
 
 interface TeamNode extends TeamMember {
   children: TeamNode[];
@@ -67,14 +67,14 @@ function MemberCard({
       </div>
 
       {/* Name & Position */}
-      <h4
+      <h3
         className={`font-sans font-bold text-mitologi-navy text-center mt-4 md:mt-5 leading-tight tracking-tight
         ${isFounder ? "text-sm md:text-xl" : "text-[13px] md:text-base"}`}
       >
         {member.name}
-      </h4>
+      </h3>
       <p
-        className={`text-slate-500 font-sans font-medium text-center mt-1 md:mt-1.5 uppercase tracking-widest
+        className={`text-slate-600 font-sans font-medium text-center mt-1 md:mt-1.5 uppercase tracking-widest
         ${isFounder ? "text-[11px] md:text-sm text-mitologi-gold font-bold" : "text-[9px] md:text-xs"}`}
       >
         {member.position}

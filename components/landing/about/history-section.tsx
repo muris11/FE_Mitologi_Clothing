@@ -223,7 +223,7 @@ export function AboutHistory({ settings }: { settings?: SiteSettings }) {
 
                       <div className="relative z-10 flex-1 flex flex-col">
                         <div className="flex items-start justify-between mb-4 sm:mb-6">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-navy text-white flex items-center justify-center font-sans font-black text-xl shadow-md group-hover:scale-110 group-hover:bg-mitologi-gold group-hover:text-mitologi-navy transition-all duration-300">
+                          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-navy text-white flex items-center justify-center font-sans font-black text-xl shadow-md group-hover:scale-110 group-hover:bg-mitologi-gold group-hover:text-mitologi-navy transition-all duration-300">
                             {letter}
                           </div>
                           <span className="text-xl sm:text-2xl font-sans font-black text-slate-100 group-hover:text-mitologi-navy/5 transition-colors duration-300">

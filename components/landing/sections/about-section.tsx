@@ -6,14 +6,14 @@ import {
   ShieldCheckIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
-import { SiteSettings } from "lib/api/types";
-import { storageUrl } from "lib/utils/storage-url";
-import { useEffect, useMemo, useState } from "react";
 import {
   MotionSection,
   StaggerGrid,
   StaggerGridItem,
 } from "components/ui/motion";
+import { SiteSettings } from "lib/api/types";
+import { storageUrl } from "lib/utils/storage-url";
+import { useEffect, useMemo, useState } from "react";
 
 export function AboutSection({ settings }: { settings?: SiteSettings }) {
   const foundedYear =
@@ -73,7 +73,7 @@ export function AboutSection({ settings }: { settings?: SiteSettings }) {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium leading-tight text-center font-sans">
+                <p className="text-xs sm:text-sm text-slate-600 font-medium leading-tight text-center font-sans">
                   &ldquo;{settings?.general?.siteTagline || ""}&rdquo;
                 </p>
               </div>
@@ -118,10 +118,10 @@ export function AboutSection({ settings }: { settings?: SiteSettings }) {
                   <div className="w-10 h-10 bg-mitologi-navy/5 text-mitologi-navy rounded-full flex items-center justify-center mb-4 group-hover:bg-mitologi-navy group-hover:text-white transition-colors duration-300">
                     <feature.icon className="h-5 w-5" aria-hidden="true" />
                   </div>
-                  <h4 className="font-bold font-sans text-sm text-mitologi-navy mb-2">
+                  <h3 className="font-bold font-sans text-sm text-mitologi-navy mb-2">
                     {feature.title}
-                  </h4>
-                  <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed font-medium">
                     {feature.desc}
                   </p>
                 </StaggerGridItem>

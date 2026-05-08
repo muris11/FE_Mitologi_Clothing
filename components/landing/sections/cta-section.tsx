@@ -1,6 +1,6 @@
+import { MotionSection } from "components/ui/motion";
 import { CtaData } from "lib/api/types";
 import Link from "next/link";
-import { MotionSection } from "components/ui/motion";
 
 export function CTASection({ cta }: { cta?: CtaData }) {
   const title = cta?.title || "";
@@ -22,7 +22,7 @@ export function CTASection({ cta }: { cta?: CtaData }) {
           <h2 className="relative z-10 text-4xl lg:text-5xl font-sans font-extrabold text-mitologi-navy tracking-tight leading-tight group-hover:text-mitologi-gold transition-colors duration-500">
             {title}
           </h2>
-          <p className="relative z-10 mx-auto mt-6 max-w-xl text-lg md:text-xl leading-relaxed text-slate-500 font-medium font-sans">
+          <p className="relative z-10 mx-auto mt-6 max-w-xl text-lg md:text-xl leading-relaxed text-slate-600 font-medium font-sans">
             {subtitle}
           </p>
           <div className="relative z-10 mt-10 flex items-center justify-center gap-x-6">

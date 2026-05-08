@@ -1,15 +1,15 @@
 "use client";
 
 import { Card } from "components/ui/card";
+import {
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
+} from "components/ui/motion";
 import { SectionHeading } from "components/ui/section-heading";
 import { SiteSettings } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
 
 export function ServicesOverview({ settings }: { settings?: SiteSettings }) {
   const services = (settings?.servicesData || []).map((s) => ({
@@ -105,9 +105,9 @@ export function ServicesOverview({ settings }: { settings?: SiteSettings }) {
                   {service.description}
                 </p>
                 <div className="mt-8 border-t border-slate-100 pt-6">
-                  <h4 className="text-xs font-bold font-sans tracking-wider uppercase text-slate-400 mb-4">
+                  <h3 className="text-xs font-bold font-sans tracking-wider uppercase text-slate-600 mb-4">
                     Material Tersedia:
-                  </h4>
+                  </h3>
                   <ul className="space-y-3">
                     {service.items.map((item) => (
                       <li

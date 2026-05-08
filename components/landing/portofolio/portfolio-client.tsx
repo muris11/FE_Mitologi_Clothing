@@ -3,11 +3,11 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { SubpageHero } from "components/landing/shared/subpage-hero";
 import { Button } from "components/ui/button";
+import { MotionDiv, MotionSection } from "components/ui/motion";
 import { PortfolioItem } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
 import Link from "next/link";
-import { MotionDiv, MotionSection } from "components/ui/motion";
 
 export function PortfolioClient({ portfolio }: { portfolio: PortfolioItem }) {
   const hasImage = portfolio.imageUrl && portfolio.imageUrl.length > 0;
@@ -61,7 +61,7 @@ export function PortfolioClient({ portfolio }: { portfolio: PortfolioItem }) {
                       />
                     </div>
                   ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 text-slate-400 font-sans">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 text-slate-600 font-sans">
                       <p className="text-sm font-medium">No Image Available</p>
                     </div>
                   )}
@@ -94,7 +94,7 @@ export function PortfolioClient({ portfolio }: { portfolio: PortfolioItem }) {
                       }}
                     />
                   ) : (
-                    <p className="text-slate-500 leading-[1.7] font-sans text-sm sm:text-[15px] lg:text-base text-justify italic">
+                    <p className="text-slate-600 leading-[1.7] font-sans text-sm sm:text-[15px] lg:text-base text-justify italic">
                       Belum ada deskripsi mendetail untuk proyek ini.
                     </p>
                   )}

@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  ClockIcon,
-  EnvelopeIcon,
-  MapPinIcon,
-  PhoneIcon,
+    ClockIcon,
+    EnvelopeIcon,
+    MapPinIcon,
+    PhoneIcon,
 } from "@heroicons/react/24/outline";
-import { SiteSettings } from "lib/api/types";
 import { MotionDiv, MotionSection } from "components/ui/motion";
+import { SiteSettings } from "lib/api/types";
 
 interface KontakSectionProps {
   settings?: SiteSettings;
@@ -190,14 +190,14 @@ export function KontakSection({ settings }: KontakSectionProps) {
                   {contactItems.map((item, i) => (
                     <div key={i} className="flex gap-5 group/item items-start">
                       <div className="flex-shrink-0">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-navy text-white flex items-center justify-center font-sans font-black shadow-md group-hover/item:scale-110 group-hover/item:bg-mitologi-gold group-hover/item:text-mitologi-navy transition-all duration-300">
+                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-navy text-white flex items-center justify-center font-sans font-black shadow-md group-hover/item:scale-110 group-hover/item:bg-mitologi-gold group-hover/item:text-mitologi-navy transition-all duration-300">
                           {item.icon}
                         </div>
                       </div>
                       <div className="pt-0.5">
-                        <h4 className="text-[11px] sm:text-xs font-sans font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                        <h3 className="text-[11px] sm:text-xs font-sans font-bold text-slate-600 uppercase tracking-widest mb-1.5">
                           {item.title}
-                        </h4>
+                        </h3>
                         <p className="text-mitologi-navy font-sans font-black text-[13px] sm:text-[15px] leading-relaxed tracking-tight">
                           {item.value}
                         </p>
@@ -214,7 +214,7 @@ export function KontakSection({ settings }: KontakSectionProps) {
                 </div>
 
                 <div className="relative z-10 flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-gold text-mitologi-navy flex items-center justify-center font-sans font-black shadow-md">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-gold text-mitologi-navy flex items-center justify-center font-sans font-black shadow-md">
                     <ClockIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <h3 className="text-xl sm:text-2xl font-black text-white font-sans tracking-tight">
@@ -293,7 +293,7 @@ export function KontakSection({ settings }: KontakSectionProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.label}
-                      className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-slate-50 text-mitologi-navy rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-mitologi-gold/50 hover:bg-mitologi-gold hover:text-mitologi-navy hover:-translate-y-1 transition-all duration-300 group/soc"
+                      className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 bg-slate-50 text-mitologi-navy rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-mitologi-gold/50 hover:bg-mitologi-gold hover:text-mitologi-navy hover:-translate-y-1 transition-all duration-300 group/soc"
                     >
                       <SocialIcon type={s.type} />
                     </a>

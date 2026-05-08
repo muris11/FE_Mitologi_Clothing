@@ -1,8 +1,8 @@
 "use client";
+import { MotionSection } from "components/ui/motion";
 import { SectionHeading } from "components/ui/section-heading";
 import { OrderStep } from "lib/api/types";
 import { useState } from "react";
-import { MotionSection } from "components/ui/motion";
 
 export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
   const [activeTab, setActiveTab] = useState<"langsung" | "ecommerce">(
@@ -38,7 +38,7 @@ export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
               className={`px-6 py-2.5 rounded-full font-sans tracking-wide font-bold text-sm transition-all duration-300 ${
                 activeTab === "langsung"
                   ? "bg-mitologi-navy text-white shadow-md"
-                  : "text-slate-500 hover:text-mitologi-navy hover:bg-slate-50"
+                  : "text-slate-700 hover:text-mitologi-navy hover:bg-slate-50"
               }`}
             >
               Order Langsung
@@ -48,7 +48,7 @@ export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
               className={`px-6 py-2.5 rounded-full font-sans tracking-wide font-bold text-sm transition-all duration-300 ${
                 activeTab === "ecommerce"
                   ? "bg-mitologi-navy text-white shadow-md"
-                  : "text-slate-500 hover:text-mitologi-navy hover:bg-slate-50"
+                  : "text-slate-700 hover:text-mitologi-navy hover:bg-slate-50"
               }`}
             >
               Via E-Commerce
@@ -78,9 +78,9 @@ export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
                       </span>
                     </div>
                     <div className="flex-auto py-2">
-                      <h4 className="text-xl font-sans font-bold text-mitologi-navy mb-2 tracking-tight group-hover:text-mitologi-gold transition-colors duration-300">
+                      <h3 className="text-xl font-sans font-bold text-mitologi-navy mb-2 tracking-tight group-hover:text-mitologi-gold transition-colors duration-300">
                         {step.title}
-                      </h4>
+                      </h3>
                       <p className="text-sm text-slate-600 leading-relaxed font-sans font-medium">
                         {step.description}
                       </p>

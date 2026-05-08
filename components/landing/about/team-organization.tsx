@@ -33,7 +33,7 @@ const TeamCard = ({
       {name}
     </h3>
     <p
-      className={`text-xs tracking-widest uppercase mt-2 font-sans ${isLeader ? "text-mitologi-gold font-bold" : "text-slate-500 font-bold"}`}
+      className={`text-xs tracking-widest uppercase mt-2 font-sans ${isLeader ? "text-mitologi-gold font-bold" : "text-slate-600 font-bold"}`}
     >
       {role}
     </p>

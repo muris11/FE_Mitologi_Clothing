@@ -1,8 +1,7 @@
 "use client";
 
-import { SectionHeading } from "components/ui/section-heading";
-import { SiteSettings } from "lib/api/types";
 import { motion } from "framer-motion";
+import { SiteSettings } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import Image from "next/image";
 
@@ -108,9 +107,9 @@ export function PlastisolPricing({ settings }: { settings?: PricingSettings }) {
 
                 {/* Info */}
                 <div className="p-4">
-                  <h4 className="text-xs sm:text-sm font-bold text-mitologi-navy leading-tight mb-0.5">
+                  <h3 className="text-xs sm:text-sm font-bold text-mitologi-navy leading-tight mb-0.5">
                     {pkg.title}
-                  </h4>
+                  </h3>
                   {pkg.minOrder && (
                     <p className="text-[10px] text-stone-400 font-medium mb-3">
                       {pkg.minOrder}

@@ -1,12 +1,12 @@
 "use client";
 
 import { CheckCircleIcon, StarIcon } from "@heroicons/react/24/solid";
-import { SiteSettings } from "lib/api/types";
 import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
+    MotionSection,
+    StaggerGrid,
+    StaggerGridItem,
 } from "components/ui/motion";
+import { SiteSettings } from "lib/api/types";
 
 export function AboutVisionMission({ settings }: { settings?: SiteSettings }) {
   const vision =
@@ -114,12 +114,12 @@ export function AboutVisionMission({ settings }: { settings?: SiteSettings }) {
                     key={idx}
                     className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-mitologi-gold/30 transition-all duration-300"
                   >
-                    <h4 className="font-sans font-bold text-base text-mitologi-navy mb-2 flex items-center gap-2.5">
+                    <h3 className="font-sans font-bold text-base text-mitologi-navy mb-2 flex items-center gap-2.5">
                       <span className="flex-none w-2 h-2 rounded-full bg-mitologi-gold" />
                       {val.title}
-                    </h4>
+                    </h3>
                     {val.desc && (
-                      <p className="text-sm text-slate-500 font-sans font-medium leading-relaxed">
+                      <p className="text-sm text-slate-600 font-sans font-medium leading-relaxed">
                         {val.desc}
                       </p>
                     )}
