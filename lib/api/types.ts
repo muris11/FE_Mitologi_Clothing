@@ -373,7 +373,9 @@ export type SiteSettings = {
   beranda?: {
     pricingPlastisolData?: string | PlastisolPrice[];
     pricingAddonsData?: string | PricingAddon[];
+    pricingExtraData?: string | Array<{ title: string; price: string }>;
     pricingMinOrder?: string;
+    pricingPlastisolSubtitle?: string;
     pricingFeaturesData?: Array<{ text: string }>;
     garansiBonusData?: Array<{ title: string; description: string }>;
   };
