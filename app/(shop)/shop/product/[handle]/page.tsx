@@ -4,6 +4,7 @@ import { ProductDescription } from "components/shop/product/product-description"
 import { ProductReviews } from "components/shop/product/product-reviews";
 import { RelatedProducts } from "components/shop/related-products";
 import { getCollections, getProduct } from "lib/api";
+import { getSiteSettings } from "lib/api/content";
 import { Image } from "lib/api/types";
 import { sanitizeHtml } from "lib/sanitize";
 import type { Metadata } from "next";
@@ -76,12 +77,32 @@ export default async function ProductPage(props: {
   params: Promise<{ handle: string }>;
 }) {
   const params = await props.params;
-  const [product, categories] = await Promise.all([
+  const [product, categories, settings] = await Promise.all([
     getProduct(params.handle),
     getCollections(),
+    getSiteSettings(),
   ]);
 
   if (!product) return notFound();
+
+  // Extract shipping location from contact/legality address
+  const address =
+    settings?.contact?.contactAddress ||
+    settings?.legality?.legalAddress ||
+    "Jl. Raya Lelea, Indramayu, Jawa Barat";
+  
+  // Extract city and province from address (e.g., "Indramayu, Jawa Barat")
+  const addressParts = address.split(',').map((p: string) => p.trim());
+  let shippingLocation = "Indramayu, Jawa Barat";
+  
+  // Try to find city and province in the address
+  if (addressParts.length >= 2) {
+    // Look for the last two parts which are typically city and province
+    const lastTwoParts = addressParts.slice(-2);
+    if (lastTwoParts.length === 2) {
+      shippingLocation = `${lastTwoParts[0]}, ${lastTwoParts[1]}`;
+    }
+  }
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -272,8 +293,7 @@ export default async function ProductPage(props: {
                       Dikirim Dari
                     </span>
                     <span className="text-slate-900 font-semibold">
-                      {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN ||
-                        "Cirebon, Jawa Barat"}
+                      {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN || shippingLocation}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
