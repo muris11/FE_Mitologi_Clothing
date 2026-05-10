@@ -1,5 +1,4 @@
 import { PortfolioGallery } from "components/landing/sections/portfolio-gallery";
-import { SubpageHero } from "components/landing/shared/subpage-hero";
 import { getLandingPageData } from "lib/api";
 import { getPortfolios } from "lib/api/content";
 import type { Metadata } from "next";
@@ -32,16 +31,13 @@ export default async function PortofolioPage() {
 
   return (
     <>
-      <SubpageHero
-        title="Portofolio Kami"
-        subtitle="Lihat hasil karya nyata yang telah kami kerjakan untuk klien-klien hebat kami."
-        badge={true}
-        badgeText="Hasil Karya"
-      />
       <PortfolioGallery
         items={portfolios}
         showViewAll={false}
-        showHeading={false}
+        showHeading={true}
+        overline="Hasil Karya"
+        title="Portofolio Kami"
+        subtitle="Lihat hasil karya nyata yang telah kami kerjakan untuk klien-klien hebat kami."
       />
     </>
   );

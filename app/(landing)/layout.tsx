@@ -38,7 +38,7 @@ export default async function LandingLayout({
       >
         <main className="min-h-screen">{children}</main>
       </Suspense>
-      <LandingFooter settings={settings} />
+      <LandingFooter settings={settings} newArrivals={data?.newArrivals} />
     </>
   );
 }

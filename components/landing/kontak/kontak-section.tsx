@@ -1,12 +1,13 @@
 "use client";
 
 import {
-    ClockIcon,
-    EnvelopeIcon,
-    MapPinIcon,
-    PhoneIcon,
+  ClockIcon,
+  EnvelopeIcon,
+  MapPinIcon,
+  PhoneIcon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
-import { MotionDiv, MotionSection } from "components/ui/motion";
+import { motion } from "framer-motion";
 import { SiteSettings } from "lib/api/types";
 
 interface KontakSectionProps {
@@ -76,6 +77,23 @@ function parseMapsEmbed(rawValue?: string): string {
   return defaultEmbed;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 1, 0.5, 1] as const },
+  },
+};
+
 export function KontakSection({ settings }: KontakSectionProps) {
   const contact = settings?.contact;
 
@@ -128,182 +146,178 @@ export function KontakSection({ settings }: KontakSectionProps) {
     },
   ].filter((s) => s.url && s.enabled);
 
-  const contactItems = [
-    {
-      icon: <MapPinIcon className="w-7 h-7" />,
-      title: "Alamat Workshop",
-      value: address,
-    },
-    {
-      icon: <PhoneIcon className="w-7 h-7" />,
-      title: "Telepon / WhatsApp",
-      value: phone,
-    },
-    {
-      icon: <EnvelopeIcon className="w-7 h-7" />,
-      title: "Email",
-      value: email,
-    },
-  ];
-
   return (
-    <MotionSection className="relative py-24 sm:py-32 bg-slate-50 overflow-hidden">
-      {/* Background Decorative Graphic matching History Section */}
-      <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-white to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] bg-mitologi-gold/5 rounded-full blur-[100px] pointer-events-none" />
+    <section className="relative py-20 sm:py-28 bg-white overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-mitologi-gold/[0.03] via-transparent to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
-      <div className="relative mx-auto max-w-[1440px] px-6 lg:px-8 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch">
-          {/* Left: Info Content */}
-          <MotionDiv
-            delay={0.1}
-            className="lg:col-span-5 flex flex-col justify-center"
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        className="relative mx-auto max-w-6xl px-6 lg:px-8"
+      >
+        <motion.div variants={itemVariants} className="mb-16 max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mitologi-gold mb-3">
+            Kontak
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-mitologi-navy tracking-tight mb-4">
+            Hubungi kami kapan saja
+          </h2>
+          <p className="text-slate-500 text-base sm:text-lg leading-relaxed">
+            Kami siap membantu kebutuhan clothing Anda. Pilih cara yang paling
+            nyaman untuk terhubung dengan tim kami.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <motion.a
+            variants={itemVariants}
+            href={`mailto:${email}`}
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-7 transition-all duration-300 hover:border-mitologi-gold/40 hover:shadow-lg hover:shadow-mitologi-gold/5"
           >
-            <div className="inline-flex items-center gap-3 mb-6 sm:mb-8 bg-white border border-slate-200 shadow-sm rounded-full py-2 px-5 w-fit">
-              {/* <span className="w-2 h-2 rounded-full bg-mitologi-gold animate-pulse" /> */}
-              <span className="text-mitologi-navy font-sans font-bold uppercase tracking-[0.2em] text-[11px] sm:text-xs">
-                Layanan Pelanggan
+            <div>
+              <div className="mb-5 inline-flex items-center justify-center w-11 h-11 rounded-xl bg-mitologi-navy/5 text-mitologi-navy group-hover:bg-mitologi-gold/10 group-hover:text-mitologi-gold transition-colors duration-300">
+                <EnvelopeIcon className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-semibold text-slate-900 mb-1.5">
+                Email
+              </h3>
+              <p className="text-sm text-slate-500 mb-4">
+                Kami merespon dalam 24 jam.
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-mitologi-navy">
+                {email}
+              </span>
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-400 group-hover:text-mitologi-gold transition-colors" />
+            </div>
+          </motion.a>
+
+          <motion.a
+            variants={itemVariants}
+            href={`tel:${phone.replace(/\s/g, "")}`}
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-7 transition-all duration-300 hover:border-mitologi-gold/40 hover:shadow-lg hover:shadow-mitologi-gold/5"
+          >
+            <div>
+              <div className="mb-5 inline-flex items-center justify-center w-11 h-11 rounded-xl bg-mitologi-navy/5 text-mitologi-navy group-hover:bg-mitologi-gold/10 group-hover:text-mitologi-gold transition-colors duration-300">
+                <PhoneIcon className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-semibold text-slate-900 mb-1.5">
+                Telepon / WhatsApp
+              </h3>
+              <p className="text-sm text-slate-500 mb-4">
+                Langsung terhubung dengan admin.
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-mitologi-navy">
+                {phone}
+              </span>
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-400 group-hover:text-mitologi-gold transition-colors" />
+            </div>
+          </motion.a>
+
+          <motion.div
+            variants={itemVariants}
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-7 transition-all duration-300 hover:border-mitologi-gold/40 hover:shadow-lg hover:shadow-mitologi-gold/5"
+          >
+            <div>
+              <div className="mb-5 inline-flex items-center justify-center w-11 h-11 rounded-xl bg-mitologi-navy/5 text-mitologi-navy group-hover:bg-mitologi-gold/10 group-hover:text-mitologi-gold transition-colors duration-300">
+                <MapPinIcon className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-semibold text-slate-900 mb-1.5">
+                Workshop
+              </h3>
+              <p className="text-sm text-slate-500 mb-4">
+                Kunjungi workshop kami langsung.
+              </p>
+            </div>
+            <span className="text-sm font-medium text-mitologi-navy leading-snug">
+              {address}
+            </span>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="group relative flex flex-col rounded-2xl border border-slate-200 bg-mitologi-navy p-7 transition-all duration-300 hover:shadow-lg md:col-span-2 lg:col-span-2"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-mitologi-gold/20 text-mitologi-gold">
+                <ClockIcon className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">
+                Jam Operasional
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center justify-between rounded-xl bg-white/[0.06] border border-white/10 px-5 py-4">
+                <span className="text-sm text-slate-300">{weekdayLabel}</span>
+                <span className="text-sm font-semibold text-white">
+                  {weekdayHours}
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-white/[0.06] border border-white/10 px-5 py-4">
+                <span className="text-sm text-slate-300">{weekendLabel}</span>
+                <span className="text-sm font-semibold text-mitologi-gold">
+                  {weekendHours}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="group relative flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 p-7 transition-all duration-300 hover:border-mitologi-gold/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
+              Temukan Kami
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.type}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-white text-slate-600 border border-slate-200 shadow-sm hover:border-mitologi-gold/50 hover:text-mitologi-gold hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <SocialIcon type={s.type} />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {mapsEmbed && (
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
+          >
+            <div className="flex items-center gap-2.5 px-6 py-4 bg-slate-50 border-b border-slate-200">
+              <MapPinIcon className="w-4 h-4 text-mitologi-gold" />
+              <span className="text-sm font-semibold text-mitologi-navy">
+                Lokasi Workshop
               </span>
             </div>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-black mb-8 leading-[1.15] tracking-tight text-mitologi-navy">
-              Mari <span className="text-mitologi-gold">Terhubung</span>
-            </h2>
-
-            <div className="relative mb-12">
-              <div className="absolute top-2 bottom-0 left-[11px] w-px bg-gradient-to-b from-mitologi-gold via-slate-200 to-transparent" />
-              <div className="pl-8 sm:pl-10 relative">
-                <div className="absolute left-[7px] top-[6px] w-[9px] h-[9px] rounded-full bg-mitologi-gold ring-4 ring-white" />
-                <p className="text-slate-600 leading-[1.7] font-sans font-medium text-sm sm:text-[15px] lg:text-base text-justify">
-                  Hubungi kami untuk konsultasi, pemesanan, atau sekadar
-                  bertanya seputar layanan produksi kami. Tim kami dengan senang
-                  hati akan membantu Anda.
-                </p>
-              </div>
+            <div className="relative w-full h-[320px] sm:h-[400px]">
+              <iframe
+                src={mapsEmbed}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full grayscale-[15%] hover:grayscale-0 transition-all duration-500"
+              />
             </div>
-
-            <div className="space-y-6">
-              {/* Contact Details Card (Matches Makna Logo Card) */}
-              <div className="relative group bg-white rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-mitologi-gold/30 transition-all duration-300 overflow-hidden flex flex-col">
-                <div className="absolute inset-0 bg-gradient-to-br from-mitologi-navy/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                <div className="relative z-10 space-y-6">
-                  {contactItems.map((item, i) => (
-                    <div key={i} className="flex gap-5 group/item items-start">
-                      <div className="flex-shrink-0">
-                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-navy text-white flex items-center justify-center font-sans font-black shadow-md group-hover/item:scale-110 group-hover/item:bg-mitologi-gold group-hover/item:text-mitologi-navy transition-all duration-300">
-                          {item.icon}
-                        </div>
-                      </div>
-                      <div className="pt-0.5">
-                        <h3 className="text-[11px] sm:text-xs font-sans font-bold text-slate-600 uppercase tracking-widest mb-1.5">
-                          {item.title}
-                        </h3>
-                        <p className="text-mitologi-navy font-sans font-black text-[13px] sm:text-[15px] leading-relaxed tracking-tight">
-                          {item.value}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Jam Operasional */}
-              <div className="relative group bg-mitologi-navy rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 shadow-sm border border-transparent hover:shadow-xl hover:border-mitologi-gold/30 transition-all duration-300 overflow-hidden flex flex-col">
-                <div className="absolute -right-6 -top-6 text-white/5 group-hover:scale-110 transition-transform duration-700">
-                  <ClockIcon className="w-32 h-32 transform rotate-12" />
-                </div>
-
-                <div className="relative z-10 flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-mitologi-gold text-mitologi-navy flex items-center justify-center font-sans font-black shadow-md">
-                    <ClockIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black text-white font-sans tracking-tight">
-                    Jam Operasional
-                  </h3>
-                </div>
-                <ul className="space-y-4 font-sans text-slate-300 relative z-10 pl-2">
-                  <li className="flex justify-between items-center group/time">
-                    <div className="flex items-center gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover/time:bg-mitologi-gold transition-colors"></span>
-                      <span className="font-medium text-[13px] sm:text-[15px]">
-                        {weekdayLabel}
-                      </span>
-                    </div>
-                    <span className="font-bold text-white tracking-tight">
-                      {weekdayHours}
-                    </span>
-                  </li>
-                  <li className="flex justify-between items-center group/time pt-1">
-                    <div className="flex items-center gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover/time:bg-mitologi-gold transition-colors"></span>
-                      <span className="font-medium text-[13px] sm:text-[15px]">
-                        {weekendLabel}
-                      </span>
-                    </div>
-                    <span className="font-bold text-mitologi-gold tracking-tight">
-                      {weekendHours}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </MotionDiv>
-
-          {/* Right: Map Presentation */}
-          <MotionDiv
-            delay={0.3}
-            className="lg:col-span-7 h-full min-h-[400px] mt-10 lg:mt-0 lg:pl-4"
-          >
-            <div className="relative w-full h-full group flex flex-col">
-              <div className="absolute inset-0 bg-gradient-to-br from-mitologi-gold/20 to-mitologi-navy/5 rounded-[2.5rem] transform translate-x-3 translate-y-3 sm:translate-x-6 sm:translate-y-6 transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4 pointer-events-none" />
-              <div className="absolute inset-0 border-2 border-slate-200 rounded-[2.5rem] transform -translate-x-3 -translate-y-3 sm:-translate-x-6 sm:-translate-y-6 transition-transform duration-500 group-hover:-translate-x-4 group-hover:-translate-y-4 bg-white/50 backdrop-blur-sm pointer-events-none" />
-
-              <div className="relative w-full rounded-[2rem] overflow-hidden bg-white shadow-xl flex flex-col p-2 z-10 border border-slate-100 flex-1 min-h-[400px]">
-                {/* Header Peta (matches image display in history) */}
-                <div className="flex items-center gap-3 mb-4 mt-2 px-4 sm:px-6">
-                  <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shadow-sm border border-slate-100">
-                    <MapPinIcon className="w-4 h-4 text-mitologi-gold" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-black text-mitologi-navy font-sans tracking-tight">
-                    Lokasi Workshop
-                  </h2>
-                </div>
-
-                <div className="flex-1 w-full rounded-[1.5rem] overflow-hidden relative">
-                  <iframe
-                    src={mapsEmbed}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="w-full h-full filter opacity-95 grayscale-[20%] contrast-[95%] hover:opacity-100 hover:grayscale-0 hover:contrast-100 transition-all duration-500 absolute inset-0"
-                  />
-                </div>
-              </div>
-
-              {/* Social Media floating below map like the info badge */}
-              {socials.length > 0 && (
-                <div className="absolute -bottom-6 -left-4 sm:-bottom-8 sm:-left-6 bg-white/95 backdrop-blur shadow-xl border border-slate-100 p-4 sm:p-5 rounded-3xl flex gap-3 group-hover:-translate-y-2 transition-transform duration-500 z-20">
-                  {socials.map((s) => (
-                    <a
-                      key={s.type}
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={s.label}
-                      className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 bg-slate-50 text-mitologi-navy rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-mitologi-gold/50 hover:bg-mitologi-gold hover:text-mitologi-navy hover:-translate-y-1 transition-all duration-300 group/soc"
-                    >
-                      <SocialIcon type={s.type} />
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </MotionDiv>
-        </div>
-      </div>
-    </MotionSection>
+          </motion.div>
+        )}
+      </motion.div>
+    </section>
   );
 }

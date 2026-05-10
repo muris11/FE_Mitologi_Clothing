@@ -22,7 +22,7 @@ export function Testimonials({
   const col3 = testimonials.filter((_, i) => i % 3 === 2);
 
   return (
-    <MotionSection className="bg-slate-50 py-24 sm:py-32 relative overflow-hidden border-t border-slate-200/50">
+    <MotionSection className="bg-slate-50 py-24 sm:py-32 relative overflow-hidden">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-2xl text-center mb-16 flex flex-col items-center">
           <SectionHeading

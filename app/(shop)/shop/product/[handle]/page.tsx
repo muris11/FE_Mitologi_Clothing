@@ -12,8 +12,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-// export const runtime = "edge"; // Disabled to avoid connection issues with local PHP backend
-
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
@@ -23,7 +21,6 @@ export async function generateMetadata(props: {
   if (!product) return notFound();
 
   const { url, width, height, altText: alt } = product.featuredImage || {};
-  // Normalize tags to always be an array
   const tags = Array.isArray(product.tags) ? product.tags : [];
   const indexable = !tags.includes("hidden");
 
@@ -85,19 +82,15 @@ export default async function ProductPage(props: {
 
   if (!product) return notFound();
 
-  // Extract shipping location from contact/legality address
   const address =
     settings?.contact?.contactAddress ||
     settings?.legality?.legalAddress ||
     "Jl. Raya Lelea, Indramayu, Jawa Barat";
-  
-  // Extract city and province from address (e.g., "Indramayu, Jawa Barat")
-  const addressParts = address.split(',').map((p: string) => p.trim());
+
+  const addressParts = address.split(",").map((p: string) => p.trim());
   let shippingLocation = "Indramayu, Jawa Barat";
-  
-  // Try to find city and province in the address
+
   if (addressParts.length >= 2) {
-    // Look for the last two parts which are typically city and province
     const lastTwoParts = addressParts.slice(-2);
     if (lastTwoParts.length === 2) {
       shippingLocation = `${lastTwoParts[0]}, ${lastTwoParts[1]}`;
@@ -145,14 +138,12 @@ export default async function ProductPage(props: {
     ],
   };
 
-  // Find category name for breadcrumb
   const productTags = Array.isArray(product.tags) ? product.tags : [];
   const categoryName =
     categories.find((c) =>
       productTags.some((tag) => tag.toLowerCase() === c.handle.toLowerCase()),
     )?.title || "Produk";
 
-  // Prepare gallery images
   const images = Array.isArray(product.images) ? product.images : [];
   const galleryImages =
     images.length > 0
@@ -184,172 +175,112 @@ export default async function ProductPage(props: {
         }}
       />
 
-      {/* Breadcrumb Section */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500 font-sans font-medium">
-            <Link
-              href="/"
-              className="hover:text-mitologi-navy transition-colors"
-            >
+      <div className="bg-white min-h-screen">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-1.5 py-4 text-sm text-slate-500 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <Link href="/" className="hover:text-slate-900 transition-colors flex-shrink-0">
               Beranda
             </Link>
-            <ChevronRightIcon className="w-4 h-4" />
+            <ChevronRightIcon className="w-3.5 h-3.5 flex-shrink-0" />
             <Link
               href="/shop"
-              className="hover:text-mitologi-navy transition-colors"
+              className="hover:text-slate-900 transition-colors flex-shrink-0"
             >
               Katalog
             </Link>
-            <ChevronRightIcon className="w-4 h-4" />
-            <span className="text-slate-900 font-bold truncate">
+            <ChevronRightIcon className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="text-slate-900 font-medium truncate sm:max-w-[300px]">
               {product.title}
             </span>
           </nav>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="bg-slate-50 min-h-screen pb-16 pt-8">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-          {/* Product Section Card */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 lg:p-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-              {/* Image Gallery (5 cols) */}
-              <div className="md:col-span-5">
-                <Suspense
-                  fallback={
-                    <div className="relative aspect-[4/5] w-full bg-slate-100 rounded-2xl animate-pulse" />
-                  }
-                >
-                  <Gallery images={galleryImages} />
-                </Suspense>
-              </div>
-
-              {/* Product Info (7 cols) */}
-              <div className="md:col-span-7">
-                <Suspense fallback={<ProductInfoSkeleton />}>
-                  <ProductDescription product={product} />
-                </Suspense>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 pb-12 sm:pb-16 pt-2">
+            <div>
+              <Suspense
+                fallback={
+                  <div className="aspect-[4/5] w-full bg-slate-100 rounded-lg animate-pulse" />
+                }
+              >
+                <Gallery images={galleryImages} />
+              </Suspense>
             </div>
-          </div>
 
-          {/* Shop/Toko Info Card */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-white border border-slate-100 shadow-md overflow-hidden flex items-center justify-center p-1.5">
-                <img
-                  src="/images/logo.png"
-                  alt="Mitologi Clothing"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h3 className="font-sans font-bold text-lg text-mitologi-navy">
-                  Mitologi Clothing
+            <div className="lg:pt-2">
+              <Suspense fallback={<ProductInfoSkeleton />}>
+                <ProductDescription product={product} />
+              </Suspense>
+
+              <div className="mt-10 pt-8 border-t border-slate-100">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
+                  Detail
                 </h3>
-                <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-sm text-slate-500 font-sans font-medium mt-1">
-                  <span>Produk Premium</span>
-                  <span className="hidden sm:inline text-slate-300">•</span>
-                  <span className="text-emerald-600 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Online
-                  </span>
-                </div>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                  <dt className="text-slate-500">Kategori</dt>
+                  <dd className="text-slate-900 font-medium">{categoryName}</dd>
+                  <dt className="text-slate-500">Stok</dt>
+                  <dd className="text-slate-900 font-medium">
+                    {product.totalStock !== undefined
+                      ? product.totalStock
+                      : product.variants[0]?.stock || 0}{" "}
+                    tersedia
+                  </dd>
+                  <dt className="text-slate-500">Dikirim dari</dt>
+                  <dd className="text-slate-900 font-medium">
+                    {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN || shippingLocation}
+                  </dd>
+                  {product.variants[0]?.sku && (
+                    <>
+                      <dt className="text-slate-500">SKU</dt>
+                      <dd className="text-slate-900 font-mono text-xs">
+                        {product.variants[0].sku}
+                      </dd>
+                    </>
+                  )}
+                </dl>
               </div>
             </div>
           </div>
 
-          {/* Product Details & Description Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-            {/* Product Specifications (Left/Top) */}
-            <div className="lg:col-span-4 space-y-8">
-              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-                <h2 className="text-lg font-sans font-extrabold text-mitologi-navy mb-6 flex items-center gap-2">
-                  <div className="w-1.5 h-6 bg-mitologi-gold rounded-full"></div>
-                  Spesifikasi Produk
-                </h2>
-
-                <div className="flex flex-col gap-4 text-sm font-sans">
-                  <div className="flex flex-col gap-1 pb-4 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Kategori</span>
-                    <span className="text-mitologi-navy font-bold">
-                      {categoryName}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1 pb-4 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Stok</span>
-                    <span className="text-slate-900 font-semibold">
-                      Sisa Kuantitas: Tersedia{" "}
-                      {product.totalStock !== undefined
-                        ? product.totalStock
-                        : product.variants[0]?.stock || 0}{" "}
-                      buah
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1 pb-4 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">
-                      Dikirim Dari
-                    </span>
-                    <span className="text-slate-900 font-semibold">
-                      {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN || shippingLocation}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-slate-500 font-medium">SKU</span>
-                    <span className="font-mono text-slate-600 bg-slate-50 px-2 py-1 rounded w-fit">
-                      {product.variants[0]?.sku || "-"}
-                    </span>
-                  </div>
-                </div>
-              </div>
+          {product.descriptionHtml || product.description ? (
+            <div className="border-t border-slate-100 py-12 max-w-3xl">
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                Deskripsi
+              </h2>
+              <div
+                className="prose prose-slate prose-sm max-w-none text-slate-600 leading-relaxed prose-headings:text-slate-900 prose-a:text-slate-900 prose-strong:text-slate-800"
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(
+                    product.descriptionHtml || product.description,
+                  ),
+                }}
+              />
             </div>
+          ) : null}
 
-            {/* Product Description (Right/Bottom) */}
-            <div className="lg:col-span-8">
-              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 lg:p-8 h-full">
-                <h2 className="text-lg font-sans font-extrabold text-mitologi-navy mb-6 flex items-center gap-2">
-                  <div className="w-1.5 h-6 bg-mitologi-navy rounded-full"></div>
-                  Deskripsi Produk
-                </h2>
-                <div
-                  className="prose prose-slate prose-sm sm:prose-base max-w-none text-slate-600 font-sans leading-relaxed whitespace-pre-line prose-headings:text-mitologi-navy prose-a:text-mitologi-navy hover:prose-a:text-mitologi-gold prose-strong:text-slate-900"
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(
-                      product.descriptionHtml || product.description,
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Product Reviews */}
-          <div className="mb-16">
+          <div className="border-t border-slate-100 py-12">
             <ProductReviews handle={product.handle} />
           </div>
 
-          {/* Related Products - Now has its own styled header */}
-          <Suspense fallback={null}>
-            <RelatedProducts id={product.id} />
-          </Suspense>
+          <div className="border-t border-slate-100 py-12">
+            <Suspense fallback={null}>
+              <RelatedProducts id={product.id} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-// Skeleton Loading for Product Info
 function ProductInfoSkeleton() {
   return (
-    <div className="space-y-6">
-      <div className="h-8 w-3/4 bg-slate-200 rounded-lg animate-pulse" />
-      <div className="h-4 w-1/4 bg-slate-200 rounded-md animate-pulse" />
-      <div className="h-12 w-1/3 bg-slate-200 rounded-xl animate-pulse" />
-      <div className="space-y-4 pt-4">
-        <div className="h-12 w-full bg-slate-200 rounded-full animate-pulse" />
-        <div className="h-12 w-1/2 bg-slate-200 rounded-full animate-pulse" />
+    <div className="space-y-4">
+      <div className="h-6 w-3/4 bg-slate-100 rounded animate-pulse" />
+      <div className="h-4 w-1/4 bg-slate-100 rounded animate-pulse" />
+      <div className="h-8 w-1/3 bg-slate-100 rounded animate-pulse mt-4" />
+      <div className="space-y-3 pt-6">
+        <div className="h-10 w-full bg-slate-100 rounded-lg animate-pulse" />
+        <div className="h-10 w-1/2 bg-slate-100 rounded-lg animate-pulse" />
       </div>
     </div>
   );

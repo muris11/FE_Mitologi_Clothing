@@ -71,7 +71,6 @@ export const ProductCard = memo(function ProductCard({
 
   const minPrice = parseFloat(product.priceRange.minVariantPrice.amount);
   const maxPrice = parseFloat(product.priceRange.maxVariantPrice.amount);
-
   const isPriceRange = minPrice !== maxPrice;
 
   const imageUrl = storageUrl(product.featuredImage?.url);
@@ -84,9 +83,8 @@ export const ProductCard = memo(function ProductCard({
   const isSale = tags.includes("sale") || tags.includes("diskon");
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-[22px] shadow-soft hover:shadow-hover border border-app overflow-hidden transition-shadow duration-200 group">
-      {/* Image Area */}
-      <div className="relative aspect-[4/4.8] overflow-hidden bg-app-cream">
+    <div className="group flex flex-col h-full">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-slate-100">
         <Link
           href={`/shop/product/${product.handle}`}
           className="relative block h-full w-full"
@@ -98,126 +96,119 @@ export const ProductCard = memo(function ProductCard({
               fill
               sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
               className={cn(
-                "object-cover group-hover:scale-[1.02] transition-all duration-500",
-                isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-md",
+                "object-cover transition-transform duration-500 group-hover:scale-105",
+                isLoaded ? "opacity-100" : "opacity-0",
               )}
               onLoad={() => setIsLoaded(true)}
               priority={index < 4}
             />
           ) : (
             <div className="h-full w-full flex items-center justify-center text-slate-300">
-              <ShoppingBagIcon className="w-12 h-12" />
-            </div>
-          )}
-
-          {/* Wishlist Button - Top Right */}
-          <div className="absolute top-3 right-3 z-10 opacity-100 transition-opacity duration-200">
-            <WishlistButton
-              productId={product.id}
-              className="bg-white p-2 sm:p-1.5 rounded-full shadow-sm hover:bg-white hover:text-red-500 transition-colors duration-200 text-slate-400 border border-app touch-manipulation"
-              iconClassName="h-4 w-4"
-            />
-          </div>
-
-          {/* Bottom Strip Badge (if Sale) */}
-          {isSale && (
-            <div className="absolute bottom-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full bg-[rgba(20,32,51,0.84)] text-white text-[10px] font-bold uppercase tracking-[0.18em]">
-              Promo
+              <ShoppingBagIcon className="w-10 h-10" />
             </div>
           )}
         </Link>
-      </div>
 
-      {/* Body Area */}
-      <div className="flex flex-col flex-grow p-4 bg-white relative">
-        {/* Badges */}
-        <div className="flex flex-wrap gap-1.5 mb-2">
+        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
+          {isSale && (
+            <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-red-500 text-white rounded">
+              Sale
+            </span>
+          )}
           {isBestSeller && (
-            <span className="inline-flex items-center px-2 py-1 bg-app-cream text-mitologi-navy text-[10px] font-bold rounded-full tracking-[0.14em] uppercase border border-app">
-              TERLARIS
+            <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-mitologi-navy text-white rounded">
+              Terlaris
             </span>
           )}
           {isRecommended && !isBestSeller && (
-            <span className="inline-flex items-center px-2 py-1 bg-app-cream text-mitologi-gold-dark text-[10px] font-bold rounded-full tracking-[0.14em] uppercase border border-app">
-              REKOMENDASI
+            <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-mitologi-gold text-mitologi-navy rounded">
+              Untuk Anda
             </span>
           )}
         </div>
 
-        {/* Title */}
-        <Link href={`/shop/product/${product.handle}`} className="mb-2">
-          <h3 className="text-[14px] sm:text-[15px] leading-snug font-sans font-semibold tracking-[0.01em] text-slate-800 group-hover:text-mitologi-navy transition-colors line-clamp-2 min-h-[42px]">
+        <div className="absolute top-2.5 right-2.5 z-10">
+          <WishlistButton
+            productId={product.id}
+            className="bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-slate-500 hover:text-red-500 transition-colors shadow-sm"
+            iconClassName="h-4 w-4"
+          />
+        </div>
+
+        <div className="absolute bottom-0 inset-x-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
+          <button
+            onClick={handleAddToCart}
+            disabled={isAdding || product.availableForSale === false}
+            className="w-full py-2.5 text-xs font-semibold text-center bg-white/95 backdrop-blur-sm text-mitologi-navy rounded-md hover:bg-mitologi-navy hover:text-white transition-colors disabled:opacity-50"
+          >
+            {isAdding
+              ? "Menambahkan..."
+              : hasMultipleVariants
+                ? "Pilih Varian"
+                : "Tambah ke Keranjang"}
+          </button>
+        </div>
+
+        {totalStock !== undefined && totalStock > 0 && totalStock <= 5 && (
+          <div className="absolute bottom-2.5 left-2.5 z-10 group-hover:opacity-0 transition-opacity">
+            <span className="text-[10px] font-bold text-white bg-red-500/90 px-1.5 py-0.5 rounded">
+              Sisa {totalStock}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col flex-grow pt-3 pb-1">
+        <Link href={`/shop/product/${product.handle}`}>
+          <h3 className="text-sm font-medium text-slate-800 leading-snug line-clamp-2 group-hover:text-mitologi-navy transition-colors">
             {product.title}
           </h3>
         </Link>
 
-        {/* Price */}
-        <div className="mt-auto mb-3 text-left">
-          <div className="text-[18px] font-extrabold text-mitologi-navy font-sans leading-none">
+        <div className="mt-1.5 flex items-baseline gap-1.5">
+          <span className="text-sm font-bold text-slate-900">
             {isPriceRange ? (
-              <div className="flex items-center gap-1">
+              <span className="flex items-center gap-1">
                 <Price
                   amount={product.priceRange.minVariantPrice.amount}
                   currencyCode={product.priceRange.minVariantPrice.currencyCode}
                 />
-                <span className="text-slate-400 font-normal text-xs">-</span>
+                <span className="text-slate-400 font-normal text-xs">–</span>
                 <Price
                   amount={product.priceRange.maxVariantPrice.amount}
                   currencyCode={product.priceRange.maxVariantPrice.currencyCode}
                 />
-              </div>
+              </span>
             ) : (
               <Price
                 amount={product.priceRange.minVariantPrice.amount}
                 currencyCode={product.priceRange.minVariantPrice.currencyCode}
               />
             )}
-          </div>
+          </span>
         </div>
 
-        {/* Rating & Sold Info */}
-        <div className="flex min-h-[18px] items-center gap-1.5 text-[11px] text-slate-500 font-sans mt-1">
+        <div className="mt-1.5 flex items-center gap-2 text-[11px] text-slate-400">
           {hasRating && (
-            <div className="flex items-center">
+            <span className="flex items-center gap-0.5">
               <svg
-                className="w-3 h-3 text-mitologi-gold mr-0.5"
+                className="w-3 h-3 text-amber-400"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              <span>{product.averageRating?.toFixed(1)}</span>
-            </div>
-          )}
-          {hasRating && hasSoldMetric && (
-            <span className="w-0.5 h-0.5 rounded-full bg-slate-300"></span>
-          )}
-          {hasSoldMetric && <span>Terjual {product.totalSold}+</span>}
-        </div>
-
-        <div className="flex items-center justify-between text-[11px] text-slate-400 font-sans mt-2">
-          <div className="truncate">
-            {variantTitle ? (
-              <span>{variantTitle}</span>
-            ) : (
-              <span>Siap dikirim</span>
-            )}
-          </div>
-          {totalStock !== undefined && totalStock > 0 && totalStock <= 5 && (
-            <span className="text-[10px] font-bold text-red-500 tracking-wide bg-red-50 px-2 py-1 rounded-full border border-red-100">
-              Sisa {totalStock}
+              {product.averageRating?.toFixed(1)}
             </span>
           )}
+          {hasRating && hasSoldMetric && (
+            <span className="w-0.5 h-0.5 rounded-full bg-slate-300" />
+          )}
+          {hasSoldMetric && <span>{product.totalSold}+ terjual</span>}
+          {!hasRating && !hasSoldMetric && variantTitle && (
+            <span>{variantTitle}</span>
+          )}
         </div>
-
-        {/* Cart Button */}
-        <button
-          onClick={handleAddToCart}
-          disabled={isAdding || product.availableForSale === false}
-          className="absolute bottom-4 right-4 p-2.5 sm:p-2 text-mitologi-navy bg-app-cream hover:bg-mitologi-navy hover:text-white rounded-full transition-colors border border-app hover:border-mitologi-navy touch-manipulation"
-        >
-          <ShoppingBagIcon className="w-4 h-4" />
-        </button>
       </div>
     </div>
   );
@@ -225,14 +216,11 @@ export const ProductCard = memo(function ProductCard({
 
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col rounded-2xl overflow-hidden h-full">
-      <div className="aspect-[4/5] bg-slate-100 animate-pulse rounded-2xl" />
-      <div className="pt-5 px-2 flex flex-col flex-grow bg-white animate-pulse">
-        <div className="flex justify-between items-start mb-2">
-          <div className="h-5 bg-slate-200 rounded w-1/2" />
-          <div className="h-5 bg-slate-200 rounded w-1/3" />
-        </div>
-        <div className="h-4 bg-slate-100 rounded w-1/4 mt-1" />
+    <div className="flex flex-col">
+      <div className="aspect-[3/4] bg-slate-100 animate-pulse rounded-lg" />
+      <div className="pt-3 space-y-2">
+        <div className="h-4 bg-slate-100 rounded w-4/5" />
+        <div className="h-4 bg-slate-100 rounded w-1/3" />
       </div>
     </div>
   );
@@ -240,7 +228,7 @@ export function ProductCardSkeleton() {
 
 export function ProductGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10">
       {Array.from({ length: 8 }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}

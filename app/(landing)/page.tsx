@@ -86,7 +86,7 @@ export default async function HomePage() {
         <PortfolioGallery items={data?.portfolioItems} />
         <PartnerClients partners={data?.partners} />
         <Testimonials testimonials={data?.testimonials} />
-        <CTASection cta={data?.cta} />
+        <CTASection cta={data?.cta} portfolioItems={data?.portfolioItems} products={data?.newArrivals} />
       </Suspense>
     </>
   );

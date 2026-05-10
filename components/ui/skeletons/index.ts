@@ -3,6 +3,7 @@ export * from "./hero-skeleton";
 export * from "./portfolio-skeleton";
 export * from "./product-detail-skeleton";
 export * from "./subpage-hero-skeleton";
+export * from "./subpage-header-skeleton";
 export * from "./category-page-skeleton";
 export * from "./layanan-page-skeleton";
 export * from "./portfolio-page-skeleton";

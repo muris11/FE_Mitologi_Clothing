@@ -70,8 +70,9 @@ export function Hero({ slides = [] }: { slides?: HeroSlide[] }) {
                   className="object-cover"
                   sizes="100vw"
                 />
-                {/* Gradient Overlay for image readability */}
+                {/* Gradient Overlays for readability */}
                 <div className="absolute inset-0 bg-gradient-to-r from-mitologi-navy/95 via-mitologi-navy/70 to-mitologi-navy/20" />
+                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-mitologi-navy/60 to-transparent" />
               </>
             ) : (
               /* Navy Blue Background Fallback */
@@ -162,7 +163,7 @@ export function Hero({ slides = [] }: { slides?: HeroSlide[] }) {
                     variant="gold"
                     className="shadow-lg shadow-mitologi-gold/20 flex-1 sm:flex-none px-2 sm:px-6 text-xs sm:text-sm"
                   >
-                    <Link href={slide.ctaLink || "/produk"}>
+                    <Link href={slide.ctaLink || "/shop"}>
                       {slide.ctaText}
                     </Link>
                   </Button>

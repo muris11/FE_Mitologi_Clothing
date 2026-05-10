@@ -10,11 +10,13 @@ import { useEffect, useState } from "react";
 interface ProductFiltersProps {
   categories: Collection[];
   activeCategory?: string | null;
+  onClose?: () => void;
 }
 
 export function ProductFilters({
   categories,
   activeCategory: propActiveCategory,
+  onClose,
 }: ProductFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -50,6 +52,7 @@ export function ProductFilters({
     } else {
       router.push(`/shop${queryString}`, { scroll: false });
     }
+    onClose?.();
   };
 
   const handlePriceApply = () => {
@@ -62,35 +65,25 @@ export function ProductFilters({
 
     params.delete("page");
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    onClose?.();
   };
 
   return (
     <div className="space-y-8">
-      {/* Jenis Kain Section */}
       <div>
-        <h3 className="font-sans font-bold text-mitologi-navy text-sm uppercase tracking-widest mb-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
           Kategori
         </h3>
-
-        <div className="space-y-3">
-          {/* All Products Option */}
+        <div className="space-y-1">
           <button
             onClick={() => handleCategoryChange(null)}
             className={cx(
-              "w-full text-left text-sm transition-all font-sans group flex items-center gap-3",
+              "w-full text-left text-sm py-1.5 px-2 rounded-md transition-colors",
               !activeCategory
-                ? "font-extrabold text-mitologi-navy"
-                : "font-medium text-slate-500 hover:text-mitologi-navy",
+                ? "font-semibold text-slate-900 bg-slate-100"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
             )}
           >
-            <span
-              className={cx(
-                "w-1.5 h-1.5 rounded-full transition-all",
-                !activeCategory
-                  ? "bg-mitologi-gold"
-                  : "bg-transparent group-hover:bg-slate-300",
-              )}
-            />
             Semua Produk
           </button>
 
@@ -110,20 +103,12 @@ export function ProductFilters({
                   key={category.handle}
                   onClick={() => handleCategoryChange(category.handle)}
                   className={cx(
-                    "w-full text-left text-sm transition-all font-sans group flex items-center gap-3",
+                    "w-full text-left text-sm py-1.5 px-2 rounded-md transition-colors",
                     isActive
-                      ? "font-extrabold text-mitologi-navy"
-                      : "font-medium text-slate-500 hover:text-mitologi-navy",
+                      ? "font-semibold text-slate-900 bg-slate-100"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
                   )}
                 >
-                  <span
-                    className={cx(
-                      "w-1.5 h-1.5 rounded-full transition-all flex-shrink-0",
-                      isActive
-                        ? "bg-mitologi-gold"
-                        : "bg-transparent group-hover:bg-slate-300",
-                    )}
-                  />
                   {category.title}
                 </button>
               );
@@ -131,64 +116,59 @@ export function ProductFilters({
         </div>
       </div>
 
-      {/* Price Filter Section */}
-      <div className="mt-8">
-        <h3 className="font-sans font-bold text-mitologi-navy text-sm uppercase tracking-widest mb-4">
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
           Harga
         </h3>
-
-        <div className="space-y-4">
-          <div className="space-y-3">
-            <div>
-              <label
-                htmlFor="minPrice"
-                className="text-xs font-sans font-bold text-slate-500 mb-1.5 block"
-              >
-                Minimal
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-sans font-medium">
-                  Rp
-                </span>
-                <Input
-                  type="number"
-                  id="minPrice"
-                  placeholder="0"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  className="pl-9 text-sm font-sans rounded-xl border-slate-200 focus:border-mitologi-navy focus:ring-mitologi-navy shadow-sm transition-shadow [appearance:none] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
-                />
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="maxPrice"
-                className="text-xs font-sans font-bold text-slate-500 mb-1.5 block"
-              >
-                Maksimal
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-sans font-medium">
-                  Rp
-                </span>
-                <Input
-                  type="number"
-                  id="maxPrice"
-                  placeholder="~"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="pl-9 text-sm font-sans rounded-xl border-slate-200 focus:border-mitologi-navy focus:ring-mitologi-navy shadow-sm transition-shadow [appearance:none] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
-                />
-              </div>
+        <div className="space-y-3">
+          <div>
+            <label
+              htmlFor="minPrice"
+              className="text-[11px] text-slate-500 mb-1 block"
+            >
+              Minimal
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                Rp
+              </span>
+              <Input
+                type="number"
+                id="minPrice"
+                placeholder="0"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="pl-8 text-sm rounded-lg border-slate-200 focus:border-slate-400 focus:ring-slate-400 [appearance:none] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
             </div>
           </div>
-
+          <div>
+            <label
+              htmlFor="maxPrice"
+              className="text-[11px] text-slate-500 mb-1 block"
+            >
+              Maksimal
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                Rp
+              </span>
+              <Input
+                type="number"
+                id="maxPrice"
+                placeholder="~"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="pl-8 text-sm rounded-lg border-slate-200 focus:border-slate-400 focus:ring-slate-400 [appearance:none] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+          </div>
           <Button
             onClick={handlePriceApply}
             variant="ghost"
-            className="w-full rounded-xl font-sans font-bold border border-slate-200 text-slate-600 hover:border-mitologi-navy hover:text-mitologi-navy transition-colors mt-2"
+            className="w-full text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
           >
-            Terapkan Harga
+            Terapkan
           </Button>
         </div>
       </div>

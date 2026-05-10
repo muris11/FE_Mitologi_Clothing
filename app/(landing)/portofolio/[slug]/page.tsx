@@ -1,9 +1,8 @@
 import { PortfolioClient } from "components/landing/portofolio/portfolio-client";
 import { getPortfolio } from "lib/api";
+import { getPortfolios } from "lib/api/content";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-
-// export const runtime = 'edge'; // Disabled: incompatible with local PHP backend
 
 export async function generateMetadata({
   params,
@@ -46,5 +45,16 @@ export default async function PortfolioDetailPage({
     notFound();
   }
 
-  return <PortfolioClient portfolio={portfolio} />;
+  const allPortfolios = await getPortfolios();
+  const relatedPortfolios = allPortfolios
+    .filter(
+      (p) =>
+        p.slug !== slug &&
+        (p.category === portfolio.category || !portfolio.category),
+    )
+    .slice(0, 3);
+
+  return (
+    <PortfolioClient portfolio={portfolio} relatedItems={relatedPortfolios} />
+  );
 }

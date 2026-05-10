@@ -1,10 +1,10 @@
+import { AboutPageHero } from "components/landing/about/about-page-hero";
 import { CompanyLegality } from "components/landing/about/company-legality";
 import { FounderStory } from "components/landing/about/founder-story";
 import { AboutHistory } from "components/landing/about/history-section";
 import { ProductionFacilities } from "components/landing/about/production-facilities";
 import { TeamStructure } from "components/landing/about/team-structure";
 import { AboutVisionMission } from "components/landing/about/vision-mission";
-import { SubpageHero } from "components/landing/shared/subpage-hero";
 import { getLandingPageData } from "lib/api";
 
 export const dynamic = "force-dynamic";
@@ -42,17 +42,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <SubpageHero
-        title={`Tentang ${settings?.general?.siteName || "Kami"}`}
-        subtitle={
-          settings?.about?.aboutHeadline ||
-          settings?.general?.siteTagline ||
-          settings?.general?.siteDescription ||
-          ""
-        }
-        badge={true}
-        badgeText={settings?.general?.siteName || "Mitologi Clothing"}
-      />
+      <AboutPageHero settings={settings} />
       <AboutHistory settings={settings} />
       <FounderStory settings={settings} />
       <AboutVisionMission settings={settings} />

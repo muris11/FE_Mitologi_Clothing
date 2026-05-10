@@ -1,106 +1,171 @@
 "use client";
 
 import { CheckIcon } from "@heroicons/react/24/solid";
-import {
-    MotionSection,
-    StaggerGrid,
-    StaggerGridItem,
-} from "components/ui/motion";
-import { SectionHeading } from "components/ui/section-heading";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { PrintingMethod } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
+import { cn } from "lib/utils";
 import Image from "next/image";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState } from "react";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function PrintingMethods({ methods }: { methods?: PrintingMethod[] }) {
+  const [openIndex, setOpenIndex] = useState<number>(0);
+
   if (!methods || methods.length === 0) return null;
 
   return (
-    <MotionSection className="relative py-24 sm:py-32 bg-white overflow-hidden">
-      {/* Background Decorative Graphic */}
-      <div className="absolute top-0 right-0 w-full h-[600px] bg-gradient-to-b from-slate-50 to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-mitologi-gold/5 rounded-full blur-[80px] pointer-events-none" />
+    <section className="py-20 sm:py-32 bg-white">
+      <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
+        <AnimatedContainer className="text-center mb-14">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-3">
+            Eksplorasi Teknik Sablon
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-mitologi-navy text-balance">
+            Pilih Sesuai Kebutuhan Anda
+          </h2>
+          <p className="text-slate-500 mt-3 text-sm sm:text-base max-w-2xl mx-auto">
+            Kami menyediakan berbagai teknik printing berkualitas tinggi, dari sablon manual legendaris hingga digital printing modern.
+          </p>
+        </AnimatedContainer>
 
-      <div className="relative mx-auto max-w-[1440px] px-6 lg:px-8 z-10">
-        <div className="mx-auto max-w-3xl text-center mb-16 flex flex-col items-center">
-          <SectionHeading
-            overline="Eksplorasi Teknik Sablon"
-            title="Pilih Sesuai Kebutuhan Anda"
-            subtitle="Kami menyediakan berbagai teknik printing berkualitas tinggi, dari sablon manual legendaris hingga digital printing modern."
-            className="items-center"
-          />
-        </div>
+        <AnimatedContainer delay={0.3} className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-start">
+          {/* Left: Accordion */}
+          <div className="lg:col-span-3 space-y-3">
+            {methods.map((method, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <div
+                  key={method.id}
+                  className={cn(
+                    "rounded-2xl border overflow-hidden transition-all duration-300 cursor-pointer",
+                    isOpen
+                      ? "border-mitologi-gold/30 bg-slate-50"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  )}
+                  onClick={() => setOpenIndex(index)}
+                >
+                  <div className="flex items-center justify-between p-5">
+                    <div className="flex items-center gap-4">
+                      <span className={cn(
+                        "flex-none w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-colors duration-300",
+                        isOpen ? "bg-mitologi-navy text-white" : "bg-slate-100 text-slate-500"
+                      )}>
+                        {index + 1}
+                      </span>
+                      <div>
+                        <h3 className={cn(
+                          "font-bold text-base transition-colors duration-300",
+                          isOpen ? "text-mitologi-navy" : "text-slate-700"
+                        )}>
+                          {method.name}
+                        </h3>
+                        {method.priceRange && (
+                          <span className="text-xs text-mitologi-gold font-medium">{method.priceRange}</span>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronDownIcon className={cn(
+                      "w-5 h-5 text-slate-400 transition-transform duration-300 flex-shrink-0",
+                      isOpen && "rotate-180 text-mitologi-gold"
+                    )} />
+                  </div>
 
-        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-[1440px] mx-auto">
-          {methods.map((method, index) => (
-            <StaggerGridItem
-              key={method.id}
-              className="group flex flex-col bg-white rounded-2xl md:rounded-[2rem] overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:border-mitologi-gold/30 hover:-translate-y-2 transition-all duration-300 relative"
-            >
-              {/* Number Badge */}
-              <div className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full bg-mitologi-navy/90 text-white font-bold font-sans flex items-center justify-center text-sm shadow-md backdrop-blur-sm border border-white/10 group-hover:bg-mitologi-gold group-hover:text-mitologi-navy transition-colors duration-300">
-                {index + 1}
-              </div>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-5 pb-5 pt-0">
+                          {/* Image inside accordion - mobile only */}
+                          {method.image && (
+                            <div className="relative aspect-video rounded-xl overflow-hidden border border-slate-200 mb-4 lg:hidden">
+                              <Image
+                                src={storageUrl(method.image)}
+                                alt={method.name}
+                                fill
+                                sizes="100vw"
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                          <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                            {method.description}
+                          </p>
+                          {method.pros && method.pros.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-mitologi-gold mb-2">Keunggulan</p>
+                              <ul className="space-y-1.5">
+                                {method.pros.map((pro, i) => (
+                                  <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                                    <CheckIcon className="w-3.5 h-3.5 text-mitologi-navy flex-shrink-0 mt-0.5" />
+                                    {pro}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
 
-              {/* Image Header */}
-              <div className="relative w-full aspect-square sm:aspect-auto sm:h-64 bg-slate-100 overflow-hidden">
-                {method.image ? (
-                  <>
-                    <Image
-                      src={storageUrl(method.image)}
-                      alt={method.name}
-                      fill
-                      className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-mitologi-navy/90 via-mitologi-navy/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </>
+          {/* Right: Sticky image - desktop only */}
+          <div className="lg:col-span-2 sticky top-32 hidden lg:block">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={openIndex}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-slate-200"
+              >
+                {methods[openIndex]?.image ? (
+                  <Image
+                    src={storageUrl(methods[openIndex].image)}
+                    alt={methods[openIndex].name}
+                    fill
+                    sizes="30vw"
+                    className="object-cover"
+                  />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-mitologi-navy to-slate-800 opacity-90"></div>
+                  <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                    <span className="text-slate-300 text-sm">No image</span>
+                  </div>
                 )}
-
-                {/* Title overlay on image */}
-                <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
-                  <h3 className="text-lg sm:text-2xl font-bold font-sans text-white tracking-tight leading-tight group-hover:text-mitologi-gold transition-colors duration-300 line-clamp-2">
-                    {method.name}
-                  </h3>
-                  {method.priceRange && (
-                    <span className="inline-block mt-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] sm:text-xs font-bold font-sans text-white border border-white/20">
-                      {method.priceRange}
-                    </span>
-                  )}
+                <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent">
+                  <span className="text-sm font-bold text-white">{methods[openIndex]?.name}</span>
                 </div>
-              </div>
-
-              {/* Content Body */}
-              <div className="p-4 sm:p-6 flex flex-col flex-1 bg-white">
-                <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3 sm:line-clamp-none">
-                  {method.description}
-                </p>
-
-                <div className="mt-auto">
-                  <h3 className="text-[10px] sm:text-xs font-bold text-mitologi-gold uppercase tracking-widest font-sans mb-3 flex items-center gap-2">
-                    <span className="w-4 h-px bg-mitologi-gold/50"></span>
-                    Keunggulan
-                  </h3>
-
-                  {method.pros && method.pros.length > 0 && (
-                    <ul className="space-y-2 sm:space-y-3">
-                      {method.pros.map((pro, i) => (
-                        <li key={i} className="flex items-start gap-2.5">
-                          <CheckIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-mitologi-navy flex-shrink-0 mt-0.5" />
-                          <span className="text-xs sm:text-sm font-sans text-slate-700 font-medium">
-                            {pro}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            </StaggerGridItem>
-          ))}
-        </StaggerGrid>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </AnimatedContainer>
       </div>
-    </MotionSection>
+    </section>
   );
 }

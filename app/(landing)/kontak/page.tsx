@@ -1,5 +1,5 @@
 import { KontakSection } from "components/landing/kontak/kontak-section";
-import { SubpageHero } from "components/landing/shared/subpage-hero";
+import { SubpageHeader } from "components/landing/shared/subpage-header";
 import { getLandingPageData } from "lib/api";
 import type { Metadata } from "next";
 
@@ -35,11 +35,10 @@ export default async function KontakPage() {
 
   return (
     <>
-      <SubpageHero
+      <SubpageHeader
+        overline="Kontak"
         title="Hubungi Kami"
         subtitle="Siap mendiskusikan kebutuhan clothing Anda. Konsultasi gratis!"
-        badge={true}
-        badgeText="Hubungi Admin"
       />
       <KontakSection settings={data?.siteSettings} />
     </>

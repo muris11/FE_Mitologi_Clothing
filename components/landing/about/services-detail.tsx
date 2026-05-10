@@ -43,9 +43,9 @@ export function AboutServicesDetail({ settings }: { settings?: SiteSettings }) {
             >
               {/* Text Side */}
               <div className="flex-1 space-y-6">
-                <div className="inline-block px-4 py-1.5 bg-white border border-slate-100 text-mitologi-navy font-sans font-bold text-xs uppercase tracking-widest rounded-full shadow-sm">
-                  {service.title}
-                </div>
+                <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold">
+                  Layanan {index + 1}
+                </span>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-mitologi-navy leading-[1.1] tracking-tight">
                   {service.header}
                 </h3>

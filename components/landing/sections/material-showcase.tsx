@@ -1,13 +1,23 @@
 "use client";
 
-import { Card } from "components/ui/card";
-import { SectionHeading } from "components/ui/section-heading";
 import { Material } from "lib/api/types";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
+import { motion, useReducedMotion } from "framer-motion";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 const COLOR_THEMES: Record<string, string> = {
   "bg-gray-100 text-gray-800": "bg-gray-100 text-gray-800",
@@ -19,6 +29,27 @@ const COLOR_THEMES: Record<string, string> = {
   "bg-teal-100 text-teal-800": "bg-teal-100 text-teal-800",
 };
 
+function MaterialCard({ material }: { material: Material }) {
+  const themeClass =
+    material.colorTheme && COLOR_THEMES[material.colorTheme]
+      ? COLOR_THEMES[material.colorTheme]
+      : "bg-mitologi-navy/5 text-mitologi-navy";
+
+  return (
+    <div className="group p-6 sm:p-8 flex flex-col gap-3 cursor-pointer hover:bg-mitologi-navy/[0.02] transition-colors duration-200">
+      <span className={`inline-flex items-center self-start rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${themeClass}`}>
+        {material.name}
+      </span>
+      <h3 className="text-base sm:text-lg font-bold text-mitologi-navy tracking-tight group-hover:text-mitologi-gold transition-colors duration-200">
+        {material.name}
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        {material.description}
+      </p>
+    </div>
+  );
+}
+
 export function MaterialShowcase({
   materials = [],
 }: {
@@ -27,58 +58,29 @@ export function MaterialShowcase({
   if (materials.length === 0) return null;
 
   return (
-    <MotionSection className="bg-white py-24 sm:py-32 border-t border-slate-200/50">
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center mb-16 flex flex-col items-center">
-          <SectionHeading
-            overline="Pilihan Material"
-            title="Bahan Kualitas Premium"
-            className="items-center text-center"
-          />
-          <p className="mt-6 text-base md:text-lg leading-relaxed text-slate-600 font-sans font-medium max-w-2xl text-center">
-            Kami menyediakan berbagai jenis kain sesuai kebutuhan produk Anda,
-            mulai dari kaos santai hingga seragam formal.
+    <section className="py-20 sm:py-32 bg-white">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-5 sm:px-8">
+        <AnimatedContainer className="mx-auto max-w-3xl text-center">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-3">
+            Pilihan Material
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-mitologi-navy text-balance">
+            Bahan Kualitas Premium
+          </h2>
+          <p className="text-slate-500 mt-4 text-sm sm:text-base tracking-wide text-balance">
+            Kami menyediakan berbagai jenis kain sesuai kebutuhan produk Anda, mulai dari kaos santai hingga seragam formal.
           </p>
-        </div>
+        </AnimatedContainer>
 
-        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {materials.map((material) => {
-            const themeClass =
-              material.colorTheme && COLOR_THEMES[material.colorTheme]
-                ? COLOR_THEMES[material.colorTheme]
-                : "bg-mitologi-navy/5 text-mitologi-navy";
-
-            return (
-              <StaggerGridItem key={material.id}>
-                <Card className="group relative p-5 sm:p-8 flex flex-col justify-between rounded-2xl border border-slate-100 bg-white shadow-soft hover:shadow-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden h-full">
-                  {/* Top border effect */}
-                  <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-mitologi-gold to-mitologi-navy origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out z-10" />
-
-                  <div className="relative z-20">
-                    {material.colorTheme && (
-                      <div className="mb-5">
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold font-sans uppercase tracking-widest ${themeClass}`}
-                        >
-                          {material.name}
-                        </span>
-                      </div>
-                    )}
-
-                    <h3 className="text-lg sm:text-2xl font-sans font-bold text-mitologi-navy tracking-tight mb-2 sm:mb-3 group-hover:text-mitologi-gold transition-colors duration-300">
-                      {material.name}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600 font-sans font-medium">
-                      {material.description}
-                    </p>
-                  </div>
-                </Card>
-              </StaggerGridItem>
-            );
-          })}
-        </StaggerGrid>
+        <AnimatedContainer
+          delay={0.4}
+          className="grid grid-cols-1 divide-x divide-y divide-dashed border border-dashed border-slate-200 sm:grid-cols-2 lg:grid-cols-3 rounded-2xl overflow-hidden"
+        >
+          {materials.map((material) => (
+            <MaterialCard key={material.id} material={material} />
+          ))}
+        </AnimatedContainer>
       </div>
-    </MotionSection>
+    </section>
   );
 }

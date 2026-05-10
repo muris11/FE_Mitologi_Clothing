@@ -75,61 +75,58 @@ export function VariantSelector({
   };
 
   return options.map((option) => (
-    <form key={option.id}>
-      <dl className="mb-6">
-        <dt className="mb-3 text-sm font-sans font-bold text-mitologi-navy">
-          {getTranslatedName(option.name)}
-        </dt>
-        <dd className="flex flex-wrap gap-2.5">
-          {option.values.map((value) => {
-            const optionNameLowerCase = option.name.toLowerCase();
+    <fieldset key={option.id} className="mb-5 last:mb-0">
+      <legend className="text-sm font-medium text-slate-700 mb-2.5">
+        {getTranslatedName(option.name)}
+      </legend>
+      <div className="flex flex-wrap gap-2">
+        {option.values.map((value) => {
+          const optionNameLowerCase = option.name.toLowerCase();
 
-            const optionParams: Record<string, string> = {};
-            searchParams.forEach((v, k) => (optionParams[k] = v));
-            optionParams[optionNameLowerCase] = value;
+          const optionParams: Record<string, string> = {};
+          searchParams.forEach((v, k) => (optionParams[k] = v));
+          optionParams[optionNameLowerCase] = value;
 
-            const filtered = Object.entries(optionParams).filter(
-              ([key, value]) =>
-                options.find(
-                  (option) =>
-                    option.name.toLowerCase() === key &&
-                    option.values.includes(value),
-                ),
-            );
-            const isAvailableForSale = combinations.find((combination) =>
-              filtered.every(
-                ([key, value]) =>
-                  combination[key] === value && combination.availableForSale,
+          const filtered = Object.entries(optionParams).filter(
+            ([key, value]) =>
+              options.find(
+                (option) =>
+                  option.name.toLowerCase() === key &&
+                  option.values.includes(value),
               ),
-            );
+          );
+          const isAvailableForSale = combinations.find((combination) =>
+            filtered.every(
+              ([key, value]) =>
+                combination[key] === value && combination.availableForSale,
+            ),
+          );
 
-            const isActive = searchParams.get(optionNameLowerCase) === value;
+          const isActive = searchParams.get(optionNameLowerCase) === value;
 
-            return (
-              <button
-                formAction={() => updateOption(optionNameLowerCase, value)}
-                key={value}
-                aria-disabled={!isAvailableForSale}
-                disabled={!isAvailableForSale}
-                title={`${getTranslatedName(option.name)} ${value}${!isAvailableForSale ? " (Stok Habis)" : ""}`}
-                className={clsx(
-                  "flex min-w-[48px] items-center justify-center rounded-xl border-2 px-4 py-2 text-sm font-sans font-semibold transition-all shadow-sm",
-                  {
-                    "cursor-default border-mitologi-navy bg-mitologi-navy text-white shadow-md scale-105":
-                      isActive,
-                    "border-slate-200 bg-white text-slate-700 hover:border-mitologi-navy hover:text-mitologi-navy":
-                      !isActive && isAvailableForSale,
-                    "relative z-10 cursor-not-allowed border-slate-100 bg-slate-50 text-slate-400 opacity-50":
-                      !isAvailableForSale,
-                  },
-                )}
-              >
-                {value}
-              </button>
-            );
-          })}
-        </dd>
-      </dl>
-    </form>
+          return (
+            <button
+              formAction={() => updateOption(optionNameLowerCase, value)}
+              key={value}
+              aria-disabled={!isAvailableForSale}
+              disabled={!isAvailableForSale}
+              title={`${getTranslatedName(option.name)} ${value}${!isAvailableForSale ? " (Stok Habis)" : ""}`}
+              className={clsx(
+                "min-w-[40px] px-3.5 py-2 text-sm border rounded-md transition-colors",
+                {
+                  "border-slate-900 bg-slate-900 text-white": isActive,
+                  "border-slate-200 bg-white text-slate-700 hover:border-slate-400":
+                    !isActive && isAvailableForSale,
+                  "border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed line-through":
+                    !isAvailableForSale,
+                },
+              )}
+            >
+              {value}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   ));
 }

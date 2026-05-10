@@ -29,6 +29,15 @@ export default function ShopChatbot() {
 
   useEffect(() => {
     setIsMounted(true);
+
+    // Auto-dismiss greeting after 10 seconds on mobile
+    const timer = setTimeout(() => {
+      if (window.innerWidth < 640) {
+        setIsGreetingDismissed(true);
+      }
+    }, 10000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const scrollToBottom = () => {
@@ -258,30 +267,30 @@ export default function ShopChatbot() {
       <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-[60]">
         {/* Initial Greeting Bubble */}
         {!isOpen && messages.length === 0 && !isGreetingDismissed && (
-          <div className="bg-white p-4 pr-10 rounded-2xl shadow-xl shadow-mitologi-navy/10 border border-mitologi-gold/30 max-w-[260px] mb-2 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-500 relative group fill-mode-both">
+          <div className="bg-white/90 backdrop-blur-md p-2.5 pr-8 rounded-2xl shadow-xl shadow-mitologi-navy/10 border border-mitologi-gold/30 max-w-[160px] sm:max-w-[260px] mb-2 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-500 relative group fill-mode-both">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setIsGreetingDismissed(true);
               }}
-              className="absolute top-1 right-1 p-2 text-slate-400 hover:text-mitologi-navy hover:bg-slate-100 rounded-full transition-colors z-10"
+              className="absolute top-1 right-1 p-1 text-slate-400 hover:text-mitologi-navy hover:bg-slate-100 rounded-full transition-colors z-10"
               aria-label="Tutup notifikasi"
             >
-              <XMarkIcon className="w-4 h-4" />
+              <XMarkIcon className="w-3.5 h-3.5" />
             </button>
-            <div className="relative z-0 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-mitologi-gold/20 flex flex-shrink-0 items-center justify-center">
-                <ChatBubbleLeftRightIcon className="w-4 h-4 text-mitologi-navy" />
+            <div className="relative z-0 flex items-center gap-2">
+              <div className="w-5 h-5 rounded-full bg-mitologi-gold/20 flex flex-shrink-0 items-center justify-center">
+                <ChatBubbleLeftRightIcon className="w-2.5 h-2.5 text-mitologi-navy" />
               </div>
-              <p className="text-sm font-sans text-slate-700 leading-relaxed font-medium">
-                Butuh bantuan? Buka{" "}
+              <p className="text-[11px] font-sans text-slate-700 leading-tight font-medium">
+                Ada yang bisa{" "}
                 <span className="font-bold text-mitologi-navy">
-                  Asisten Mitologi
+                  kami bantu?
                 </span>
               </p>
             </div>
             {/* Pointer tail */}
-            <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white border-b border-r border-mitologi-gold/30 transform rotate-45"></div>
+            <div className="absolute -bottom-1 right-6 w-2.5 h-2.5 bg-white border-b border-r border-mitologi-gold/30 transform rotate-45"></div>
           </div>
         )}
 

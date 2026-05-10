@@ -19,7 +19,7 @@ export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
     .sort((a, b) => a.stepNumber - b.stepNumber);
 
   return (
-    <MotionSection className="bg-slate-50 py-24 sm:py-32 border-t border-slate-200/50">
+    <MotionSection className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-12 flex flex-col items-center">
           <SectionHeading
@@ -68,7 +68,7 @@ export function OrderFlow({ orderSteps = [] }: { orderSteps?: OrderStep[] }) {
 
               {filteredSteps.length > 0 ? (
                 filteredSteps.map((step, idx) => (
-                  <div key={step.id} className="flex gap-6 relative group">
+                  <div key={step.id} className="flex gap-6 relative group cursor-pointer">
                     {/* Animated line progress overlay */}
                     <div className="absolute top-12 left-6 w-0.5 bg-mitologi-navy h-full -z-10 opacity-0 group-hover:opacity-10 transition-opacity duration-500 scale-y-0 origin-top group-hover:scale-y-100" />
 

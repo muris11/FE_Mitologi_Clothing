@@ -5,13 +5,24 @@ import {
   GiftIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
-import { SectionHeading } from "components/ui/section-heading";
 import { SiteSettings } from "lib/api/types";
-import {
-  MotionSection,
-  StaggerGrid,
-  StaggerGridItem,
-} from "components/ui/motion";
+import { motion, useReducedMotion } from "framer-motion";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 interface GuaranteeBonusProps {
   settings?: SiteSettings;
@@ -55,45 +66,44 @@ export function GuaranteeBonus({ settings }: GuaranteeBonusProps) {
       : fallbackFeatures;
 
   return (
-    <MotionSection className="relative py-24 sm:py-32 bg-slate-50 overflow-hidden">
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8 relative z-10">
-        <div className="mx-auto max-w-3xl text-center mb-16 flex flex-col items-center">
-          <SectionHeading
-            overline="Keuntungan Memilih Kami"
-            title="Garansi & Bonus Eksklusif"
-            subtitle="Kami tidak hanya berkomitmen pada kualitas, tapi juga memberikan apresiasi lebih untuk setiap pesanan Anda."
-            className="items-center"
-          />
-        </div>
+    <section className="py-20 sm:py-32 bg-slate-50 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(202,138,4,0.04),transparent_60%)] pointer-events-none" />
 
-        <StaggerGrid className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => {
+      <div className="relative mx-auto w-full max-w-5xl space-y-10 px-5 sm:px-8 z-10">
+        <AnimatedContainer className="mx-auto max-w-3xl text-center">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-3">
+            Keuntungan Memilih Kami
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-mitologi-navy text-balance">
+            Garansi & Bonus Eksklusif
+          </h2>
+          <p className="text-slate-500 mt-4 text-sm sm:text-base tracking-wide text-balance">
+            Kami tidak hanya berkomitmen pada kualitas, tapi juga memberikan apresiasi lebih untuk setiap pesanan Anda.
+          </p>
+        </AnimatedContainer>
+
+        <AnimatedContainer delay={0.4} className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+          {features.map((feature, i) => {
             const Icon = feature.icon as React.ElementType;
-
             return (
-              <StaggerGridItem
-                key={index}
-                className="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-soft hover:shadow-hover hover:-translate-y-2 transition-all duration-300 group overflow-hidden"
+              <div
+                key={i}
+                className="group relative p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 hover:border-mitologi-gold/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
-                {/* Gold accent top border on hover */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-mitologi-gold to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                <div className="w-16 h-16 rounded-2xl bg-mitologi-navy text-mitologi-gold flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
-                  {Icon && <Icon className="w-8 h-8" />}
+                <div className="w-12 h-12 rounded-xl bg-mitologi-navy text-mitologi-gold flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  {Icon && <Icon className="w-6 h-6" />}
                 </div>
-
-                <h3 className="text-xl font-bold font-sans text-mitologi-navy mb-3 tracking-tight">
+                <h3 className="text-lg font-bold text-mitologi-navy tracking-tight mb-2">
                   {feature.title}
                 </h3>
-
-                <p className="text-slate-600 font-medium leading-relaxed font-sans text-sm">
+                <p className="text-sm text-slate-500 leading-relaxed group-hover:text-slate-700 transition-colors duration-300">
                   {feature.description}
                 </p>
-              </StaggerGridItem>
+              </div>
             );
           })}
-        </StaggerGrid>
+        </AnimatedContainer>
       </div>
-    </MotionSection>
+    </section>
   );
 }

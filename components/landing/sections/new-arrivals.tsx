@@ -11,7 +11,7 @@ import { MotionSection } from "components/ui/motion";
 
 export function NewArrivalsSkeleton() {
   return (
-    <section className="bg-gradient-to-b from-slate-50/50 to-white py-16 sm:py-24 border-t border-slate-200/50">
+    <section className="bg-gradient-to-b from-slate-50/50 to-white py-16 sm:py-24">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-8 mb-12">
         <div className="mx-auto max-w-2xl text-center flex flex-col items-center">
           <div className="inline-flex items-center gap-2 mb-4">
@@ -55,7 +55,7 @@ export function NewArrivals({
   if (products.length === 0) return null;
 
   return (
-    <MotionSection className="bg-gradient-to-b from-slate-50/50 to-white py-16 sm:py-24 border-t border-slate-200/50 relative overflow-hidden">
+    <MotionSection className="bg-gradient-to-b from-slate-50/50 to-white py-16 sm:py-24 relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-mitologi-gold/5 rounded-full blur-3xl" />

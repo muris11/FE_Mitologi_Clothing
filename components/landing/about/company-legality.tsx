@@ -1,12 +1,23 @@
 "use client";
 
-import { BuildingLibraryIcon } from "@heroicons/react/24/outline";
-import {
-    MotionSection,
-    StaggerGrid,
-    StaggerGridItem,
-} from "components/ui/motion";
 import { SiteSettings } from "lib/api/types";
+import { motion, useReducedMotion } from "framer-motion";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function CompanyLegality({ settings }: { settings?: SiteSettings }) {
   const legality = settings?.legality;
@@ -35,38 +46,36 @@ export function CompanyLegality({ settings }: { settings?: SiteSettings }) {
   if (items.length === 0) return null;
 
   return (
-    <MotionSection className="py-20 lg:py-24 bg-white border-t border-slate-200">
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
-        <div className="flex items-center gap-4 mb-12">
-          <div className="p-3 bg-mitologi-navy/5 rounded-2xl border border-mitologi-navy/10">
-            <BuildingLibraryIcon className="w-8 h-8 text-mitologi-navy" />
-          </div>
-          <div>
-            <p className="text-sm font-sans font-bold tracking-[0.15em] text-mitologi-gold uppercase mb-1">
-              Informasi Legal
-            </p>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-sans font-extrabold text-mitologi-navy tracking-tight leading-[1.1]">
-              Legalitas Perusahaan
-            </h2>
-          </div>
-        </div>
+    <section className="py-20 sm:py-32 bg-slate-50">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-5 sm:px-8">
+        <AnimatedContainer className="text-center sm:text-left">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-3">
+            Informasi Legal
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-mitologi-navy">
+            Legalitas Perusahaan
+          </h2>
+        </AnimatedContainer>
 
-        <StaggerGrid className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <AnimatedContainer
+          delay={0.4}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-slate-200 rounded-2xl overflow-hidden bg-white"
+        >
           {items.map((item, idx) => (
-            <StaggerGridItem
+            <div
               key={idx}
-              className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-soft transition-all group"
+              className="group p-6 sm:p-7 hover:bg-slate-50/80 transition-colors duration-200 cursor-pointer"
             >
-              <h3 className="text-xs sm:text-sm font-sans font-bold text-slate-600 uppercase tracking-wider mb-2 group-hover:text-mitologi-gold transition-colors">
+              <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-hover:text-mitologi-gold transition-colors duration-200">
                 {item.label}
-              </h3>
-              <p className="text-sm sm:text-lg font-sans font-bold text-mitologi-navy">
+              </p>
+              <p className="text-sm sm:text-base font-bold text-mitologi-navy">
                 {item.value}
               </p>
-            </StaggerGridItem>
+            </div>
           ))}
-        </StaggerGrid>
+        </AnimatedContainer>
       </div>
-    </MotionSection>
+    </section>
   );
 }

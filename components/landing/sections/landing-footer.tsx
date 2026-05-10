@@ -1,4 +1,4 @@
-import { SiteSettings } from "lib/api/types";
+import { Product, SiteSettings } from "lib/api/types";
 import { createSocialUrl } from "lib/utils";
 import Link from "next/link";
 import {
@@ -15,8 +15,10 @@ import { MotionDiv } from "components/ui/motion";
 
 export default function LandingFooter({
   settings,
+  newArrivals,
 }: {
   settings?: SiteSettings;
+  newArrivals?: Product[];
 }) {
   const socialLinks = [
     {
@@ -56,6 +58,12 @@ export default function LandingFooter({
       (link.enabled === undefined || link.enabled === "1"),
   );
 
+  const latestProducts = newArrivals && newArrivals.length > 0
+    ? [...newArrivals]
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        .slice(0, 4)
+    : [];
+
   const footerLinks = [
     {
       title: "Perusahaan",
@@ -67,13 +75,19 @@ export default function LandingFooter({
       ],
     },
     {
-      title: "Produk",
-      links: [
-        { name: "Kaos Custom", href: "/produk?category=kaos" },
-        { name: "Jersey Printing", href: "/produk?category=jersey" },
-        { name: "Kemeja & PDL", href: "/produk?category=kemeja" },
-        { name: "Merchandise", href: "/produk?category=merchandise" },
-      ],
+      title: latestProducts.length > 0 ? "Koleksi Terbaru" : "Produk",
+      links:
+        latestProducts.length > 0
+          ? latestProducts.map((p) => ({
+              name: p.title,
+              href: `/shop/product/${p.handle}`,
+            }))
+          : [
+              { name: "Kaos Custom", href: "/shop?category=kaos" },
+              { name: "Jersey Printing", href: "/shop?category=jersey" },
+              { name: "Kemeja & PDL", href: "/shop?category=kemeja" },
+              { name: "Merchandise", href: "/shop?category=merchandise" },
+            ],
     },
   ];
 

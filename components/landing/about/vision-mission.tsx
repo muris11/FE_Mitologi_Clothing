@@ -1,12 +1,23 @@
 "use client";
 
-import { CheckCircleIcon, StarIcon } from "@heroicons/react/24/solid";
-import {
-    MotionSection,
-    StaggerGrid,
-    StaggerGridItem,
-} from "components/ui/motion";
 import { SiteSettings } from "lib/api/types";
+import { motion, useReducedMotion } from "framer-motion";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function AboutVisionMission({ settings }: { settings?: SiteSettings }) {
   const vision =
@@ -40,96 +51,66 @@ export function AboutVisionMission({ settings }: { settings?: SiteSettings }) {
         : [];
 
   return (
-    <MotionSection className="relative py-24 sm:py-32 bg-white overflow-hidden">
-      {/* Background Decorative */}
-      <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-50/80 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-mitologi-gold/5 rounded-full blur-[120px] pointer-events-none" />
+    <section className="py-20 sm:py-32 bg-white">
+      <div className="mx-auto w-full max-w-5xl space-y-16 px-5 sm:px-8">
 
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8 relative z-10">
-        {/* ── Visi ── */}
-        <div className="text-center max-w-4xl mx-auto mb-20 sm:mb-24">
-          <div className="inline-flex items-center gap-3 mb-6 bg-white border border-slate-200 shadow-sm rounded-full py-2 px-5">
-            <span className="text-mitologi-navy font-sans font-bold uppercase tracking-[0.2em] text-[11px] sm:text-xs">
+        {/* Visi */}
+        {vision && (
+          <AnimatedContainer className="text-center max-w-3xl mx-auto">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-4">
               Visi Kami
             </span>
-          </div>
+            <blockquote className="text-2xl sm:text-3xl md:text-4xl font-medium text-mitologi-navy leading-relaxed">
+              &ldquo;{vision}&rdquo;
+            </blockquote>
+          </AnimatedContainer>
+        )}
 
-          <blockquote className="relative px-10 sm:px-16">
-            <span className="absolute top-0 left-0 text-7xl sm:text-8xl font-serif text-mitologi-gold/20 leading-[0.8] select-none">
-              &ldquo;
+        {/* Misi */}
+        {missions.length > 0 && (
+          <AnimatedContainer delay={0.3}>
+            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-6">
+              Misi Kami
             </span>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-sans font-medium text-slate-700 leading-relaxed">
-              {vision}
-            </p>
-            <span className="absolute bottom-0 right-0 text-7xl sm:text-8xl font-serif text-mitologi-gold/20 leading-[0.8] select-none rotate-180">
-              &ldquo;
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-dashed border border-dashed border-slate-200 rounded-2xl overflow-hidden">
+              {missions.map((item: string, idx: number) => (
+                <div key={idx} className="p-5 sm:p-6 flex gap-4 items-start hover:bg-slate-50/80 transition-colors duration-200">
+                  <span className="flex-none flex items-center justify-center w-8 h-8 rounded-lg bg-mitologi-navy text-white font-bold text-sm">
+                    {idx + 1}
+                  </span>
+                  <span className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </AnimatedContainer>
+        )}
+
+        {/* Nilai Perusahaan */}
+        {values.length > 0 && (
+          <AnimatedContainer delay={0.5}>
+            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-6">
+              Nilai Perusahaan
             </span>
-          </blockquote>
-        </div>
-
-        {/* ── Misi & Nilai ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Misi */}
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-mitologi-navy text-white shadow-lg shadow-mitologi-navy/20">
-                <CheckCircleIcon className="w-6 h-6" />
-              </div>
-              <h3 className="text-2xl font-sans font-bold text-mitologi-navy tracking-tight">
-                Misi Kami
-              </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-slate-200 rounded-2xl overflow-hidden">
+              {values.map((val: { title: string; desc: string }, idx: number) => (
+                <div key={idx} className="group p-6 sm:p-7 hover:bg-slate-50/80 transition-colors duration-200 cursor-pointer">
+                  <h3 className="font-bold text-base text-mitologi-navy mb-1.5 group-hover:text-mitologi-gold transition-colors duration-200">
+                    {val.title}
+                  </h3>
+                  {val.desc && (
+                    <p className="text-sm text-slate-500 leading-relaxed">
+                      {val.desc}
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
+          </AnimatedContainer>
+        )}
 
-            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8 hover:shadow-xl hover:border-mitologi-gold/30 transition-all duration-300">
-              <ul className="space-y-4">
-                {missions.map((item: string, idx: number) => (
-                  <li key={idx} className="flex gap-4 items-start">
-                    <span className="flex-none flex items-center justify-center w-8 h-8 rounded-xl bg-mitologi-gold/10 text-mitologi-gold font-bold text-sm">
-                      {idx + 1}
-                    </span>
-                    <span className="text-slate-600 font-sans font-medium text-base leading-relaxed">
-                      {item}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Nilai */}
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-mitologi-gold text-white shadow-lg shadow-mitologi-gold/20">
-                <StarIcon className="w-6 h-6" />
-              </div>
-              <h3 className="text-2xl font-sans font-bold text-mitologi-navy tracking-tight">
-                Nilai Perusahaan
-              </h3>
-            </div>
-
-            <StaggerGrid className="grid grid-cols-2 gap-4">
-              {values.map(
-                (val: { title: string; desc: string }, idx: number) => (
-                  <StaggerGridItem
-                    key={idx}
-                    className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-mitologi-gold/30 transition-all duration-300"
-                  >
-                    <h3 className="font-sans font-bold text-base text-mitologi-navy mb-2 flex items-center gap-2.5">
-                      <span className="flex-none w-2 h-2 rounded-full bg-mitologi-gold" />
-                      {val.title}
-                    </h3>
-                    {val.desc && (
-                      <p className="text-sm text-slate-600 font-sans font-medium leading-relaxed">
-                        {val.desc}
-                      </p>
-                    )}
-                  </StaggerGridItem>
-                ),
-              )}
-            </StaggerGrid>
-          </div>
-        </div>
       </div>
-    </MotionSection>
+    </section>
   );
 }

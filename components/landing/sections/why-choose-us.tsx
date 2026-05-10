@@ -5,89 +5,80 @@ import {
     ClockIcon,
     HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
-import {
-    MotionSection,
-    StaggerGrid,
-    StaggerGridItem,
-} from "components/ui/motion";
-import { SectionHeading } from "components/ui/section-heading";
 import { SiteSettings } from "lib/api/types";
+import { motion, useReducedMotion } from "framer-motion";
+
+function AnimatedContainer({ className, delay = 0.1, children }: { className?: string; delay?: number; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+  if (shouldReduceMotion) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function FeatureCard({ feature }: { feature: { title: string; desc: string; icon: React.ElementType } }) {
+  const Icon = feature.icon;
+  return (
+    <div className="group p-6 sm:p-8 flex flex-col gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors duration-200">
+      <div className="w-10 h-10 rounded-xl bg-mitologi-navy/5 text-mitologi-navy flex items-center justify-center group-hover:bg-mitologi-navy group-hover:text-mitologi-gold transition-colors duration-200">
+        <Icon className="w-5 h-5" />
+      </div>
+      <div>
+        <h3 className="text-base sm:text-lg font-bold text-mitologi-navy tracking-tight mb-1.5">
+          {feature.title}
+        </h3>
+        <p className="text-sm text-slate-500 leading-relaxed">
+          {feature.desc}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function WhyChooseUs({ settings }: { settings?: SiteSettings }) {
   const guarantees =
     settings?.guaranteesData && settings.guaranteesData.length > 0
       ? settings.guaranteesData.map((g, i) => ({
           title: g.title,
-          subtitle: "",
           desc: g.description || g.desc || "",
-          icon: [ClockIcon, HandThumbUpIcon, ArrowPathIcon][i % 3] || ClockIcon,
+          icon: [ClockIcon, HandThumbUpIcon, ArrowPathIcon, ClockIcon, HandThumbUpIcon, ArrowPathIcon, ClockIcon][i % 7] || ClockIcon,
         }))
       : [];
 
   if (guarantees.length === 0) return null;
 
   return (
-    <MotionSection className="relative py-24 sm:py-32 bg-white border-t border-slate-200/50 overflow-hidden">
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="mx-auto max-w-3xl text-center mb-16 flex flex-col items-center">
-          <SectionHeading
-            overline="Kenapa Memilih Kami?"
-            title="Standar Kualitas Terbaik"
-            subtitle="Komitmen kami adalah memberikan hasil terbaik dengan standar produksi profesional."
-            className="items-center"
-          />
-          <p className="font-bold text-mitologi-navy font-sans uppercase tracking-wider text-sm mt-4">
-            Kepuasan Anda adalah prioritas utama kami.
+    <section className="py-20 sm:py-32 bg-white">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-5 sm:px-8">
+        <AnimatedContainer className="mx-auto max-w-3xl text-center">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-mitologi-gold mb-3">
+            Kenapa Memilih Kami?
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-mitologi-navy text-balance">
+            Standar Kualitas Terbaik
+          </h2>
+          <p className="text-slate-500 mt-4 text-sm sm:text-base tracking-wide text-balance">
+            Komitmen kami adalah memberikan hasil terbaik dengan standar produksi profesional. Kepuasan Anda adalah prioritas utama kami.
           </p>
-        </div>
+        </AnimatedContainer>
 
-        {/* Features Grid - Mobile 2-Col Compact / Desktop 3-Col */}
-        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {guarantees.map((feature, index) => {
-            const Icon = feature.icon;
-
-            return (
-              <StaggerGridItem
-                key={index}
-                className="flex flex-col relative bg-white rounded-2xl p-5 md:p-8 border border-slate-100 shadow-soft hover:shadow-hover hover:-translate-y-1 transition-all duration-300 h-full justify-between group"
-              >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-2xl bg-slate-50 text-mitologi-navy mb-4 sm:mb-6 group-hover:bg-mitologi-navy group-hover:text-mitologi-gold transition-colors duration-300 shadow-sm border border-slate-100">
-                  <Icon className="h-6 w-6 sm:h-7 sm:w-7 transition-transform duration-300 group-hover:scale-110" />
-                </div>
-
-                <div className="mb-3 sm:mb-4">
-                  <h3 className="text-lg sm:text-xl font-sans font-bold text-mitologi-navy tracking-tight mb-1">
-                    {feature.title}
-                  </h3>
-                  {feature.subtitle && (
-                    <p className="text-[10px] font-bold font-sans text-mitologi-gold uppercase tracking-widest mt-1">
-                      {feature.subtitle}
-                    </p>
-                  )}
-                </div>
-
-                <div className="text-slate-600 text-xs sm:text-sm leading-relaxed font-sans font-medium">
-                  {feature.desc.includes("\n") ? (
-                    <ul className="space-y-3 text-left">
-                      {feature.desc
-                        .split("\n")
-                        .map((line: string, i: number) => (
-                          <li key={i} className="flex gap-3 items-start">
-                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-mitologi-gold flex-shrink-0 shadow-sm" />
-                            <span>{line.replace(/^\d+\.\s*/, "")}</span>
-                          </li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p>{feature.desc}</p>
-                  )}
-                </div>
-              </StaggerGridItem>
-            );
-          })}
-        </StaggerGrid>
+        <AnimatedContainer
+          delay={0.4}
+          className="grid grid-cols-1 divide-x divide-y divide-dashed border border-dashed border-slate-200 sm:grid-cols-2 lg:grid-cols-3 rounded-2xl overflow-hidden"
+        >
+          {guarantees.map((feature, i) => (
+            <FeatureCard key={i} feature={feature} />
+          ))}
+        </AnimatedContainer>
       </div>
-    </MotionSection>
+    </section>
   );
 }

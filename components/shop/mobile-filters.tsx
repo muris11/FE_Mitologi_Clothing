@@ -2,7 +2,7 @@
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Collection } from "lib/api/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductFilters } from "./product-filters";
 import { SortSelect } from "./sort-select";
 
@@ -14,6 +14,27 @@ export function MobileFilters({
   activeCategory?: string | null;
 }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // Disable body scroll when mobile filters are open
+  useEffect(() => {
+    if (mobileFiltersOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileFiltersOpen]);
+
+  // Handle escape key to close filters
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileFiltersOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
 
   return (
     <>
@@ -41,38 +62,57 @@ export function MobileFilters({
       </button>
 
       {mobileFiltersOpen && (
-        <div className="relative z-50 lg:hidden">
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" />
-          <div className="fixed inset-0 z-40 flex">
-            <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-2xl rounded-l-3xl border-l border-slate-200">
-              <div className="flex items-center justify-between px-6 pb-4 border-b border-slate-100">
-                <h2 className="text-xl font-sans font-bold text-mitologi-navy">
-                  Filter & Urutkan
-                </h2>
-                <button
-                  type="button"
-                  className="-mr-2 flex h-10 w-10 items-center justify-center rounded-full p-2 text-slate-400 hover:text-mitologi-navy hover:bg-slate-50 transition-colors"
-                  onClick={() => setMobileFiltersOpen(false)}
-                >
-                  <span className="sr-only">Tutup menu</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+        <div className="fixed inset-0 z-[200] lg:hidden">
+          {/* Backdrop - Fixed to cover screen */}
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
+            onClick={() => setMobileFiltersOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Drawer - Relative positioning inside a flex container to push to right */}
+          <div className="fixed inset-y-0 right-0 h-full w-full max-w-[320px] flex flex-col bg-white shadow-2xl rounded-l-[2rem] border-l border-slate-200 overflow-hidden animate-in slide-in-from-right duration-500 ease-out z-[201]">
+            {/* Header - Fixed at top */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-white">
+              <h2 className="text-xl font-sans font-bold text-mitologi-navy">
+                Filter & Urutkan
+              </h2>
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-slate-400 hover:text-mitologi-navy hover:bg-slate-50 transition-all active:scale-95 bg-slate-100/50"
+                onClick={() => setMobileFiltersOpen(false)}
+              >
+                <span className="sr-only">Tutup menu</span>
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Content area - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-6 py-8 space-y-10 scrollbar-hide">
+              {/* Mobile Sort */}
+              <div>
+                <h3 className="font-bold text-mitologi-navy font-sans text-[11px] uppercase tracking-[0.2em] mb-5 pb-2 border-b border-slate-100">
+                  Urutkan
+                </h3>
+                <SortSelect onClose={() => setMobileFiltersOpen(false)} />
               </div>
 
-              <div className="mt-6 px-6 space-y-8">
-                {/* Mobile Sort */}
-                <div>
-                  <h3 className="font-bold text-mitologi-navy font-sans text-sm uppercase tracking-widest mb-4 border-b border-slate-200 pb-2">
-                    Urutkan
-                  </h3>
-                  <SortSelect />
-                </div>
+              {/* Re-use ProductFilters */}
+              <ProductFilters
+                categories={categories}
+                activeCategory={activeCategory}
+                onClose={() => setMobileFiltersOpen(false)}
+              />
 
-                {/* Re-use ProductFilters */}
-                <ProductFilters
-                  categories={categories}
-                  activeCategory={activeCategory}
-                />
+              {/* Bottom close button for convenience */}
+              <div className="pt-6 pb-10">
+                <button
+                  type="button"
+                  className="w-full py-4 bg-mitologi-navy text-white rounded-2xl font-bold font-sans text-sm hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98]"
+                  onClick={() => setMobileFiltersOpen(false)}
+                >
+                  Tutup Filter
+                </button>
               </div>
             </div>
           </div>

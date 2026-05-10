@@ -67,7 +67,7 @@ export function ServicesOverview({ settings }: { settings?: SiteSettings }) {
   ];
 
   return (
-    <MotionSection className="py-24 sm:py-32 bg-slate-50 border-t border-slate-200/50">
+    <MotionSection className="py-24 sm:py-32 bg-slate-50">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16 flex flex-col items-center">
           <SectionHeading

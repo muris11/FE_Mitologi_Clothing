@@ -32,13 +32,12 @@ export function Gallery({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Main Image */}
-      <div className="relative aspect-[4/5] w-full rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden shadow-soft group">
+    <div className="flex flex-col gap-3">
+      <div className="relative aspect-[4/5] w-full rounded-lg bg-slate-100 overflow-hidden group">
         {currentImage.src && currentImage.src !== "" ? (
           <>
             <Image
-              className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+              className="h-full w-full object-cover"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               alt={currentImage.altText || "Product image"}
@@ -47,38 +46,34 @@ export function Gallery({
               unoptimized={true}
             />
 
-            {/* Navigation Arrows (visible on hover or mobile) */}
             {images.length > 1 && (
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-3 opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity">
                 <button
                   onClick={() => updateImage(previousImageIndex.toString())}
                   aria-label="Previous product image"
-                  className="rounded-full bg-white/90 backdrop-blur-sm p-3 text-mitologi-navy shadow-sm hover:bg-mitologi-navy hover:text-white hover:scale-110 transition-all border border-slate-200"
+                  className="rounded-full bg-white/90 backdrop-blur-sm p-2 text-slate-700 shadow-sm hover:bg-white transition-colors"
                 >
-                  <ArrowLeftIcon className="h-5 w-5" />
+                  <ArrowLeftIcon className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => updateImage(nextImageIndex.toString())}
                   aria-label="Next product image"
-                  className="rounded-full bg-white/90 backdrop-blur-sm p-3 text-mitologi-navy shadow-sm hover:bg-mitologi-navy hover:text-white hover:scale-110 transition-all border border-slate-200"
+                  className="rounded-full bg-white/90 backdrop-blur-sm p-2 text-slate-700 shadow-sm hover:bg-white transition-colors"
                 >
-                  <ArrowRightIcon className="h-5 w-5" />
+                  <ArrowRightIcon className="h-4 w-4" />
                 </button>
               </div>
             )}
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="text-sm font-sans font-medium text-slate-400">
-              No Image
-            </span>
+            <span className="text-sm text-slate-400">No Image</span>
           </div>
         )}
       </div>
 
-      {/* Thumbnails - Horizontal Strip */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2 pt-1 px-1 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {images.map((image, index) => {
             const isActive = index === imageIndex;
 
@@ -87,10 +82,10 @@ export function Gallery({
                 key={`${image.src}-${index}`}
                 onClick={() => updateImage(index.toString())}
                 aria-label={`Select product image ${index + 1}`}
-                className={`relative h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl border-2 transition-all duration-200 ease-out bg-slate-50 ${
+                className={`relative h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 overflow-hidden rounded-md border transition-all ${
                   isActive
-                    ? "border-mitologi-gold shadow-md scale-105"
-                    : "border-transparent opacity-60 hover:opacity-100 hover:border-slate-300 hover:shadow-sm"
+                    ? "border-slate-900 opacity-100"
+                    : "border-transparent opacity-50 hover:opacity-100"
                 }`}
               >
                 <Image

@@ -1,10 +1,5 @@
-import {
-  StarIcon,
-  ChevronRightIcon,
-  FireIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ProductCard } from "components/shop/product-card";
-import { MotionSection } from "components/ui/motion";
 import { getBestSellers } from "lib/api/catalog";
 import { getRecommendations } from "lib/api/recommendations";
 import { getUser } from "lib/api/server-auth";
@@ -35,81 +30,36 @@ export async function RecommendationsSection() {
     return null;
   }
 
-  const title = isPersonalized ? "Rekomendasi Untuk Anda" : "Produk Populer";
-  const subtitle = isPersonalized
-    ? "Dipilih khusus berdasarkan selera dan riwayat Anda"
-    : "Produk paling diminati pelanggan kami";
-  const Icon = isPersonalized ? StarIcon : FireIcon;
-  const iconBgClass = isPersonalized
-    ? "bg-mitologi-gold/10 border-mitologi-gold/20 text-mitologi-gold-dark"
-    : "bg-orange-50 border-orange-200 text-orange-600";
+  const title = isPersonalized ? "Untuk Anda" : "Populer";
 
   return (
-    <MotionSection className="py-12 sm:py-16 relative overflow-hidden bg-gradient-to-b from-mitologi-cream/30 to-white">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-mitologi-gold/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-mitologi-navy/5 rounded-full blur-3xl" />
+    <section className="py-8 border-b border-slate-100">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <Link
+          href="/shop"
+          className="hidden sm:flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 transition-colors"
+        >
+          Lihat semua
+          <ChevronRightIcon className="h-3.5 w-3.5" />
+        </Link>
       </div>
 
-      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 relative z-10">
-        {/* Main Card Container */}
-        <div className="bg-white rounded-3xl shadow-premium border border-slate-100 p-6 lg:p-10">
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
-            <div className="flex items-center gap-4">
-              <div
-                className={`flex h-14 w-14 items-center justify-center rounded-xl ${iconBgClass}`}
-              >
-                <Icon className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-sans font-bold text-mitologi-navy tracking-tight">
-                  {title}
-                </h2>
-                <p className="text-sm font-sans text-slate-500 font-medium mt-1">
-                  {subtitle}
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href="/shop"
-              className="hidden sm:flex items-center gap-2 text-sm font-sans font-bold text-mitologi-navy hover:text-mitologi-gold transition-colors group px-4 py-2 rounded-full hover:bg-slate-50"
-            >
-              Lihat Semua
-              <ChevronRightIcon className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+      <div className="flex lg:grid lg:grid-cols-4 gap-4 lg:gap-6 overflow-x-auto pb-2 lg:pb-0 snap-x snap-mandatory scrollbar-hide -mx-1 px-1 lg:mx-0 lg:px-0">
+        {products.slice(0, 4).map((product, index) => (
+          <div
+            key={product.id}
+            className="flex-shrink-0 w-[200px] sm:w-[220px] lg:w-auto snap-start"
+          >
+            <ProductCard
+              product={product}
+              index={index}
+              isRecommended={isPersonalized}
+              isBestSeller={!isPersonalized}
+            />
           </div>
-
-          {/* Products Grid - Horizontal Scroll on Mobile, Grid on Desktop */}
-          <div className="flex lg:grid lg:grid-cols-4 gap-4 lg:gap-6 overflow-x-auto pb-4 lg:pb-0 snap-x snap-mandatory scrollbar-hide -mx-2 px-2 lg:mx-0 lg:px-0">
-            {products.slice(0, 4).map((product, index) => (
-              <div
-                key={product.id}
-                className="flex-shrink-0 w-[280px] sm:w-[300px] lg:w-auto snap-start"
-              >
-                <ProductCard
-                  product={product}
-                  index={index}
-                  isRecommended={isPersonalized}
-                  isBestSeller={!isPersonalized}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile CTA */}
-          <div className="mt-8 text-center sm:hidden">
-            <Link
-              href="/shop"
-              className="inline-flex items-center justify-center w-full py-3.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-sans font-bold text-sm hover:bg-slate-50 hover:text-mitologi-navy hover:border-mitologi-navy/30 transition-all shadow-sm"
-            >
-              Lihat Semua Produk
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
-    </MotionSection>
+    </section>
   );
 }

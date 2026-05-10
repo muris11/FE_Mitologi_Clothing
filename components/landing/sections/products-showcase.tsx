@@ -16,7 +16,7 @@ export function ProductsShowcase({
   if (!categories || categories.length === 0) return null;
 
   return (
-    <MotionSection className="bg-slate-50 py-24 sm:py-32 border-t border-slate-200/50">
+    <MotionSection className="bg-slate-50 py-24 sm:py-32">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <div className="flex items-center justify-center gap-2 mb-4">

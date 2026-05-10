@@ -1,5 +1,5 @@
 import { CategoryGrid } from "components/landing/sections/category-grid";
-import { SubpageHero } from "components/landing/shared/subpage-hero";
+import { SubpageHeader } from "components/landing/shared/subpage-header";
 import { getLandingPageData } from "lib/api";
 import type { Metadata } from "next";
 
@@ -31,11 +31,10 @@ export default async function KategoriPage() {
 
   return (
     <>
-      <SubpageHero
+      <SubpageHeader
+        overline="Koleksi Kami"
         title="Kategori Produk"
         subtitle="Temukan koleksi pilihan dengan material premium dan desain eksklusif yang dirancang khusus untuk Anda."
-        badge={true}
-        badgeText="Koleksi Kami"
       />
       <CategoryGrid categories={data?.categories || []} hideHeader={true} />
     </>
