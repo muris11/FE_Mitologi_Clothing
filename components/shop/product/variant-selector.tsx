@@ -112,7 +112,7 @@ export function VariantSelector({
               disabled={!isAvailableForSale}
               title={`${getTranslatedName(option.name)} ${value}${!isAvailableForSale ? " (Stok Habis)" : ""}`}
               className={clsx(
-                "min-w-[40px] px-3.5 py-2 text-sm border rounded-md transition-colors",
+                "min-w-[40px] px-4 py-2 text-sm border rounded-lg transition-colors",
                 {
                   "border-slate-900 bg-slate-900 text-white": isActive,
                   "border-slate-200 bg-white text-slate-700 hover:border-slate-400":

@@ -106,18 +106,20 @@ export default function CartModal() {
 
             {!cart || !cart.lines || cart.lines.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center px-6">
-                <ShoppingCartIcon className="h-10 w-10 text-slate-300 mb-4" />
-                <p className="text-sm font-medium text-slate-900 mb-1">
+                <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-5">
+                  <ShoppingCartIcon className="h-7 w-7 text-slate-300" />
+                </div>
+                <p className="text-base font-semibold text-slate-900 mb-1">
                   Keranjang kosong
                 </p>
-                <p className="text-xs text-slate-500 text-center mb-6">
+                <p className="text-sm text-slate-500 text-center mb-6 max-w-[220px]">
                   Temukan koleksi terbaik kami dan mulai belanja.
                 </p>
                 <button
                   onClick={closeCart}
-                  className="text-sm font-medium text-slate-900 underline underline-offset-4 hover:text-slate-600 transition-colors"
+                  className="w-full max-w-[200px] py-2.5 text-sm font-medium bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
                 >
-                  Lanjut belanja
+                  Mulai Belanja
                 </button>
               </div>
             ) : (

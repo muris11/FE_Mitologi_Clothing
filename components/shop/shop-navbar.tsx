@@ -242,22 +242,19 @@ export function ShopNavbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu - Full screen slide down */}
+      {/* Mobile Menu - dropdown from navbar */}
       <div
         className={cn(
-          "fixed inset-x-0 top-0 z-30 lg:hidden transition-all duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none bg-white",
+          "fixed inset-x-0 top-[80px] sm:top-[88px] z-30 lg:hidden transition-all duration-300 ease-out bg-white border-b border-slate-200 overflow-hidden",
           isMobileMenuOpen
-            ? "h-screen opacity-100 pointer-events-auto"
-            : "h-0 opacity-0 pointer-events-none overflow-hidden",
+            ? "max-h-[80vh] opacity-100 pointer-events-auto"
+            : "max-h-0 opacity-0 pointer-events-none",
         )}
       >
-        <div className={cn(
-          "flex flex-col h-full pt-28 pb-8 px-6 transition-all duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-          isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-        )}>
+        <div className="px-6 py-5">
           {/* User Info */}
           {user && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/50 p-3">
+            <div className="mb-4 flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/50 p-3">
               {user.avatarUrl && !avatarLoadError ? (
                 <Image
                   src={storageUrl(user.avatarUrl)}
@@ -278,7 +275,7 @@ export function ShopNavbar() {
               </div>
               <button
                 onClick={handleLogout}
-                className="rounded-full p-2 text-rose-600 hover:bg-rose-50 transition-colors duration-200 cursor-pointer"
+                className="rounded-full p-2 text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                 aria-label="Keluar"
               >
                 <ArrowRightOnRectangleIcon className="h-5 w-5" />
@@ -287,8 +284,8 @@ export function ShopNavbar() {
           )}
 
           {/* Nav items */}
-          <nav className="flex flex-col gap-2">
-            {menuItems.map((item, idx) => {
+          <nav className="flex flex-col">
+            {menuItems.map((item) => {
               const isActive =
                 item.path === "/shop"
                   ? pathname.startsWith("/shop") &&
@@ -301,12 +298,11 @@ export function ShopNavbar() {
                   href={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "block text-2xl sm:text-3xl font-bold tracking-tight py-3 transition-all duration-300 ease-out cursor-pointer",
+                    "block text-lg font-semibold py-3 transition-colors cursor-pointer",
                     isActive
-                      ? "text-mitologi-gold"
-                      : "text-mitologi-navy hover:text-mitologi-gold active:text-mitologi-gold"
+                      ? "text-mitologi-navy"
+                      : "text-slate-600 hover:text-mitologi-navy"
                   )}
-                  style={{ transitionDelay: isMobileMenuOpen ? `${idx * 50}ms` : "0ms" }}
                 >
                   {item.title}
                 </Link>
@@ -318,37 +314,36 @@ export function ShopNavbar() {
                 href="/shop/account"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
-                  "block text-2xl sm:text-3xl font-bold tracking-tight py-3 transition-all duration-300 ease-out cursor-pointer",
+                  "block text-lg font-semibold py-3 transition-colors cursor-pointer",
                   pathname.startsWith("/shop/account")
-                    ? "text-mitologi-gold"
-                    : "text-mitologi-navy hover:text-mitologi-gold"
+                    ? "text-mitologi-navy"
+                    : "text-slate-600 hover:text-mitologi-navy"
                 )}
-                style={{ transitionDelay: isMobileMenuOpen ? `${menuItems.length * 50}ms` : "0ms" }}
               >
                 Akun Saya
               </Link>
             )}
           </nav>
 
-          {/* Bottom CTA */}
-          <div className="mt-auto">
+          {/* CTA */}
+          <div className="mt-4">
             {!user ? (
               <Button
                 asChild
-                className="h-14 w-full rounded-2xl text-base font-bold bg-mitologi-navy text-white hover:bg-mitologi-navy-light transition-all duration-300 cursor-pointer"
+                className="h-12 w-full rounded-xl text-sm font-bold bg-mitologi-navy text-white hover:bg-mitologi-navy-light transition-colors cursor-pointer"
               >
                 <Link href="/shop/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  <UserIcon className="mr-2 h-5 w-5" />
+                  <UserIcon className="mr-2 h-4 w-4" />
                   Masuk / Daftar
                 </Link>
               </Button>
             ) : (
               <Button
                 asChild
-                className="h-14 w-full rounded-2xl text-base font-bold bg-mitologi-navy text-white hover:bg-mitologi-navy-light transition-all duration-300 cursor-pointer"
+                className="h-12 w-full rounded-xl text-sm font-bold bg-mitologi-navy text-white hover:bg-mitologi-navy-light transition-colors cursor-pointer"
               >
                 <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)}>
-                  <ShoppingBagIcon className="mr-2 h-5 w-5" />
+                  <ShoppingBagIcon className="mr-2 h-4 w-4" />
                   Mulai Belanja
                 </Link>
               </Button>

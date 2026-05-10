@@ -33,7 +33,10 @@ export function Gallery({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative aspect-[4/5] w-full rounded-lg bg-slate-100 overflow-hidden group">
+      <div 
+        className="relative aspect-[4/5] w-full rounded-lg bg-slate-100 overflow-hidden group min-h-[300px]"
+        style={{ aspectRatio: '4/5' }}
+      >
         {currentImage.src && currentImage.src !== "" ? (
           <>
             <Image

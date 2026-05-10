@@ -160,7 +160,7 @@ export function ProductDescription({ product }: { product: Product }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <h1 className="text-[22px] sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-[1.2] tracking-tight mb-3">
         {product.title}
       </h1>
@@ -221,25 +221,22 @@ export function ProductDescription({ product }: { product: Product }) {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-4 mb-6 sm:mb-8">
-        <span className="text-sm font-medium text-slate-700">Jumlah</span>
-        <div className="flex items-center border border-slate-200 rounded-lg h-9 sm:h-10 shadow-sm">
+      <div className="flex flex-wrap items-center gap-4 mb-8">
+        <span className="text-sm text-slate-500">Jumlah</span>
+        <div className="flex items-center border border-slate-200 rounded-lg h-10">
           <button
             onClick={() => handleQuantityChange("minus")}
-            className="w-9 sm:w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 disabled:opacity-40 transition-colors"
+            className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 disabled:opacity-40 transition-colors"
             disabled={quantity <= 1 || isPending}
           >
             <MinusIcon className="w-4 h-4" />
           </button>
-          <input
-            type="text"
-            value={quantity}
-            readOnly
-            className="w-10 sm:w-12 h-full text-center text-sm font-bold text-slate-900 bg-transparent border-x border-slate-200 focus:outline-none"
-          />
+          <div className="w-12 h-full flex items-center justify-center text-sm font-semibold text-slate-900 border-x border-slate-200">
+            {quantity}
+          </div>
           <button
             onClick={() => handleQuantityChange("plus")}
-            className="w-9 sm:w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 disabled:opacity-40 transition-colors"
+            className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 disabled:opacity-40 transition-colors"
             disabled={
               isPending ||
               (matchedVariant?.stock !== undefined &&
@@ -249,7 +246,7 @@ export function ProductDescription({ product }: { product: Product }) {
             <PlusIcon className="w-4 h-4" />
           </button>
         </div>
-        <span className="text-xs font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded">
+        <span className="text-xs text-slate-400">
           {matchedVariant && matchedVariant.stock !== undefined
             ? `${matchedVariant.stock} tersedia`
             : product.totalStock !== undefined
@@ -258,14 +255,14 @@ export function ProductDescription({ product }: { product: Product }) {
         </span>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mb-6">
+      <div className="flex flex-col gap-3 mb-8">
         <Button
           onClick={handleBuyNow}
           disabled={
             !(matchedVariant || product.variants[0])?.availableForSale ||
             isPending
           }
-          className="flex-1 h-12 sm:h-11 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors"
+          className="w-full h-12 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-colors"
         >
           {isPending ? "Memproses..." : "Beli Sekarang"}
         </Button>
@@ -278,15 +275,15 @@ export function ProductDescription({ product }: { product: Product }) {
               isPending
             }
             variant="ghost"
-            className="flex-1 sm:flex-none h-12 sm:h-11 px-4 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex-1 h-12 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors text-sm font-medium"
           >
-            <ShoppingCartIcon className="w-5 h-5 mr-2 sm:mr-0" />
-            <span className="sm:hidden text-sm">Keranjang</span>
+            <ShoppingCartIcon className="w-4 h-4 mr-2" />
+            Keranjang
           </Button>
 
           <WishlistButton
             productId={product.id}
-            className="h-12 w-12 sm:h-11 sm:w-11 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:text-red-500 hover:border-red-200 transition-colors flex-shrink-0"
+            className="h-12 w-12 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:text-red-500 hover:border-red-200 transition-colors flex-shrink-0"
             iconClassName="h-5 w-5"
           />
         </div>

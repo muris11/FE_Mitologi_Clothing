@@ -177,91 +177,92 @@ export default async function ProductPage(props: {
 
       <div className="bg-white min-h-screen">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-1.5 py-4 text-sm text-slate-500 overflow-x-auto whitespace-nowrap scrollbar-hide">
-            <Link href="/" className="hover:text-slate-900 transition-colors flex-shrink-0">
+          <nav className="flex items-center gap-1.5 py-4 text-sm text-slate-400 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <Link href="/" className="hover:text-slate-700 transition-colors flex-shrink-0">
               Beranda
             </Link>
-            <ChevronRightIcon className="w-3.5 h-3.5 flex-shrink-0" />
+            <ChevronRightIcon className="w-3 h-3 flex-shrink-0" />
             <Link
               href="/shop"
-              className="hover:text-slate-900 transition-colors flex-shrink-0"
+              className="hover:text-slate-700 transition-colors flex-shrink-0"
             >
               Katalog
             </Link>
-            <ChevronRightIcon className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="text-slate-900 font-medium truncate sm:max-w-[300px]">
+            <ChevronRightIcon className="w-3 h-3 flex-shrink-0" />
+            <span className="text-slate-700 truncate max-w-[200px] sm:max-w-[300px]">
               {product.title}
             </span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 pb-12 sm:pb-16 pt-2">
-            <div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pb-16 pt-4">
+            <div className="lg:col-span-7">
               <Suspense
                 fallback={
-                  <div className="aspect-[4/5] w-full bg-slate-100 rounded-lg animate-pulse" />
+                  <div className="aspect-[4/5] w-full bg-slate-50 rounded-xl animate-pulse" />
                 }
               >
                 <Gallery images={galleryImages} />
               </Suspense>
             </div>
 
-            <div className="lg:pt-2">
-              <Suspense fallback={<ProductInfoSkeleton />}>
-                <ProductDescription product={product} />
-              </Suspense>
+            <div className="lg:col-span-5">
+              <div className="lg:sticky lg:top-24">
+                <Suspense fallback={<ProductInfoSkeleton />}>
+                  <ProductDescription product={product} />
+                </Suspense>
 
-              <div className="mt-10 pt-8 border-t border-slate-100">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
-                  Detail
-                </h3>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                  <dt className="text-slate-500">Kategori</dt>
-                  <dd className="text-slate-900 font-medium">{categoryName}</dd>
-                  <dt className="text-slate-500">Stok</dt>
-                  <dd className="text-slate-900 font-medium">
-                    {product.totalStock !== undefined
-                      ? product.totalStock
-                      : product.variants[0]?.stock || 0}{" "}
-                    tersedia
-                  </dd>
-                  <dt className="text-slate-500">Dikirim dari</dt>
-                  <dd className="text-slate-900 font-medium">
-                    {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN || shippingLocation}
-                  </dd>
-                  {product.variants[0]?.sku && (
-                    <>
-                      <dt className="text-slate-500">SKU</dt>
-                      <dd className="text-slate-900 font-mono text-xs">
-                        {product.variants[0].sku}
-                      </dd>
-                    </>
-                  )}
-                </dl>
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                  <dl className="grid grid-cols-2 gap-y-3 text-sm">
+                    <dt className="text-slate-400">Kategori</dt>
+                    <dd className="text-slate-900">{categoryName}</dd>
+                    <dt className="text-slate-400">Stok</dt>
+                    <dd className="text-slate-900">
+                      {product.totalStock !== undefined
+                        ? product.totalStock
+                        : product.variants[0]?.stock || 0}{" "}
+                      tersedia
+                    </dd>
+                    <dt className="text-slate-400">Dikirim dari</dt>
+                    <dd className="text-slate-900">
+                      {process.env.NEXT_PUBLIC_SHIPPING_ORIGIN || shippingLocation}
+                    </dd>
+                    {product.variants[0]?.sku && (
+                      <>
+                        <dt className="text-slate-400">SKU</dt>
+                        <dd className="text-slate-900 font-mono text-xs">
+                          {product.variants[0].sku}
+                        </dd>
+                      </>
+                    )}
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
 
-          {product.descriptionHtml || product.description ? (
-            <div className="border-t border-slate-100 py-12 max-w-3xl">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                Deskripsi
-              </h2>
-              <div
-                className="prose prose-slate prose-sm max-w-none text-slate-600 leading-relaxed prose-headings:text-slate-900 prose-a:text-slate-900 prose-strong:text-slate-800"
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeHtml(
-                    product.descriptionHtml || product.description,
-                  ),
-                }}
-              />
+          {(product.descriptionHtml || product.description) && (
+            <div className="border-t border-slate-100 py-12 lg:py-16">
+              <div className="max-w-3xl">
+                <h2 className="text-base font-semibold text-slate-900 mb-5">
+                  Deskripsi Produk
+                </h2>
+                <div
+                  className="prose prose-slate prose-sm max-w-none text-slate-600 leading-relaxed prose-headings:text-slate-900 prose-a:text-slate-900 prose-strong:text-slate-800"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(
+                      product.descriptionHtml || product.description,
+                    ),
+                  }}
+                />
+              </div>
             </div>
-          ) : null}
+          )}
 
-          <div className="border-t border-slate-100 py-12">
+          <div className="border-t border-slate-100 py-12 lg:py-16">
             <ProductReviews handle={product.handle} />
           </div>
 
-          <div className="border-t border-slate-100 py-12">
+          <div className="border-t border-slate-100 py-12 lg:py-16">
             <Suspense fallback={null}>
               <RelatedProducts id={product.id} />
             </Suspense>
