@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon, TruckIcon, ClipboardDocumentIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { Button } from "components/ui/button";
-import { getOrderDetail, payOrder } from "lib/api";
+import { getOrderDetail, payOrder, confirmOrderPayment } from "lib/api";
 import {
   MidtransPaymentResponse,
   MidtransSnap,
@@ -42,18 +42,23 @@ export default function OrderDetailPage(props: {
     fetchOrder();
   }, [params.orderNumber]);
 
-  // Poll for status updates when order is pending
+  // Poll for status updates when order is pending - sync with Midtrans
   useEffect(() => {
     if (order?.status === "pending") {
-      const interval = setInterval(() => {
+      const interval = setInterval(async () => {
+        await confirmOrderPayment(order.orderNumber);
         fetchOrder();
       }, 5000); // Check every 5 seconds
       return () => clearInterval(interval);
     }
-  }, [order?.status]);
+  }, [order?.status, order?.orderNumber]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
+    // Sync with Midtrans first
+    if (order) {
+      await confirmOrderPayment(order.orderNumber);
+    }
     await fetchOrder();
     addToast({ variant: "success", title: "Status diperbarui" });
   };
