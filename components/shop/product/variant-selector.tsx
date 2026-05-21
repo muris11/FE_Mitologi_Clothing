@@ -106,7 +106,8 @@ export function VariantSelector({
 
           return (
             <button
-              formAction={() => updateOption(optionNameLowerCase, value)}
+              type="button"
+              onClick={() => updateOption(optionNameLowerCase, value)}
               key={value}
               aria-disabled={!isAvailableForSale}
               disabled={!isAvailableForSale}
