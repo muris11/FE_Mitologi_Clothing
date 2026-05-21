@@ -3,12 +3,13 @@
 import { CheckCircleIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import CopyOrderId from "./copy-order-id";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { confirmOrderPayment } from "lib/api";
 
 export default function CheckoutSuccessClient({ orderId }: { orderId: string }) {
   const [syncing, setSyncing] = useState(true);
   const [syncStatus, setSyncStatus] = useState<"checking" | "paid" | "pending" | "error">("checking");
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!orderId) {
@@ -16,23 +17,39 @@ export default function CheckoutSuccessClient({ orderId }: { orderId: string }) 
       return;
     }
 
-    const syncPaymentStatus = async () => {
+    const checkStatus = async () => {
       try {
         const result = await confirmOrderPayment(orderId);
 
         if (result.success && result.order?.status === "processing") {
           setSyncStatus("paid");
-        } else {
-          setSyncStatus("pending");
+          setSyncing(false);
+          if (pollRef.current) clearInterval(pollRef.current);
         }
       } catch {
-        setSyncStatus("error");
-      } finally {
-        setSyncing(false);
+        // Keep polling on error
       }
     };
 
-    syncPaymentStatus();
+    // Check immediately
+    checkStatus();
+
+    // Poll every 3 seconds until paid (max 30 seconds)
+    let attempts = 0;
+    pollRef.current = setInterval(() => {
+      attempts++;
+      if (attempts >= 10) {
+        setSyncStatus("pending");
+        setSyncing(false);
+        if (pollRef.current) clearInterval(pollRef.current);
+        return;
+      }
+      checkStatus();
+    }, 3000);
+
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
   }, [orderId]);
 
   return (

@@ -40,13 +40,13 @@ export async function confirmOrderPayment(
   orderNumber: string,
 ): Promise<{ success: boolean; order?: Order }> {
   try {
-    const order = await apiFetch<Order>(
+    const response = await apiFetch<{ order: Order }>(
       ENDPOINTS.ORDER_CONFIRM_PAYMENT(orderNumber),
       {
         method: "POST",
       },
     );
-    return { success: true, order };
+    return { success: true, order: response?.order };
   } catch (error) {
     return { success: false };
   }
