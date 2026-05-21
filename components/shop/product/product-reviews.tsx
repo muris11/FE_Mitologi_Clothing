@@ -9,6 +9,30 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { storageUrl } from "lib/utils/storage-url";
 
+function ReviewAvatar({ src, alt, userName }: { src: string; alt: string; userName: string }) {
+  const [error, setError] = useState(false);
+  const resolvedSrc = storageUrl(src);
+
+  if (!src || error) {
+    return (
+      <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-sm font-medium">
+        {userName.charAt(0).toUpperCase()}
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={resolvedSrc}
+      alt={alt}
+      width={36}
+      height={36}
+      className="w-9 h-9 rounded-full object-cover"
+      onError={() => setError(true)}
+    />
+  );
+}
+
 export function ProductReviews({ handle }: { handle: string }) {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [summary, setSummary] = useState<ReviewSummary | null>(null);
@@ -265,19 +289,11 @@ export function ProductReviews({ handle }: { handle: string }) {
             <div key={review.id} className="py-6 first:pt-0">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0">
-                  {review.userAvatar ? (
-                    <Image
-                      src={storageUrl(review.userAvatar)}
-                      alt={review.userName}
-                      width={36}
-                      height={36}
-                      className="w-9 h-9 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-sm font-medium">
-                      {review.userName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <ReviewAvatar
+                    src={review.userAvatar || ""}
+                    alt={review.userName}
+                    userName={review.userName}
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0">

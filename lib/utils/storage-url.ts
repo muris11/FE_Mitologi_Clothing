@@ -26,7 +26,7 @@ export function storageUrl(
   }
 
   if (/^https?:\/\//i.test(normalizedPath)) {
-    // If it's already an absolute URL (external storage like center.biz.id), return as-is
+    // If it's already an absolute URL with /storage/, return as-is
     if (normalizedPath.includes('/storage/')) {
       return normalizedPath;
     }
@@ -51,8 +51,17 @@ export function storageUrl(
     }
   }
 
+  // Relative path - convert to absolute URL using backend origin
   const withoutLeadingSlash = normalizedPath.replace(/^\/+/, "");
   const withoutStoragePrefix = withoutLeadingSlash.replace(/^storage\/+/, "");
+  
+  // In production, use the backend API URL as the storage origin
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  const backendOrigin = backendUrl.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+  
+  if (backendOrigin && !normalizedPath.startsWith("/images/")) {
+    return `${backendOrigin}/storage/${withoutStoragePrefix}`;
+  }
 
   return `/storage/${withoutStoragePrefix}`;
 }
