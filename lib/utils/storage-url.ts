@@ -26,6 +26,11 @@ export function storageUrl(
   }
 
   if (/^https?:\/\//i.test(normalizedPath)) {
+    // If it's already an absolute URL (external storage like center.biz.id), return as-is
+    if (normalizedPath.includes('/storage/')) {
+      return normalizedPath;
+    }
+    
     try {
       const parsed = new URL(normalizedPath);
 

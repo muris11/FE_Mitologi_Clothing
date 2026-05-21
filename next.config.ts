@@ -73,6 +73,22 @@ const nextConfig: NextConfig = {
     unoptimized: !isProduction,
     dangerouslyAllowSVG: true,
     remotePatterns: [
+      ...(process.env.NEXT_PUBLIC_STORAGE_ORIGIN
+        ? [
+            {
+              protocol: (process.env.NEXT_PUBLIC_STORAGE_ORIGIN.startsWith("https")
+                ? "https"
+                : "http") as any,
+              hostname: process.env.NEXT_PUBLIC_STORAGE_ORIGIN.replace(
+                "https://",
+                "",
+              ).replace("http://", "").split(":")[0] as string,
+              port: (process.env.NEXT_PUBLIC_STORAGE_ORIGIN.includes(":")
+                ? process.env.NEXT_PUBLIC_STORAGE_ORIGIN.split(":")[2]?.split("/")[0]
+                : undefined) as string | undefined,
+            },
+          ]
+        : []),
       ...backendRemotePatterns,
       ...(process.env.NEXT_PUBLIC_PLACEHOLD_ORIGIN
         ? [
@@ -103,7 +119,7 @@ const nextConfig: NextConfig = {
         hostname: "*.amazonaws.com",
         port: undefined as string | undefined,
       },
-    ].filter((p) => p.hostname !== ""),
+    ].filter((p: any) => p && p.hostname !== "") as any,
   },
 
   // In Next.js 15+, turbopack can be at top level

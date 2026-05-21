@@ -24,8 +24,9 @@ import {
   updateAddress,
 } from "lib/api/addresses";
 import { updateProfile } from "lib/api/account";
+import { getProvinces, getCities, getSubdistricts } from "lib/api/shipping";
 import clsx from "clsx";
-import { UnknownError, User, Address } from "lib/api/types";
+import { UnknownError, User, Address, Province, City, Subdistrict } from "lib/api/types";
 import { storageUrl } from "lib/utils/storage-url";
 import { useAuth } from "lib/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -60,9 +61,87 @@ export function ProfileTab({
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
 
+  const [provincesList, setProvincesList] = useState<Province[]>([]);
+  const [citiesList, setCitiesList] = useState<City[]>([]);
+  const [subdistrictsList, setSubdistrictsList] = useState<Subdistrict[]>([]);
+  const [selectedProvId, setSelectedProvId] = useState<number | null>(null);
+  const [selectedCityId, setSelectedCityId] = useState<number | null>(null);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+
   useEffect(() => {
     loadAddresses();
   }, []);
+
+  useEffect(() => {
+    if (isAddressModalOpen) {
+      loadProvinces();
+    }
+  }, [isAddressModalOpen]);
+
+  const loadProvinces = async () => {
+    if (provincesList.length > 0) return;
+    setIsLoadingLocations(true);
+    try {
+      const data = await getProvinces();
+      setProvincesList(data || []);
+    } catch (e) {
+      console.error("Failed to load provinces:", e);
+    } finally {
+      setIsLoadingLocations(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedProvId) {
+      loadCities(selectedProvId);
+    } else {
+      setCitiesList([]);
+      setSubdistrictsList([]);
+      setSelectedCityId(null);
+    }
+  }, [selectedProvId]);
+
+  useEffect(() => {
+    if (selectedCityId) {
+      loadSubdistricts(selectedCityId);
+    } else {
+      setSubdistrictsList([]);
+    }
+  }, [selectedCityId]);
+
+  const loadCities = async (provId: number) => {
+    setIsLoadingLocations(true);
+    try {
+      const data = await getCities(provId);
+      setCitiesList(data || []);
+    } catch (e) {
+      console.error("Failed to load cities:", e);
+    } finally {
+      setIsLoadingLocations(false);
+    }
+  };
+
+  const loadSubdistricts = async (cityId: number) => {
+    setIsLoadingLocations(true);
+    try {
+      const data = await getSubdistricts(cityId);
+      const normalized = (data || []).map((item: any) => ({
+        subdistrict_id: String(item.subdistrict_id || item.id),
+        province_id: String(item.province_id || ""),
+        province: item.province || "",
+        city_id: String(item.city_id || ""),
+        city: item.city || "",
+        type: "Kecamatan" as const,
+        subdistrict_name: item.subdistrict_name || item.name || "",
+        postal_code: item.postal_code || "",
+      }));
+      setSubdistrictsList(normalized);
+    } catch (e) {
+      console.error("Failed to load subdistricts:", e);
+    } finally {
+      setIsLoadingLocations(false);
+    }
+  };
 
   useEffect(() => {
     setAvatarLoadError(false);
@@ -93,6 +172,7 @@ export function ProfileTab({
     addressLine2: "",
     city: "",
     province: "",
+    subdistrict: "",
     postalCode: "",
     country: "Indonesia",
     isPrimary: false,
@@ -107,12 +187,50 @@ export function ProfileTab({
       addressLine2: "",
       city: "",
       province: "",
+      subdistrict: "",
       postalCode: "",
       country: "Indonesia",
       isPrimary: false,
     });
     setEditingAddress(null);
+    setSelectedProvId(null);
+    setSelectedCityId(null);
+    setCitiesList([]);
+    setSubdistrictsList([]);
   };
+
+  // Automatically resolve province ID when editing an address and provinces are loaded
+  useEffect(() => {
+    if (editingAddress && provincesList.length > 0 && isAddressModalOpen) {
+      const provNameNorm = (editingAddress.province || "").toLowerCase();
+      const foundProv = provincesList.find((p) => {
+        const nameNorm = (p.province || (p as any).name || "").toLowerCase();
+        return nameNorm === provNameNorm || nameNorm.includes(provNameNorm) || provNameNorm.includes(nameNorm);
+      });
+      if (foundProv) {
+        setSelectedProvId(Number(foundProv.province_id || (foundProv as any).id));
+      }
+    }
+  }, [editingAddress, provincesList, isAddressModalOpen]);
+
+  // Automatically resolve city ID when editing an address and cities are loaded
+  useEffect(() => {
+    if (editingAddress && citiesList.length > 0 && selectedProvId) {
+      const cityNameNorm = (editingAddress.city || "").toLowerCase();
+      const cleanName = (name: string) =>
+        name.toLowerCase()
+          .replace(/^(kabupaten|kab\.|kota)\s+/i, "")
+          .trim();
+      const cleanCityNorm = cleanName(cityNameNorm);
+      const foundCity = citiesList.find((c) => {
+        const cleanCName = cleanName(c.city_name || (c as any).name || "");
+        return cleanCName === cleanCityNorm || cleanCName.includes(cleanCityNorm) || cleanCityNorm.includes(cleanCName);
+      });
+      if (foundCity) {
+        setSelectedCityId(Number(foundCity.city_id || (foundCity as any).id));
+      }
+    }
+  }, [editingAddress, citiesList, selectedProvId]);
 
   const openAddAddress = () => {
     resetAddressForm();
@@ -129,6 +247,7 @@ export function ProfileTab({
       addressLine2: address.addressLine2 || "",
       city: address.city || "",
       province: address.province || "",
+      subdistrict: (address as any).subdistrict || "",
       postalCode: address.postalCode || "",
       country: address.country || "Indonesia",
       isPrimary: address.isPrimary || false,
@@ -640,34 +759,110 @@ export function ProfileTab({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-sans font-bold text-mitologi-navy mb-2">
-                Kota <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
-                value={addressForm.city}
-                placeholder="Contoh: Jakarta"
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, city: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-sans font-bold text-mitologi-navy mb-2">
                 Provinsi <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all placeholder:text-slate-400"
-                value={addressForm.province}
-                placeholder="Contoh: DKI Jakarta"
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, province: e.target.value })
-                }
+              <select
+                className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all"
+                value={provincesList.find(p => (p.province || (p as any).name || "").toLowerCase() === addressForm.province.toLowerCase())?.province_id || (provincesList.find(p => (p.province || (p as any).name || "").toLowerCase() === addressForm.province.toLowerCase()) as any)?.id || ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (!val) {
+                    setAddressForm({ ...addressForm, province: "", city: "" });
+                    setSelectedProvId(null);
+                    return;
+                  }
+                  const found = provincesList.find(p => String(p.province_id || (p as any).id) === val);
+                  if (found) {
+                    const pName = found.province || (found as any).name || "";
+                    setAddressForm({ ...addressForm, province: pName, city: "" });
+                    setSelectedProvId(Number(found.province_id || (found as any).id));
+                  }
+                }}
                 required
-              />
+                disabled={isLoadingLocations && provincesList.length === 0}
+              >
+                <option value="">-- Pilih Provinsi --</option>
+                {provincesList.map((p) => {
+                  const pId = String(p.province_id || (p as any).id);
+                  const pName = p.province || (p as any).name || "";
+                  return (
+                    <option key={pId} value={pId}>
+                      {pName}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-sans font-bold text-mitologi-navy mb-2">
+                Kota <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all"
+                value={citiesList.find(c => (c.city_name || (c as any).name || "").toLowerCase() === addressForm.city.toLowerCase())?.city_id || (citiesList.find(c => (c.city_name || (c as any).name || "").toLowerCase() === addressForm.city.toLowerCase()) as any)?.id || ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (!val) {
+                    setAddressForm({ ...addressForm, city: "" });
+                    setSelectedCityId(null);
+                    return;
+                  }
+                  const found = citiesList.find(c => String(c.city_id || (c as any).id) === val);
+                  if (found) {
+                    const cName = found.city_name || (found as any).name || "";
+                    setAddressForm({
+                      ...addressForm,
+                      city: cName,
+                    });
+                    setSelectedCityId(Number(found.city_id || (found as any).id));
+                  }
+                }}
+                required
+                disabled={!selectedProvId || (isLoadingLocations && citiesList.length === 0)}
+              >
+                <option value="">-- Pilih Kota --</option>
+                {citiesList.map((c) => {
+                  const cId = String(c.city_id || (c as any).id);
+                  const cName = c.city_name || (c as any).name || "";
+                  return (
+                    <option key={cId} value={cId}>
+                      {cName}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-sans font-bold text-mitologi-navy mb-2">
+              Kecamatan <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="block w-full rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:border-mitologi-navy focus:ring-2 focus:ring-mitologi-navy/10 sm:text-sm py-3 px-4 font-sans transition-all"
+              value={subdistrictsList.find(s => s.subdistrict_name.toLowerCase() === (addressForm.subdistrict || "").toLowerCase())?.subdistrict_id || ""}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!val) {
+                  setAddressForm({ ...addressForm, subdistrict: "", postalCode: "" });
+                  return;
+                }
+                const found = subdistrictsList.find(s => s.subdistrict_id === val);
+                if (found) {
+                  setAddressForm({ ...addressForm, subdistrict: found.subdistrict_name, postalCode: found.postal_code || addressForm.postalCode });
+                }
+              }}
+              required
+              disabled={!selectedCityId || (isLoadingLocations && subdistrictsList.length === 0)}
+            >
+              <option value="">-- Pilih Kecamatan --</option>
+              {subdistrictsList.map((s) => (
+                <option key={s.subdistrict_id} value={s.subdistrict_id}>
+                  {s.subdistrict_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

@@ -13,10 +13,10 @@ const Price = ({
 } & React.ComponentProps<"p">) => (
   <p
     suppressHydrationWarning={true}
-    className={clsx(
-      "font-sans font-semibold text-mitologi-navy tracking-tight",
-      className,
-    )}
+      className={clsx(
+        "font-sans font-semibold text-mitologi-navy tracking-tight",
+        className,
+      )}
   >
     {`${new Intl.NumberFormat("id-ID", {
       style: "currency",

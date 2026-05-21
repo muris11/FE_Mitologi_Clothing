@@ -303,5 +303,6 @@ export * from "./content";
 export * from "./endpoints";
 export * from "./orders";
 export * from "./reviews";
+export * from "./shipping";
 export * from "./types";
 export * from "./wishlist";

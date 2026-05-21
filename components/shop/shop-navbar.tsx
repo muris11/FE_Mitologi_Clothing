@@ -3,6 +3,7 @@
 import {
   ArrowRightOnRectangleIcon,
   ShoppingBagIcon,
+  TruckIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import CartModal from "components/shop/cart/modal";
@@ -20,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 const menuItems = [
   { title: "Beranda", path: "/" },
   { title: "Katalog", path: "/shop" },
+  { title: "Lacak Pesanan", path: "/shop/track-order" },
   { title: "Panduan Ukuran", path: "/shop/panduan-ukuran" },
 ];
 
@@ -120,7 +122,10 @@ export function ShopNavbar() {
                   item.path === "/shop"
                     ? pathname.startsWith("/shop") &&
                       !pathname.startsWith("/shop/panduan-ukuran") &&
-                      !pathname.startsWith("/shop/account")
+                      !pathname.startsWith("/shop/account") &&
+                      !pathname.startsWith("/shop/track-order")
+                    : item.path === "/shop/track-order"
+                    ? pathname.startsWith("/shop/track-order")
                     : pathname === item.path;
                 return (
                   <Link
@@ -290,7 +295,10 @@ export function ShopNavbar() {
                 item.path === "/shop"
                   ? pathname.startsWith("/shop") &&
                     !pathname.startsWith("/shop/panduan-ukuran") &&
-                    !pathname.startsWith("/shop/account")
+                    !pathname.startsWith("/shop/account") &&
+                    !pathname.startsWith("/shop/track-order")
+                  : item.path === "/shop/track-order"
+                  ? pathname.startsWith("/shop/track-order")
                   : pathname === item.path;
               return (
                 <Link

@@ -199,6 +199,7 @@ export type Order = {
     | "cancelled"
     | "refunded";
   trackingNumber?: string;
+  shippingCourier?: string;
   paymentStatus?: string;
   total: number;
   subtotal: number;
@@ -209,6 +210,35 @@ export type Order = {
   refundRequestedAt?: string;
   refundReason?: string;
   items: OrderItem[];
+};
+
+export type TrackingEvent = {
+  id: number;
+  status: string;
+  title: string;
+  description?: string;
+  location?: string;
+  isSystemEvent: boolean;
+  occurredAt: string;
+};
+
+export type OrderTracking = {
+  orderNumber: string;
+  status: string;
+  statusLabel: string;
+  shippingCourier?: string;
+  trackingNumber?: string;
+  currentStatus?: {
+    status: string;
+    title: string;
+    description?: string;
+    occurredAt: string;
+  };
+  shippingAddress?: {
+    city: string;
+    province: string;
+  };
+  events: TrackingEvent[];
 };
 
 export type HeroSlide = {
@@ -561,6 +591,41 @@ export type PlastisolPrice = {
 export type PricingAddon = {
   name: string;
   price: string;
+};
+
+export type ShippingOption = {
+  courier: string;
+  courierName: string;
+  service: string;
+  description: string;
+  cost: number;
+  etd: string;
+  note: string;
+};
+
+export type Province = {
+  province_id: string;
+  province: string;
+};
+
+export type City = {
+  city_id: string;
+  province_id: string;
+  province: string;
+  type: "Kabupaten" | "Kota";
+  city_name: string;
+  postal_code: string;
+};
+
+export type Subdistrict = {
+  subdistrict_id: string;
+  province_id: string;
+  province: string;
+  city_id: string;
+  city: string;
+  type: "Kecamatan";
+  subdistrict_name: string;
+  postal_code: string;
 };
 
 export type UnknownError = Error & {

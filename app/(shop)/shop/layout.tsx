@@ -22,7 +22,7 @@ export default async function ShopLayout({
         <header role="banner">
           <ShopNavbar />
         </header>
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow pt-28">{children}</main>
         <LazyChatbot />
         <ShopFooter settings={settings} />
       </div>
