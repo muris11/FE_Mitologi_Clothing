@@ -18,6 +18,7 @@ export function storageUrl(
   const normalizedPath = path.trim().replace(/\\/g, "/");
   if (!normalizedPath) return fallback;
 
+  // Local assets - return as-is
   if (
     normalizedPath.startsWith("/") &&
     !normalizedPath.startsWith("/storage/")
@@ -25,43 +26,28 @@ export function storageUrl(
     return normalizedPath;
   }
 
+  // Handle absolute URLs
   if (/^https?:\/\//i.test(normalizedPath)) {
-    // If it's already an absolute URL with /storage/, return as-is
-    if (normalizedPath.includes('/storage/')) {
-      return normalizedPath;
-    }
-    
+    // Extract storage path from absolute URL and convert to relative path
+    // This allows Next.js rewrites to handle the routing correctly
     try {
       const parsed = new URL(normalizedPath);
-
+      
       if (parsed.pathname.startsWith("/storage/")) {
-        const canonicalStoragePath = parsed.pathname
-          .replace(/^\/+/, "")
-          .replace(/^storage\/+/, "");
-        return `/storage/${canonicalStoragePath}`;
+        const storagePath = parsed.pathname.replace(/^\/+/, "");
+        return `/${storagePath}`;
       }
-
-      if (parsed.pathname.startsWith("/api/")) {
-        return parsed.pathname;
-      }
-
+      
+      // For non-storage absolute URLs, return as-is
       return normalizedPath;
     } catch {
       return normalizedPath;
     }
   }
 
-  // Relative path - convert to absolute URL using backend origin
+  // Relative path - ensure it starts with /storage/
   const withoutLeadingSlash = normalizedPath.replace(/^\/+/, "");
   const withoutStoragePrefix = withoutLeadingSlash.replace(/^storage\/+/, "");
-  
-  // In production, use the backend API URL as the storage origin
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "";
-  const backendOrigin = backendUrl.replace(/\/api\/?$/, "").replace(/\/+$/, "");
-  
-  if (backendOrigin && !normalizedPath.startsWith("/images/")) {
-    return `${backendOrigin}/storage/${withoutStoragePrefix}`;
-  }
 
   return `/storage/${withoutStoragePrefix}`;
 }
