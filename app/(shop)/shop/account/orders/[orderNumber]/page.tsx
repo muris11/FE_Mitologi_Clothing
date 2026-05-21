@@ -29,6 +29,34 @@ export default function OrderDetailPage(props: {
   const [showRefundForm, setShowRefundForm] = useState(false);
   const [refundReason, setRefundReason] = useState("");
   const [copiedOrder, setCopiedOrder] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchOrder = async () => {
+    const data = await getOrderDetail(params.orderNumber);
+    setOrder(data || null);
+    setLoading(false);
+    setIsRefreshing(false);
+  };
+
+  useEffect(() => {
+    fetchOrder();
+  }, [params.orderNumber]);
+
+  // Poll for status updates when order is pending
+  useEffect(() => {
+    if (order?.status === "pending") {
+      const interval = setInterval(() => {
+        fetchOrder();
+      }, 5000); // Check every 5 seconds
+      return () => clearInterval(interval);
+    }
+  }, [order?.status]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchOrder();
+    addToast({ variant: "success", title: "Status diperbarui" });
+  };
 
   const copyOrderNumber = async () => {
     if (!order?.orderNumber) return;
@@ -36,13 +64,6 @@ export default function OrderDetailPage(props: {
     setCopiedOrder(true);
     setTimeout(() => setCopiedOrder(false), 2000);
   };
-
-  useEffect(() => {
-    getOrderDetail(params.orderNumber).then((data) => {
-      setOrder(data || null);
-      setLoading(false);
-    });
-  }, [params.orderNumber]);
 
   if (loading) {
     return (
@@ -205,9 +226,31 @@ export default function OrderDetailPage(props: {
               })}
             </p>
           </div>
-          <span className={`inline-flex px-2.5 py-1 rounded text-xs font-medium ${statusColor[order.status] || "bg-slate-100 text-slate-600"}`}>
-            {statusLabel[order.status] || order.status}
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
+              title="Perbarui status"
+            >
+              <svg
+                className={`h-4 w-4 text-slate-500 ${isRefreshing ? "animate-spin" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
+            <span className={`inline-flex px-2.5 py-1 rounded text-xs font-medium ${statusColor[order.status] || "bg-slate-100 text-slate-600"}`}>
+              {statusLabel[order.status] || order.status}
+            </span>
+          </div>
         </div>
 
         {!["cancelled", "refunded"].includes(order.status) && (
