@@ -7,6 +7,7 @@ import { ApiError, getProductReviews, submitReview } from "lib/api";
 import { ReviewItem, ReviewSummary } from "lib/api/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { storageUrl } from "lib/utils/storage-url";
 
 export function ProductReviews({ handle }: { handle: string }) {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
@@ -266,7 +267,7 @@ export function ProductReviews({ handle }: { handle: string }) {
                 <div className="flex-shrink-0">
                   {review.userAvatar ? (
                     <Image
-                      src={review.userAvatar}
+                      src={storageUrl(review.userAvatar)}
                       alt={review.userName}
                       width={36}
                       height={36}
