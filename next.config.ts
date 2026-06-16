@@ -160,6 +160,7 @@ const nextConfig: NextConfig = {
       "data:",
       "blob:",
       ...backendOrigins,
+      safeEnv("NEXT_PUBLIC_STORAGE_ORIGIN"),
       safeEnv("NEXT_PUBLIC_UNSPLASH_ORIGIN"),
       safeEnv("NEXT_PUBLIC_PLACEHOLD_ORIGIN"),
       safeEnv("NEXT_PUBLIC_TRANSPARENT_TEXTURES_ORIGIN"),
