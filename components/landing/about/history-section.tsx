@@ -82,10 +82,10 @@ export function AboutHistory({ settings }: { settings?: SiteSettings }) {
               alt={`${siteName}`}
             />
             {foundedYear && (
-              <div className="flex items-center gap-3 absolute bottom-8 left-8 bg-white p-4 rounded-xl shadow-lg">
+              <div className="flex items-center gap-2 sm:gap-3 absolute bottom-4 left-4 sm:bottom-8 sm:left-8 bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-lg border border-slate-100 max-w-[calc(100%-32px)]">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Berdiri Sejak</span>
-                  <span className="text-lg font-black text-mitologi-navy">{foundedYear}</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5 sm:mb-1">Berdiri Sejak</span>
+                  <span className="text-base sm:text-lg font-black text-mitologi-navy leading-none">{foundedYear}</span>
                 </div>
               </div>
             )}
