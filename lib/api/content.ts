@@ -89,7 +89,6 @@ export async function getSiteSettings(): Promise<SiteSettings | undefined> {
  * @returns Full URL to the team member's photo
  */
 export function getTeamMemberPhotoUrl(id: string | number): string {
-  // Always use relative path so Next.js rewrite handles it properly in production
-  // without exposing or relying on NEXT_PUBLIC_BACKEND_URL which might be localhost
-  return ENDPOINTS.TEAM_MEMBER_PHOTO(id);
+  // Prepend /api so Next.js rewrites can proxy it to the backend
+  return `/api${ENDPOINTS.TEAM_MEMBER_PHOTO(id)}`;
 }
