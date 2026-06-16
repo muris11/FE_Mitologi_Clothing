@@ -2,7 +2,7 @@
 
 import { MotionSection } from "components/ui/motion";
 import { TeamMember } from "lib/api/types";
-import { storageUrl } from "lib/utils/storage-url";
+import { getTeamMemberPhotoUrl } from "lib/api/content";
 
 interface TeamNode extends TeamMember {
   children: TeamNode[];
@@ -44,7 +44,7 @@ function MemberCard({
       >
         {member.photoUrl ? (
           <img
-            src={storageUrl(member.photoUrl)}
+            src={getTeamMemberPhotoUrl(member.id)}
             alt={member.name}
             className={`block object-contain ${isFounder ? "w-32 md:w-64" : "w-24 md:w-48"}`}
           />
