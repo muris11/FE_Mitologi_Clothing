@@ -145,6 +145,9 @@ function CircularPricingCarousel({ items }: { items: any[] }) {
                       alt={pkg.title || "Paket sablon"}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.style.opacity = '0';
+                      }}
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center bg-stone-50">

@@ -69,6 +69,9 @@ export function Hero({ slides = [] }: { slides?: HeroSlide[] }) {
                   priority={index === 0}
                   className="object-cover"
                   sizes="100vw"
+                  onError={(e) => {
+                    e.currentTarget.style.opacity = '0';
+                  }}
                 />
                 {/* Gradient Overlays for readability */}
                 <div className="absolute inset-0 bg-gradient-to-r from-mitologi-navy/95 via-mitologi-navy/70 to-mitologi-navy/20" />

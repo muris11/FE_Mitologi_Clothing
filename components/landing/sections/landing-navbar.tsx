@@ -88,6 +88,9 @@ export function LandingNavbar({ settings }: { settings?: SiteSettings }) {
                 height={64}
                 className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 object-contain transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                 priority
+                onError={(e) => {
+                  e.currentTarget.src = '/images/logo.png';
+                }}
               />
               <span
                 className={cn(
