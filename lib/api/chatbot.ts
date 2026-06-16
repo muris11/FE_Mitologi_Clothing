@@ -31,6 +31,6 @@ export async function sendChatMessage(
     ) {
       throw new Error("Chatbot service is currently unavailable.");
     }
-    throw new Error("Gagal mengirim pesan. Silakan coba lagi nanti.");
+    throw new Error(`Gagal mengirim pesan: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
