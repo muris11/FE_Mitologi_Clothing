@@ -17,6 +17,41 @@ interface Message {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+const TypewriterMarkdown = ({ content, isAnimated }: { content: string; isAnimated: boolean }) => {
+  const [displayedContent, setDisplayedContent] = useState(isAnimated ? "" : content);
+
+  useEffect(() => {
+    if (!isAnimated) {
+      setDisplayedContent(content);
+      return;
+    }
+    let i = 0;
+    const interval = setInterval(() => {
+      i += 3;
+      if (i >= content.length) {
+        setDisplayedContent(content);
+        clearInterval(interval);
+      } else {
+        setDisplayedContent(content.substring(0, i));
+      }
+    }, 15);
+    return () => clearInterval(interval);
+  }, [content, isAnimated]);
+
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        a: ({ node, ...props }) => (
+          <a {...props} target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-mitologi-gold/40 hover:decoration-mitologi-gold transition-colors" />
+        )
+      }}
+    >
+      {displayedContent + (displayedContent.length < content.length ? "▋" : "")}
+    </ReactMarkdown>
+  );
+};
+
 export default function ShopChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -195,16 +230,23 @@ export default function ShopChatbot() {
                           : "text-slate-700 prose-a:text-mitologi-navy hover:prose-a:text-mitologi-gold prose-strong:text-mitologi-navy"
                       }`}
                     >
-                      <ReactMarkdown 
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          a: ({ node, ...props }) => (
-                            <a {...props} target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-mitologi-gold/40 hover:decoration-mitologi-gold transition-colors" />
-                          )
-                        }}
-                      >
-                        {msg.content}
-                      </ReactMarkdown>
+                      {msg.role === "assistant" ? (
+                        <TypewriterMarkdown 
+                          content={msg.content} 
+                          isAnimated={idx === messages.length - 1} 
+                        />
+                      ) : (
+                        <ReactMarkdown 
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            a: ({ node, ...props }) => (
+                              <a {...props} target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-mitologi-gold/40 hover:decoration-mitologi-gold transition-colors" />
+                            )
+                          }}
+                        >
+                          {msg.content}
+                        </ReactMarkdown>
+                      )}
                     </div>
                   </div>
                   <span
