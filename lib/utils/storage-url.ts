@@ -36,5 +36,11 @@ export function storageUrl(
   const withoutLeadingSlash = normalizedPath.replace(/^\/+/, "");
   const withoutStoragePrefix = withoutLeadingSlash.replace(/^storage\/+/, "");
 
-  return `/storage/${withoutStoragePrefix}`;
+  const backendUrl = process.env.NEXT_PUBLIC_STORAGE_ORIGIN || process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  if (backendUrl) {
+    return `${backendUrl.replace(/\/+$/, "")}/${withoutStoragePrefix}`;
+  }
+
+  return `/${withoutStoragePrefix}`;
 }
