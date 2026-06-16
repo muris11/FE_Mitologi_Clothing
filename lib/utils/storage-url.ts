@@ -28,21 +28,8 @@ export function storageUrl(
 
   // Handle absolute URLs
   if (/^https?:\/\//i.test(normalizedPath)) {
-    // Extract storage path from absolute URL and convert to relative path
-    // This allows Next.js rewrites to handle the routing correctly
-    try {
-      const parsed = new URL(normalizedPath);
-      
-      if (parsed.pathname.startsWith("/storage/")) {
-        const storagePath = parsed.pathname.replace(/^\/+/, "");
-        return `/${storagePath}`;
-      }
-      
-      // For non-storage absolute URLs, return as-is
-      return normalizedPath;
-    } catch {
-      return normalizedPath;
-    }
+    // Return absolute URLs as-is (e.g., Cloudflare R2 URLs)
+    return normalizedPath;
   }
 
   // Relative path - ensure it starts with /storage/
