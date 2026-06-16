@@ -173,7 +173,7 @@ export default function ShopChatbot() {
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex gap-3 animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-300 ease-out fill-mode-both ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.role === "assistant" && (
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-mitologi-gold to-amber-500 shadow-sm flex items-center justify-center flex-shrink-0 mt-1">
@@ -195,7 +195,14 @@ export default function ShopChatbot() {
                           : "text-slate-700 prose-a:text-mitologi-navy hover:prose-a:text-mitologi-gold prose-strong:text-mitologi-navy"
                       }`}
                     >
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a: ({ node, ...props }) => (
+                            <a {...props} target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-mitologi-gold/40 hover:decoration-mitologi-gold transition-colors" />
+                          )
+                        }}
+                      >
                         {msg.content}
                       </ReactMarkdown>
                     </div>
